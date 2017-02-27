@@ -12,6 +12,7 @@ public class OverviewController {
 
     @FXML
     Label clock;
+
     private boolean isRunning = true;
 
 
@@ -21,7 +22,7 @@ public class OverviewController {
             protected String call() throws Exception {
                 while (isRunning) {
                     updateValue(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
-                    Thread.sleep(45000);
+                    Thread.sleep(10000);
                 }
 
                 return null;
@@ -31,4 +32,9 @@ public class OverviewController {
         clock.textProperty().bind(task.valueProperty());
         new Thread(task).start();
     }
+
+    public void stopRunning() {
+        isRunning = false;
+    }
+
 }
