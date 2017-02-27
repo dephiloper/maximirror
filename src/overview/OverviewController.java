@@ -21,7 +21,7 @@ public class OverviewController {
             protected String call() throws Exception {
                 while (isRunning) {
                     updateValue(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
-                    Thread.sleep(30000);
+                    Thread.sleep(45000);
                 }
 
                 return null;
