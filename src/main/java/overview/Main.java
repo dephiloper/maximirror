@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import weather.WeatherController;
 
 public class Main extends Application {
     private OverviewController controller;
@@ -18,8 +19,9 @@ public class Main extends Application {
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
-        primaryStage.show();
+        //primaryStage.show();
         controller.updateClock();
+        WeatherController w = new WeatherController();
     }
     @Override
     public void stop(){

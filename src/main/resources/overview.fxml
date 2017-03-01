@@ -5,4 +5,7 @@
     <top>
         <Label fx:id="clock" BorderPane.alignment="CENTER" styleClass="clock"/>
     </top>
+    <right>
+        <Label fx:id="temp" BorderPane.alignment="CENTER" styleClass="clock"/>
+    </right>
 </BorderPane>
