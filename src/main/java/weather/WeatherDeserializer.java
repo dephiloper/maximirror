@@ -28,7 +28,7 @@ public class WeatherDeserializer implements JsonDeserializer<Weather> {
                 .get("all")
                 .getAsInt());
 
-        w.setLocation(jsonElement
+        w.setCurrentLocation(jsonElement
                 .getAsJsonObject()
                 .get("name")
                 .getAsString());

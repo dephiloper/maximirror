@@ -1,11 +1,13 @@
 <?import javafx.scene.layout.BorderPane?>
-
 <?import javafx.scene.control.Label?>
+
 <BorderPane fx:controller="overview.OverviewController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css">
     <top>
-        <Label fx:id="clock" BorderPane.alignment="CENTER" styleClass="clock"/>
+        <Label fx:id="clock" styleClass="clock" BorderPane.alignment="CENTER"/>
     </top>
+
     <right>
-        <Label fx:id="temp" BorderPane.alignment="CENTER" styleClass="clock"/>
+        <fx:include source="weatherWidget.fxml" fx:id="weatherWidget"/>
     </right>
+
 </BorderPane>

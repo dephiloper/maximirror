@@ -2,7 +2,23 @@
     font-family: 'Orbitron';
     src: url('Orbitron-Medium.ttf');
 }
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Light.ttf');
+}
+
 .clock {
    -fx-font-family: 'Orbitron', sans-serif;
    -fx-font-size:60px;
+}
+
+.weather {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 20px;
+}
+
+.label-margin {
+    -fx-padding: 5px;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
 }

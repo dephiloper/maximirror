@@ -7,17 +7,14 @@ public class Weather {
     private float minTemp;
     private float maxTemp;
     private float temp;
-
     private float windSpeed;
     private float windDegree;
-
     private int clouds;
-
     private String description;
-
     private String type;
     private int humidity;
-    private String location;
+    private String currentLocation;
+
 
     public int getHumidity() {
         return humidity;
@@ -91,11 +88,11 @@ public class Weather {
         this.type = type;
     }
 
-    public String getLocation() {
-        return location;
+    public String getCurrentLocation() {
+        return currentLocation;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setCurrentLocation(String currentLocation) {
+        this.currentLocation = currentLocation;
     }
 }
