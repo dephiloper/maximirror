@@ -8,7 +8,7 @@
 }
 
 .clock {
-    -fx-font-family: 'Orbitron', sans-serif;
+    -fx-font-family: 'Roboto', sans-serif;
     -fx-font-size:60px;
     -fx-text-fill: #FFF;
 }
@@ -19,12 +19,30 @@
     -fx-text-fill: #FFF;
 }
 
+.weather-main {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 30px;
+    -fx-text-fill: #FFF;
+}
+
+/*top right bottom left*/
 .label-margin {
-    -fx-padding: 5px;
+    -fx-padding: 0px 10px 5px 0px;
     -fx-border-insets: 5px;
     -fx-background-insets: 5px;
 }
 
+/*top right bottom left*/
+.label-suffix-margin {
+    -fx-padding: 0px 2px 5px 0px;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+}
+.icon-before-text-margin{
+    -fx-padding: 0px 0px 0px 10px;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+}
 .overview {
     -fx-background-color: #000;
 }

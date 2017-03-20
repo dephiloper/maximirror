@@ -2,11 +2,13 @@ package weather;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.beans.binding.Bindings;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 import java.io.BufferedReader;
@@ -21,25 +23,19 @@ import java.util.concurrent.TimeUnit;
  */
 public class WeatherController {
     @FXML
-    Label minTemp;
-    @FXML
-    Label maxTemp;
-    @FXML
     Label windSpeed;
-    @FXML
-    Label windDegree;
     @FXML
     Label clouds;
     @FXML
     Label description;
-    @FXML
-    Label type;
     @FXML
     Label humidity;
     @FXML
     Label currentLocation;
     @FXML
     Label temp;
+    @FXML
+    ImageView weatherIcon;
 
     private boolean isRunning = true;
     private WeatherDataHelper weatherDataHelper = new WeatherDataHelper();
@@ -89,7 +85,7 @@ public class WeatherController {
                                 weather.getWindDegree(),
                                 weather.getClouds(),
                                 weather.getDescription(),
-                                weather.getType().toString(),
+                                weather.getType(),
                                 weather.getHumidity(),
                                 weather.getCurrentLocation());
 
@@ -122,15 +118,13 @@ public class WeatherController {
         });
 
         temp.textProperty().bind(weatherDataHelper.tempProperty().asString());
-        minTemp.textProperty().bind(weatherDataHelper.minTempProperty().asString());
-        maxTemp.textProperty().bind(weatherDataHelper.maxTempProperty().asString());
         windSpeed.textProperty().bind(weatherDataHelper.windSpeedProperty().asString());
-        windDegree.textProperty().bind(weatherDataHelper.windDegreeProperty().asString());
         clouds.textProperty().bind(weatherDataHelper.cloudsProperty().asString());
         description.textProperty().bind(weatherDataHelper.descriptionProperty());
-        type.textProperty().bind(weatherDataHelper.typeProperty());
         humidity.textProperty().bind(weatherDataHelper.humidityProperty().asString());
         currentLocation.textProperty().bind(weatherDataHelper.currentLocationProperty());
+        Bindings.bindBidirectional(this.weatherIcon.imageProperty(), weatherDataHelper.weatherIconProperty());
+
     }
 
     public void stopRunning() {

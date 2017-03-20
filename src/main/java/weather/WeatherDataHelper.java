@@ -1,6 +1,9 @@
 package weather;
 
 import javafx.beans.property.*;
+import javafx.scene.image.Image;
+
+import java.io.File;
 
 /**
  * Created by maxigh on 04.03.17.
@@ -16,6 +19,7 @@ public class WeatherDataHelper {
     private StringProperty type = new SimpleStringProperty();
     private IntegerProperty humidity = new SimpleIntegerProperty();
     private StringProperty currentLocation = new SimpleStringProperty();
+    private ObjectProperty<Image> weatherIcon = new SimpleObjectProperty<>();
 
     public WeatherDataHelper() {
     }
@@ -31,7 +35,13 @@ public class WeatherDataHelper {
         this.type.setValue(type);
         this.humidity.setValue(humidity);
         this.currentLocation.setValue(currentLocation);
+        this.weatherIcon.setValue(resolveCurrentIcon());
     }
+
+    private Image resolveCurrentIcon() {
+        WeatherType type = WeatherType.valueOf(this.type.getValue().toUpperCase());
+        return new Image(type.getFileName());
+        }
 
     public float getMinTemp() {
         return minTemp.get();
@@ -113,6 +123,14 @@ public class WeatherDataHelper {
         return currentLocation;
     }
 
+    public Image getWeatherIcon() {
+        return weatherIcon.get();
+    }
+
+    public ObjectProperty<Image> weatherIconProperty() {
+        return weatherIcon;
+    }
+
     public void Reinitialize(float minTemp, float maxTemp, float temp, float windSpeed, float windDegree, int clouds, String description, String type, int humidity, String currentLocation) {
         this.minTemp.setValue(minTemp);
         this.maxTemp.setValue(maxTemp);
@@ -124,5 +142,6 @@ public class WeatherDataHelper {
         this.type.setValue(type);
         this.humidity.setValue(humidity);
         this.currentLocation.setValue(currentLocation);
+        this.weatherIcon.setValue(resolveCurrentIcon());
     }
 }
