@@ -8,17 +8,23 @@
 }
 
 .clock {
-   -fx-font-family: 'Orbitron', sans-serif;
-   -fx-font-size:60px;
+    -fx-font-family: 'Orbitron', sans-serif;
+    -fx-font-size:60px;
+    -fx-text-fill: #FFF;
 }
 
 .weather {
     -fx-font-family: 'Roboto', sans-serif;
     -fx-font-size: 20px;
+    -fx-text-fill: #FFF;
 }
 
 .label-margin {
     -fx-padding: 5px;
     -fx-border-insets: 5px;
     -fx-background-insets: 5px;
+}
+
+.overview {
+    -fx-background-color: #000;
 }

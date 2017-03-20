@@ -19,7 +19,7 @@ public class OverviewController {
 
     private boolean isRunning = true;
 
-    public void initialize(){
+    public void init(){
         updateClock();
         weatherWidgetController.updateWeather();
     }

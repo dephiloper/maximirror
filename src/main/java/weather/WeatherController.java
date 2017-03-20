@@ -2,13 +2,17 @@ package weather;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.util.Duration;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -39,33 +43,43 @@ public class WeatherController {
 
     private boolean isRunning = true;
     private WeatherDataHelper weatherDataHelper = new WeatherDataHelper();
-    private boolean isInitalServiceCall = true;
 
     private Weather fetchWeather(){
+        URL url = null;
         try {
-            URL url = new URL("http://api.openweathermap.org/data/2.5/weather?lat=52.5527728&lon=13.424989&appid=19ef84c997c7a3491e789422242ebcc1");
-            //private URL url = (configureURL());
-            BufferedReader buff = new BufferedReader(new InputStreamReader(url.openStream()));
-            String data;
-            String msg="";
-            while((data=buff.readLine())!=null){
-                msg+=data;
+            url = new URL("http://api.openweathermap.org/data/2.5/weather?lat=52.5527728&lon=13.424989&lang=de&units=metric&appid=19ef84c997c7a3491e789422242ebcc1");
+        } catch (MalformedURLException e) {
+            System.out.println(e.getMessage());
+        }
+        if (url != null) {
+            try (BufferedReader buff = new BufferedReader(new InputStreamReader(url.openStream()))) {
+
+                String data;
+                String msg = "";
+
+                while ((data = buff.readLine()) != null) {
+                    msg += data;
+                }
+
+                Gson gson = new GsonBuilder().registerTypeAdapter(Weather.class, new WeatherDeserializer()).create();
+                System.out.println("Weather fetched");
+                return gson.fromJson(msg, Weather.class);
+
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
             }
-            Gson gson = new GsonBuilder().registerTypeAdapter(Weather.class, new WeatherDeserializer()).create();
-            System.out.println(msg);
-            return gson.fromJson(msg, Weather.class);
-        } catch (Exception e) {
-            System.out.println("Fehler");
-            return null;}
+        }
+        return null;
     }
 
     public void  updateWeather(){
-        Service<WeatherDataHelper> service = new Service<WeatherDataHelper>() {
+        ScheduledService<WeatherDataHelper> service = new ScheduledService<WeatherDataHelper>() {
             @Override
             protected Task<WeatherDataHelper> createTask() {
                 return new Task<WeatherDataHelper>() {
                     @Override
                     protected WeatherDataHelper call() throws Exception {
+
                         Weather weather = fetchWeather();
                         WeatherDataHelper weatherDataHelper = new WeatherDataHelper(
                                 weather.getMinTemp(),
@@ -75,20 +89,20 @@ public class WeatherController {
                                 weather.getWindDegree(),
                                 weather.getClouds(),
                                 weather.getDescription(),
-                                weather.getType(),
+                                weather.getType().toString(),
                                 weather.getHumidity(),
                                 weather.getCurrentLocation());
 
                         updateValue(weatherDataHelper);
-                        if (!isInitalServiceCall)
-                            TimeUnit.HOURS.sleep(1);
-                        isInitalServiceCall = false;
                         return weatherDataHelper;
                     }
                 };
             }
         };
-        service.restart();
+
+        service.setPeriod(Duration.minutes(30));
+        service.start();
+
         service.setOnSucceeded(event -> {
             weatherDataHelper.Reinitialize(
             service.getValue().getMinTemp(),
@@ -102,11 +116,9 @@ public class WeatherController {
             service.getValue().getHumidity(),
             service.getValue().getCurrentLocation());
 
-            if (service.isRunning())
+            if (!isRunning)
                 service.cancel();
 
-            if (isRunning)
-                service.restart();
         });
 
         temp.textProperty().bind(weatherDataHelper.tempProperty().asString());

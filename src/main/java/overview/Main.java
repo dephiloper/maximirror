@@ -6,7 +6,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import weather.WeatherController;
+
+import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
     private OverviewController overviewController;
@@ -21,13 +24,12 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
         primaryStage.show();
-        overviewController.initialize();
+        overviewController.init();
     }
 
     @Override
     public void stop(){
         overviewController.stopRunning();
-        System.out.println("muh");
     }
 
 
