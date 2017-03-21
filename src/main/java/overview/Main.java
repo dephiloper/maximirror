@@ -1,32 +1,35 @@
 package overview;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.util.Duration;
+import weather.WeatherController;
+
+import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
-    private OverviewController controller;
+    private OverviewController overviewController;
+    private WeatherController weatherController;
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("overview.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/overview.fxml"));
         Parent root = loader.load();
-        controller = loader.getController();
-        primaryStage.setTitle("Hello World");
+        overviewController = loader.getController();
         Scene scene = new Scene(root,300,275);
-        scene.getStylesheets().add("overview/style.css");
+        scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
         primaryStage.show();
-        controller.updateClock();
+        overviewController.init();
     }
+
     @Override
     public void stop(){
-        controller.stopRunning();
-        System.out.println("muh");
+        overviewController.stopRunning();
     }
 
 

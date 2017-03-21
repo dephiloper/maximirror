@@ -1,8 +1,0 @@
-@font-face {
-    font-family: 'Orbitron';
-    src: url('Orbitron-Medium.ttf');
-}
-.clock {
-   -fx-font-family: 'Orbitron', sans-serif;
-   -fx-font-size:60px;
-}
