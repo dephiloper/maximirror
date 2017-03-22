@@ -1,5 +1,6 @@
 package overview;
 
+import calendar.CalendarController;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -8,12 +9,17 @@ import weather.WeatherController;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 public class OverviewController {
     @FXML
     WeatherController weatherWidgetController;
     @FXML
+    CalendarController calendarWidgetController;
+    @FXML
     Parent weatherWidget;
+    @FXML
+    Parent calendarWidget;
     @FXML
     Label clock;
 
@@ -21,17 +27,19 @@ public class OverviewController {
 
     public void init(){
         updateClock();
-        weatherWidgetController.updateWeather();
-        weatherWidgetController.updateForecast();
+        weatherWidgetController.update();
+	weatherWidgetController.updateForecast();
+	calendarWidgetController.update();
     }
 
     private void updateClock() {
+
         Task task = new Task<String>() {
             @Override
             protected String call() throws Exception {
                 while (isRunning) { //loop statusabfrage bis programmende
                     updateValue(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))); //aktualisiert Zeit und sagt jedem abbonenten bescheid
-                    Thread.sleep(5000);
+                    TimeUnit.MILLISECONDS.sleep(500);
                 }
 
                 return null;
@@ -44,6 +52,8 @@ public class OverviewController {
 
     public void stopRunning() {
         isRunning = false;
+        weatherWidgetController.stopRunning();
+        calendarWidgetController.stopRunning();
     }
 
 }

@@ -4,12 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import weather.WeatherController;
-
-import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
     private OverviewController overviewController;

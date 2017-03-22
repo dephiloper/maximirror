@@ -7,21 +7,27 @@
     src: url('Roboto-Light.ttf');
 }
 
-.clock {
+.clock-font {
     -fx-font-family: 'Roboto', sans-serif;
     -fx-font-size:60px;
     -fx-text-fill: #FFF;
 }
 
-.weather {
+.weather-font {
     -fx-font-family: 'Roboto', sans-serif;
     -fx-font-size: 20px;
     -fx-text-fill: #FFF;
 }
 
-.weather-main {
+.weather-main-font {
     -fx-font-family: 'Roboto', sans-serif;
     -fx-font-size: 30px;
+    -fx-text-fill: #FFF;
+}
+
+.calendar-font {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 20px;
     -fx-text-fill: #FFF;
 }
 
@@ -45,4 +51,23 @@
 }
 .overview {
     -fx-background-color: #000;
+}
+
+.list-cell {
+    -fx-background-color: black;
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 20px;
+    -fx-text-fill: #FFF;
+}
+
+.list-view .scroll-bar:horizontal .increment-arrow,
+.list-view .scroll-bar:horizontal .decrement-arrow,
+.list-view .scroll-bar:horizontal .increment-button,
+.list-view .scroll-bar:horizontal .decrement-button {
+    -fx-padding:0;
+}
+
+.list-view {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
 }

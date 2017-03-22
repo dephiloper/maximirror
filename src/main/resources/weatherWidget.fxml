@@ -1,5 +1,6 @@
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.FlowPane?>
+
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.image.ImageView?>
 <FlowPane fx:controller="weather.WeatherController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
@@ -7,40 +8,38 @@
         <ImageView fx:id="weatherIcon">
         </ImageView>
 
-        <Label styleClass="label-suffix-margin, weather-main, icon-before-text-margin" fx:id="temp" />
-        <Label styleClass="label-margin, weather-main">°C</Label>
+        <Label styleClass="label-suffix-margin, weather-main-font, icon-before-text-margin" fx:id="temp" />
+        <Label styleClass="label-margin, weather-main-font">°C</Label>
     </HBox>
     <HBox>
-        <Label styleClass="label-margin, weather" fx:id="description"/>
+        <Label styleClass="label-margin, weather-font" fx:id="description"/>
     </HBox>
-
-    <HBox>
-        <Label styleClass="label-margin, weather">Regen demnaechst:</Label>
-        <Label styleClass="label-margin, weather" fx:id="rain1"/>
-        <Label styleClass="label-margin, weather" fx:id="rain2"/>
-        <Label styleClass="label-margin, weather" fx:id="rain3"/>
+	<HBox>
+        <Label styleClass="label-margin, weather-font">Regen demnaechst:</Label>
+        <Label styleClass="label-margin, weather-font" fx:id="rain1"/>
+        <Label styleClass="label-margin, weather-font" fx:id="rain2"/>
+        <Label styleClass="label-margin, weather-font" fx:id="rain3"/>
     </HBox>
-
     <HBox>
-        <Label styleClass="label-margin, weather">Wolken:</Label>
-        <Label styleClass="label-suffix-margin, weather" fx:id="clouds"/>
-        <Label styleClass="label-margin, weather">%</Label>
+        <Label styleClass="label-margin, weather-font">Wolken:</Label>
+        <Label styleClass="label-suffix-margin, weather-font" fx:id="clouds"/>
+        <Label styleClass="label-margin, weather-font">%</Label>
     </HBox>
 
     <HBox>
-        <Label styleClass="label-margin, weather">Luftfeuchtigkeit:</Label>
-        <Label styleClass="label-suffix-margin, weather" fx:id="humidity"/>
-        <Label styleClass="label-margin, weather">%</Label>
+        <Label styleClass="label-margin, weather-font">Luftfeuchtigkeit:</Label>
+        <Label styleClass="label-suffix-margin, weather-font" fx:id="humidity"/>
+        <Label styleClass="label-margin, weather-font">%</Label>
     </HBox>
 
     <HBox>
-        <Label styleClass="label-margin, weather">Windgeschwindigkeit:</Label>
-        <Label styleClass="label-suffix-margin, weather" fx:id="windSpeed"/>
-        <Label styleClass="label-margin, weather">km/h</Label>
+        <Label styleClass="label-margin, weather-font">Windgeschwindigkeit:</Label>
+        <Label styleClass="label-suffix-margin, weather-font" fx:id="windSpeed"/>
+        <Label styleClass="label-margin, weather-font">km/h</Label>
     </HBox>
 
     <HBox>
-        <Label styleClass="label-margin, weather">Standort:</Label>
-        <Label styleClass="label-margin, weather" fx:id="currentLocation"/>
+        <Label styleClass="label-margin, weather-font">Standort:</Label>
+        <Label styleClass="label-margin, weather-font" fx:id="currentLocation"/>
     </HBox>
 </FlowPane>

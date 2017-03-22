@@ -61,7 +61,8 @@ public class WeatherController {
                     msg += data;
                 }
 
-                Gson gson = new GsonBuilder().registerTypeAdapter(Weather.class, new WeatherDeserializer()).create();
+                Gson gson = new GsonBuilder().registerTypeAdapter(Weather.class, new WeatherDeserializer())
+                        .create();
                 System.out.println("Weather fetched");
                 return gson.fromJson(msg, Weather.class);
 
@@ -99,15 +100,13 @@ public class WeatherController {
         }
         return null;
     }
-
-    public void  updateWeather(){
+    public void  update(){
         ScheduledService<WeatherDataHelper> service = new ScheduledService<WeatherDataHelper>() {
             @Override
             protected Task<WeatherDataHelper> createTask() {
                 return new Task<WeatherDataHelper>() {
                     @Override
                     protected WeatherDataHelper call() throws Exception {
-
                         Weather weather = fetchWeather();
                         WeatherDataHelper weatherDataHelper = new WeatherDataHelper(
                                 weather.getMinTemp(),
