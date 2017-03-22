@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.ScheduledService;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by maxigh on 01.03.17.
@@ -57,7 +55,8 @@ public class WeatherController {
                     msg += data;
                 }
 
-                Gson gson = new GsonBuilder().registerTypeAdapter(Weather.class, new WeatherDeserializer()).create();
+                Gson gson = new GsonBuilder().registerTypeAdapter(Weather.class, new WeatherDeserializer())
+                        .create();
                 System.out.println("Weather fetched");
                 return gson.fromJson(msg, Weather.class);
 
@@ -68,14 +67,13 @@ public class WeatherController {
         return null;
     }
 
-    public void  updateWeather(){
+    public void update(){
         ScheduledService<WeatherDataHelper> service = new ScheduledService<WeatherDataHelper>() {
             @Override
             protected Task<WeatherDataHelper> createTask() {
                 return new Task<WeatherDataHelper>() {
                     @Override
                     protected WeatherDataHelper call() throws Exception {
-
                         Weather weather = fetchWeather();
                         WeatherDataHelper weatherDataHelper = new WeatherDataHelper(
                                 weather.getMinTemp(),

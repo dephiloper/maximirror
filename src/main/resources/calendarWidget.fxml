@@ -1,0 +1,5 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.FlowPane?>
+<FlowPane fx:controller="calendar.CalendarController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
+    <ListView fx:id="listView" styleClass="list-cell" minWidth="400"/>
+</FlowPane>

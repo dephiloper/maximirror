@@ -3,8 +3,6 @@ package weather;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
 
-import java.io.File;
-
 /**
  * Created by maxigh on 04.03.17.
  */
@@ -39,7 +37,7 @@ public class WeatherDataHelper {
     }
 
     private Image resolveCurrentIcon() {
-        WeatherType type = WeatherType.valueOf(this.type.getValue().toUpperCase());
+        WeatherType type = WeatherType.findIconId(this.type.getValue());
         return new Image(type.getFileName());
         }
 
