@@ -3,8 +3,11 @@
 
 <BorderPane fx:controller="overview.OverviewController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" styleClass="overview">
     <top>
-        <Label fx:id="clock" styleClass="clock" BorderPane.alignment="CENTER"/>
+        <Label fx:id="clock" styleClass="clock-font" BorderPane.alignment="CENTER"/>
     </top>
+    <left>
+        <fx:include source="calendarWidget.fxml" alignment="CENTER_LEFT" fx:id="calendarWidget"/>
+    </left>
     <right>
         <fx:include source="weatherWidget.fxml" alignment="CENTER_RIGHT" fx:id="weatherWidget"/>
     </right>

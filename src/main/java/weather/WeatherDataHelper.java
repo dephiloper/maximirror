@@ -39,7 +39,7 @@ public class WeatherDataHelper {
     }
 
     private Image resolveCurrentIcon() {
-        WeatherType type = WeatherType.valueOf(this.type.getValue().toUpperCase());
+        WeatherType type = WeatherType.findIconId(this.type.getValue());
         return new Image(type.getFileName());
         }
 
