@@ -12,7 +12,8 @@ public enum WeatherType {
     CLEAR("clear", "drawables/cloud.png"),
     EXTREME("extreme", "drawables/cloud.png"),
     ADDITIONAL("additional", "drawables/cloud.png"),
-    CLOUDS("clouds","drawables/cloud.png");
+    CLOUDS("clouds","drawables/cloud.png"),
+    FOG("fog", "drawables/cloud.png");
 
     private final String identifier;
     private final String fileName;

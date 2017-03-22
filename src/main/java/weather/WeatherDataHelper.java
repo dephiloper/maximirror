@@ -41,7 +41,7 @@ public class WeatherDataHelper {
     private Image resolveCurrentIcon() {
         WeatherType type = WeatherType.valueOf(this.type.getValue().toUpperCase());
         return new Image(type.getFileName());
-        }
+    }
 
     public float getMinTemp() {
         return minTemp.get();

@@ -22,6 +22,7 @@ public class OverviewController {
     public void init(){
         updateClock();
         weatherWidgetController.updateWeather();
+        weatherWidgetController.updateForecast();
     }
 
     private void updateClock() {
