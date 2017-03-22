@@ -3,8 +3,6 @@ package weather;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
 
-import java.io.File;
-
 /**
  * Created by maxigh on 04.03.17.
  */

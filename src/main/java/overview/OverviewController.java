@@ -1,13 +1,10 @@
 package overview;
 
 import calendar.CalendarController;
-import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
-import javafx.util.Duration;
 import weather.WeatherController;
 
 import java.time.LocalTime;

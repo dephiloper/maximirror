@@ -1,7 +1,5 @@
 package weather;
 
-import javafx.beans.property.StringProperty;
-
 /**
  * Created by phil on 20.03.17.
  */
