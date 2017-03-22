@@ -11,11 +11,15 @@
         <Label styleClass="label-suffix-margin, weather-main-font, icon-before-text-margin" fx:id="temp" />
         <Label styleClass="label-margin, weather-main-font">°C</Label>
     </HBox>
-
     <HBox>
         <Label styleClass="label-margin, weather-font" fx:id="description"/>
     </HBox>
-
+	<HBox>
+        <Label styleClass="label-margin, weather-font">Regen demnaechst:</Label>
+        <Label styleClass="label-margin, weather-font" fx:id="rain1"/>
+        <Label styleClass="label-margin, weather-font" fx:id="rain2"/>
+        <Label styleClass="label-margin, weather-font" fx:id="rain3"/>
+    </HBox>
     <HBox>
         <Label styleClass="label-margin, weather-font">Wolken:</Label>
         <Label styleClass="label-suffix-margin, weather-font" fx:id="clouds"/>

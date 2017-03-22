@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,10 +33,17 @@ public class WeatherController {
     Label temp;
     @FXML
     ImageView weatherIcon;
+    @FXML
+    Label rain1;
+    @FXML
+    Label rain2;
+    @FXML
+    Label rain3;
+
 
     private boolean isRunning = true;
     private WeatherDataHelper weatherDataHelper = new WeatherDataHelper();
-
+    private ForecastDataHelper forecastDataHelper = new ForecastDataHelper();
     private Weather fetchWeather(){
         URL url = null;
         try {
@@ -67,7 +73,34 @@ public class WeatherController {
         return null;
     }
 
-    public void update(){
+    private ForecastInfo fetchForecastWeather (){
+        URL url = null;
+        try {
+            url = new URL("http://api.openweathermap.org/data/2.5/forecast?lat=52.5527728&lon=13.424989&lang=de&units=metric&appid=19ef84c997c7a3491e789422242ebcc1");
+        } catch (MalformedURLException e) {
+            System.out.println(e.getMessage());
+        }
+        if (url != null) {
+            try (BufferedReader buff = new BufferedReader(new InputStreamReader(url.openStream()))) {
+
+                String data;
+                String msg = "";
+
+                while ((data = buff.readLine()) != null) {
+                    msg += data;
+                }
+
+                Gson gson = new GsonBuilder().registerTypeAdapter(ForecastInfo.class, new ForecastDeserializer()).create();
+                System.out.println("Weatherforecast fetched");
+                return gson.fromJson(msg, ForecastInfo.class);
+
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return null;
+    }
+    public void  update(){
         ScheduledService<WeatherDataHelper> service = new ScheduledService<WeatherDataHelper>() {
             @Override
             protected Task<WeatherDataHelper> createTask() {
@@ -124,7 +157,44 @@ public class WeatherController {
         Bindings.bindBidirectional(this.weatherIcon.imageProperty(), weatherDataHelper.weatherIconProperty());
 
     }
+    public void updateForecast(){
+        ScheduledService<ForecastDataHelper> service = new ScheduledService<ForecastDataHelper>() {
+            @Override
+            protected Task<ForecastDataHelper> createTask() {
+                return new Task<ForecastDataHelper>() {
+                    @Override
+                    protected ForecastDataHelper call() throws Exception {
 
+                        ForecastInfo forecastInfo = fetchForecastWeather();
+                        ForecastDataHelper forecastDataHelper = new ForecastDataHelper(
+                                forecastInfo.getRainToday1(),
+                                forecastInfo.getRainToday2(),
+                                forecastInfo.getRainToday3());
+                        System.out.println("Forcast Success!");
+                        updateValue(forecastDataHelper);
+                        return forecastDataHelper;
+                    }
+                };
+            }
+        };
+
+        service.setPeriod(Duration.minutes(60));
+        service.start();
+
+        service.setOnSucceeded(event -> {
+            forecastDataHelper.reinitialize(
+                    service.getValue().getRainToday1(),
+                    service.getValue().getRainToday2(),
+                    service.getValue().getRainToday3());
+
+            if (!isRunning)
+                service.cancel();
+
+        });
+        rain1.textProperty().bind(forecastDataHelper.rainToday1Property().asString());
+        rain2.textProperty().bind(forecastDataHelper.rainToday2Property().asString());
+        rain3.textProperty().bind(forecastDataHelper.rainToday3Property().asString());
+    }
     public void stopRunning() {
         isRunning = false;
     }
