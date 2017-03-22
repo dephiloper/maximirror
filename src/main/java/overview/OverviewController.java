@@ -28,8 +28,8 @@ public class OverviewController {
     public void init(){
         updateClock();
         weatherWidgetController.update();
-	weatherWidgetController.updateForecast();
-	calendarWidgetController.update();
+	    weatherWidgetController.updateForecast();
+	    calendarWidgetController.update();
     }
 
     private void updateClock() {

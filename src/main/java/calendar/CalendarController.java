@@ -21,9 +21,9 @@ public class CalendarController {
     private List<String> list = new ArrayList<>();
     private boolean isRunning = true;
     private Quickstart quickstart = new Quickstart();
-
+    private Task usersListTask;
     public void update() {
-        final Task usersListTask = new Task() {
+                usersListTask = new Task() {
             protected ObservableList<String> call() throws InterruptedException, IOException {
                 while (isRunning) {
                     list.clear();
@@ -42,6 +42,7 @@ public class CalendarController {
     }
 
     public void stopRunning() {
-        isRunning = false;
+        if (usersListTask != null)
+            usersListTask.cancel();
     }
 }

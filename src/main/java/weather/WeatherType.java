@@ -4,47 +4,46 @@ package weather;
  * Created by phil on 20.03.17.
  */
 public enum WeatherType {
-    CLEAR_SKY("01","drawables/cloud.png"),
-    FEW_CLOUDS("02","drawables/cloud.png"),
-    SCATTERED_CLOUDS("03","drawables/cloud.png"),
-    BROKEN_CLOUDS("04","drawables/cloud.png"),
-    SHOWER_RAIN("09","drawables/cloud.png"),
-    RAIN("10","drawables/cloud.png"),
-    THUNDERSTORM("11","drawables/cloud.png"),
-    SNOW("13","drawables/cloud.png"),
-    MIST("50","drawables/cloud.png");
+    THUNDERSTORM("2","drawables/cloud.png"),
+    DRIZZLE("3","drawables/cloud.png"),
+    RAIN("5","drawables/cloud.png"),
+    SNOW("6","drawables/cloud.png"),
+    ATMOSPHERE("7","drawables/cloud.png"),
+    CLEAR("800","drawables/cloud.png"),
+    CLOUDS("80","drawables/cloud.png"),
+    EXTREME("90","drawables/cloud.png"),
+    ADDITIONAL("9","drawables/cloud.png");
 
-    private final String iconId;
+    private final String weatherId;
     private final String fileName;
 
-    private WeatherType(String iconId, String fileName) {
-        this.iconId = iconId;
+    private WeatherType(String weatherId, String fileName) {
+        this.weatherId = weatherId;
         this.fileName = fileName;
     }
 
     public String getFileName() { return fileName; }
 
     public static WeatherType findIconId(String type) {
-        if (type.startsWith(CLEAR_SKY.iconId)) {
-            return CLEAR_SKY;
-        } else if (type.startsWith(FEW_CLOUDS.iconId)) {
-            return FEW_CLOUDS;
-        } else if (type.startsWith(SCATTERED_CLOUDS.iconId)) {
-            return SCATTERED_CLOUDS;
-        } else if (type.startsWith(BROKEN_CLOUDS.iconId)) {
-            return BROKEN_CLOUDS;
-        } else if (type.startsWith(SHOWER_RAIN.iconId)) {
-            return SHOWER_RAIN;
-        } else if (type.startsWith(RAIN.iconId)) {
-            return RAIN;
-        } else if (type.startsWith(THUNDERSTORM.iconId)) {
+        if (type.startsWith(THUNDERSTORM.weatherId)) {
             return THUNDERSTORM;
-        } else if (type.startsWith(SNOW.iconId)) {
+        } else if (type.startsWith(DRIZZLE.weatherId)) {
+            return DRIZZLE;
+        } else if (type.startsWith(RAIN.weatherId)) {
+            return RAIN;
+        } else if (type.startsWith(SNOW.weatherId)) {
             return SNOW;
-        } else if (type.startsWith(MIST.iconId)) {
-            return MIST;
+        } else if (type.startsWith(ATMOSPHERE.weatherId)) {
+            return ATMOSPHERE;
+        } else if (type.startsWith(CLEAR.weatherId)) {
+            return CLEAR;
+        } else if (type.startsWith(CLOUDS.weatherId)) {
+            return CLOUDS;
+        } else if (type.startsWith(EXTREME.weatherId)) {
+            return EXTREME;
+        } else if (type.startsWith(ADDITIONAL.weatherId)) {
+            return ADDITIONAL;
         }
-
         return null;
     }
 }
