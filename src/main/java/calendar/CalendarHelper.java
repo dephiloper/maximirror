@@ -7,30 +7,26 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
-
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.*;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class Quickstart {
-    /** Application name. */
-    private static final String APPLICATION_NAME =
-            "Google Calendar API Java Quickstart";
+import static constants.CalendarConstants.*;
 
-    /** Directory to store user credentials for this application. */
-    private static final java.io.File DATA_STORE_DIR = new java.io.File(
-            System.getProperty("user.home"), ".credentials/calendar-java-quickstart");
-
+class CalendarHelper {
     /** Global instance of the {@link FileDataStoreFactory}. */
     private static FileDataStoreFactory DATA_STORE_FACTORY;
 
@@ -47,7 +43,7 @@ public class Quickstart {
      * at ~/.credentials/calendar-java-quickstart
      */
     private static final List<String> SCOPES =
-            Arrays.asList(CalendarScopes.CALENDAR_READONLY);
+            Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
 
     static {
         try {
@@ -62,12 +58,12 @@ public class Quickstart {
     /**
      * Creates an authorized Credential object.
      * @return an authorized Credential object.
-     * @throws IOException
+     * @throws IOException Throws exception when credentials could not be saved
      */
-    public Credential authorize() throws IOException {
+    private Credential authorize() throws IOException {
         // Load client secrets.
         InputStream in =
-                Quickstart.class.getResourceAsStream("/client_secret.json");
+                CalendarHelper.class.getResourceAsStream("/client_secret.json");
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
@@ -88,10 +84,9 @@ public class Quickstart {
     /**
      * Build and return an authorized Calendar client service.
      * @return an authorized Calendar client service
-     * @throws IOException
+     * @throws IOException Throws exception when user not authorized.
      */
-    public com.google.api.services.calendar.Calendar
-    getCalendarService() throws IOException {
+    private com.google.api.services.calendar.Calendar getCalendarService() throws IOException {
         Credential credential = authorize();
         return new com.google.api.services.calendar.Calendar.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, credential)
@@ -99,7 +94,7 @@ public class Quickstart {
                 .build();
     }
 
-    public List<String> getEvents() throws IOException {
+    List<String> getEvents() throws IOException {
         // Build a new authorized API client service.
         // Note: Do not confuse this class with the
         //   com.google.api.services.calendar.model.Calendar class.
@@ -109,24 +104,33 @@ public class Quickstart {
         // List the next 10 events from the primary calendar.
         DateTime now = new DateTime(System.currentTimeMillis());
         Events events = service.events().list("primary")
-                .setMaxResults(10)
+                .setMaxResults(CALENDAR_RESULT_COUNT)
                 .setTimeMin(now)
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
                 .execute();
+
         List<Event> items = events.getItems();
         List<String> list = new ArrayList<>();
+
         if (items.size() == 0) {
             System.out.println("No upcoming events found.");
         } else {
             System.out.println("Upcoming events");
             for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    start = event.getStart().getDate();
-                }
+                DateTime start;
+                DateTime end;
 
-                list.add(String.format("%s (%s)\n", event.getSummary(), start));
+                start = event.getStart().getDateTime() == null ? event.getStart().getDate() : event.getStart().getDateTime();
+                end = event.getEnd().getDateTime()  == null ? event.getEnd().getDate() : event.getEnd().getDateTime();
+
+                String line = new SimpleDateFormat("dd.MM").format(start.getValue()) + " - " + event.getSummary();
+
+                if (!start.isDateOnly())
+                    line += " (" + new SimpleDateFormat("HH:mm").format(start.getValue()) + " - "
+                            + new SimpleDateFormat("HH:mm").format(end.getValue()) + ")";
+
+                list.add(line);
             }
         }
 
