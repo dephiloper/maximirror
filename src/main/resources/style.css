@@ -71,3 +71,9 @@
     -fx-background-insets: 0;
     -fx-padding: 0;
 }
+
+.subHeading {
+    -fx-font-size: 30px;
+    -fx-font-family: Roboto;
+    -fx-text-fill: white;
+}

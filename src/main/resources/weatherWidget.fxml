@@ -3,22 +3,15 @@
 
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
 <FlowPane fx:controller="weather.WeatherController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
     <HBox alignment="CENTER_LEFT">
-        <ImageView fx:id="weatherIcon">
-        </ImageView>
-
+        <ImageView fx:id="weatherIcon"></ImageView>
         <Label styleClass="label-suffix-margin, weather-main-font, icon-before-text-margin" fx:id="temp" />
         <Label styleClass="label-margin, weather-main-font">°C</Label>
     </HBox>
     <HBox>
         <Label styleClass="label-margin, weather-font" fx:id="description"/>
-    </HBox>
-	<HBox>
-        <Label styleClass="label-margin, weather-font">Regen demnaechst:</Label>
-        <Label styleClass="label-margin, weather-font" fx:id="rain1"/>
-        <Label styleClass="label-margin, weather-font" fx:id="rain2"/>
-        <Label styleClass="label-margin, weather-font" fx:id="rain3"/>
     </HBox>
     <HBox>
         <Label styleClass="label-margin, weather-font">Wolken:</Label>
@@ -31,7 +24,6 @@
         <Label styleClass="label-suffix-margin, weather-font" fx:id="humidity"/>
         <Label styleClass="label-margin, weather-font">%</Label>
     </HBox>
-
     <HBox>
         <Label styleClass="label-margin, weather-font">Windgeschwindigkeit:</Label>
         <Label styleClass="label-suffix-margin, weather-font" fx:id="windSpeed"/>
@@ -42,4 +34,26 @@
         <Label styleClass="label-margin, weather-font">Standort:</Label>
         <Label styleClass="label-margin, weather-font" fx:id="currentLocation"/>
     </HBox>
+    <VBox>
+        <Label styleClass="subHeading, label-margin">Regenprognose:</Label>
+        <HBox>
+            <Label styleClass="label-margin, weather-font">Heute - </Label>
+            <Label styleClass="label-margin, weather-font" fx:id="rainStatusToday"/>
+        </HBox>
+        <HBox>
+            <Label styleClass="label-margin, weather-font">Morgen - </Label>
+            <Label styleClass="label-margin, weather-font" fx:id="rainStatusTomorrow"/>
+        </HBox>
+    </VBox>
+    <VBox>
+        <Label styleClass="subHeading, label-margin">Temperatur:</Label>
+        <HBox>
+            <Label styleClass="label-margin, weather-font">Minimum:</Label>
+            <Label styleClass="label-margin, weather-font" fx:id="tempForecastMin"/>
+        </HBox>
+        <HBox>
+            <Label styleClass="label-margin, weather-font">Maximum:</Label>
+            <Label styleClass="label-margin, weather-font" fx:id="tempForecastMax"/>
+        </HBox>
+    </VBox>
 </FlowPane>
