@@ -8,25 +8,35 @@ public class ForecastDeserializer implements JsonDeserializer<ForecastInfo> {
     @Override
     public ForecastInfo deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         ForecastInfo f = new ForecastInfo();
-        float[] rainsToday = new float[3];
-
-        for (int i = 0; i < rainsToday.length; i++) {
-            JsonObject rainObject = jsonElement
+        WeatherType[] weatherTypes = new WeatherType[16];
+        float[] temps = new float[16];
+        for (int i = 0; i < weatherTypes.length; i++){
+            weatherTypes[i]= WeatherType.findIconId(jsonElement
                     .getAsJsonObject()
                     .get("list")
                     .getAsJsonArray()
                     .get(i)
                     .getAsJsonObject()
-                    .get("rain")
-                    .getAsJsonObject();
+                    .get("weather")
+                    .getAsJsonArray()
+                    .get(0)
+                    .getAsJsonObject()
+                    .get("id")
+                    .getAsString());
 
-            if (rainObject.size() != 0)
-                rainsToday[i] = rainObject.getAsJsonPrimitive("3h").getAsFloat();
+            temps[i]= jsonElement.
+                    getAsJsonObject()
+                    .get("list")
+                    .getAsJsonArray()
+                    .get(i)
+                    .getAsJsonObject()
+                    .get("main")
+                    .getAsJsonObject()
+                    .get("temp")
+                    .getAsFloat();
         }
-        f.setRainToday1(rainsToday[0]);
-        f.setRainToday2(rainsToday[1]);
-        f.setRainToday3(rainsToday[2]);
-
+        f.setWeatherTypes(weatherTypes);
+        f.setTemp(temps);
         return f;
     }
 }

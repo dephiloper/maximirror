@@ -35,11 +35,13 @@ public class WeatherController {
     @FXML
     ImageView weatherIcon;
     @FXML
-    Label rain1;
+    Label rainStatusToday;
     @FXML
-    Label rain2;
+    Label tempForecastMax;
     @FXML
-    Label rain3;
+    Label tempForecastMin;
+    @FXML
+    Label rainStatusTomorrow;
 
 
     private boolean isRunning = true;
@@ -161,7 +163,7 @@ public class WeatherController {
         Bindings.bindBidirectional(this.weatherIcon.imageProperty(), weatherDataHelper.weatherIconProperty());
 
     }
-    public void updateForecast(){
+    public void updateForecast() {
         ScheduledService<ForecastDataHelper> service = new ScheduledService<ForecastDataHelper>() {
             @Override
             protected Task<ForecastDataHelper> createTask() {
@@ -171,10 +173,8 @@ public class WeatherController {
 
                         ForecastInfo forecastInfo = fetchForecastWeather();
                         ForecastDataHelper forecastDataHelper = new ForecastDataHelper(
-                                forecastInfo.getRainToday1(),
-                                forecastInfo.getRainToday2(),
-                                forecastInfo.getRainToday3());
-                        System.out.println("Forcast Success!");
+                                forecastInfo.getWeatherTypes(), forecastInfo.getTemp());
+                        System.out.println("Forecast Success!");
                         updateValue(forecastDataHelper);
                         return forecastDataHelper;
                     }
@@ -187,17 +187,20 @@ public class WeatherController {
 
         service.setOnSucceeded(event -> {
             forecastDataHelper.reinitialize(
-                    service.getValue().getRainToday1(),
-                    service.getValue().getRainToday2(),
-                    service.getValue().getRainToday3());
+                    service.getValue().getRainStatusToday(),
+                    service.getValue().getRainStatusTomorrow(),
+                    service.getValue().getTempForecastMax(),
+                    service.getValue().getTempForecastMin());
 
             if (!isRunning)
                 service.cancel();
 
         });
-        rain1.textProperty().bind(forecastDataHelper.rainToday1Property().asString());
-        rain2.textProperty().bind(forecastDataHelper.rainToday2Property().asString());
-        rain3.textProperty().bind(forecastDataHelper.rainToday3Property().asString());
+
+        rainStatusToday.textProperty().bind(forecastDataHelper.rainStatusTodayProperty());
+        rainStatusTomorrow.textProperty().bind(forecastDataHelper.rainStatusTomorrowProperty());
+        tempForecastMax.textProperty().bind(forecastDataHelper.tempForecastMaxProperty().asString());
+        tempForecastMin.textProperty().bind(forecastDataHelper.tempForecastMinProperty().asString());
     }
     public void stopRunning() {
         isRunning = false;
