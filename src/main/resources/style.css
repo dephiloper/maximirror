@@ -10,25 +10,31 @@
 .clock-font {
     -fx-font-family: 'Roboto', sans-serif;
     -fx-font-size:60px;
-    -fx-text-fill: #FFF;
+    -fx-text-fill: white;
 }
 
 .weather-font {
     -fx-font-family: 'Roboto', sans-serif;
     -fx-font-size: 20px;
-    -fx-text-fill: #FFF;
+    -fx-text-fill: white;
 }
 
 .weather-main-font {
     -fx-font-family: 'Roboto', sans-serif;
     -fx-font-size: 30px;
-    -fx-text-fill: #FFF;
+    -fx-text-fill: white;
 }
 
 .calendar-font {
     -fx-font-family: 'Roboto', sans-serif;
     -fx-font-size: 20px;
-    -fx-text-fill: #FFF;
+    -fx-text-fill: white;
+}
+
+.calendar-main-font {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 30px;
+    -fx-text-fill: white;
 }
 
 /*top right bottom left*/
@@ -44,20 +50,27 @@
     -fx-border-insets: 5px;
     -fx-background-insets: 5px;
 }
+
 .icon-before-text-margin{
     -fx-padding: 0px 0px 0px 10px;
     -fx-border-insets: 5px;
     -fx-background-insets: 5px;
 }
+/*top right bottom left*/
+.label-time-margin {
+    -fx-padding: 0px 0px 5px 10px;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+}
 .overview {
-    -fx-background-color: #000;
+    -fx-background-color: black;
 }
 
 .list-cell {
     -fx-background-color: black;
     -fx-font-family: 'Roboto', sans-serif;
     -fx-font-size: 20px;
-    -fx-text-fill: #FFF;
+    -fx-text-fill: white;
 }
 
 .list-view .scroll-bar:horizontal .increment-arrow,

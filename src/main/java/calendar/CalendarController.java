@@ -11,23 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by phil on 21.03.17.
- */
 public class CalendarController {
     @FXML
     ListView listView;
 
     private List<String> list = new ArrayList<>();
     private boolean isRunning = true;
-    private Quickstart quickstart = new Quickstart();
-    private Task usersListTask;
+    private CalendarHelper calendarHelper = new CalendarHelper();
+    private Task task = null;
     public void update() {
-                usersListTask = new Task() {
+                task = new Task() {
             protected ObservableList<String> call() throws InterruptedException, IOException {
                 while (isRunning) {
                     list.clear();
-                    list = quickstart.getEvents();
+                    list = calendarHelper.getEvents();
+                    //noinspection unchecked
                     updateValue(FXCollections.observableArrayList(list));
                     TimeUnit.HOURS.sleep(1);
                 }
@@ -36,13 +34,13 @@ public class CalendarController {
             }
         };
 
-        listView.itemsProperty().bind(usersListTask.valueProperty());
-
-        new Thread(usersListTask).start();
+        //noinspection unchecked
+        listView.itemsProperty().bind(task.valueProperty());
+        new Thread(task).start();
     }
 
     public void stopRunning() {
-        if (usersListTask != null)
-            usersListTask.cancel();
+        if (task != null)
+            task.cancel();
     }
 }
