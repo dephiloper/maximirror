@@ -1,48 +1,126 @@
 package weather;
 import javafx.beans.property.*;
+import java.util.Calendar;
+
 /**
  * Created by maxig on 21.03.2017.
  */
 public class ForecastDataHelper {
-    private FloatProperty rainToday1 = new SimpleFloatProperty();
-    private FloatProperty rainToday2 = new SimpleFloatProperty();
-    private FloatProperty rainToday3 = new SimpleFloatProperty();
+    private StringProperty rainStatusToday = new SimpleStringProperty();
+    private StringProperty rainStatusTomorrow = new SimpleStringProperty();
+    private FloatProperty tempForecastMax = new SimpleFloatProperty();
+    private FloatProperty tempForecastMin = new SimpleFloatProperty();
 
-    public ForecastDataHelper(){}
-
-    public ForecastDataHelper(float rainToday1, float rainToday2, float rainToday3){
-        this.rainToday1.setValue(rainToday1);
-        this.rainToday2.setValue(rainToday2);
-        this.rainToday3.setValue(rainToday3);
+    public ForecastDataHelper() {
     }
 
-    public float getRainToday1() {
-        return rainToday1.get();
+    public ForecastDataHelper(WeatherType[] weatherTypes, float[] temps) {
+        int nextDayIndex = prepareIndex();
+        prepareRain(weatherTypes, nextDayIndex);
+        prepareTemp(temps, nextDayIndex);
     }
 
-    public FloatProperty rainToday1Property() {
-        return rainToday1;
+    private void prepareRain(WeatherType[] weatherTypes, int index) {
+        String rainStatusToday = null;
+        String rainStatusTomorrow = null;
+        for (int i = 0; i <= index + 8; i++) {
+            if (i<index&&weatherTypes[i].toString().toLowerCase().contains("rain"))
+                rainStatusToday = "Regen";
+            if (i>=index&&weatherTypes[i].toString().toLowerCase().contains("rain")) {
+                rainStatusTomorrow = "Regen";
+            }
+        }
+
+        if (rainStatusTomorrow == null)
+            rainStatusTomorrow = "Kein Regen";
+        if (rainStatusToday == null)
+            rainStatusToday = "Kein Regen";
+
+        this.rainStatusToday.setValue(rainStatusToday);
+        this.rainStatusTomorrow.setValue(rainStatusTomorrow);
     }
 
-    public float getRainToday2() {
-        return rainToday2.get();
+    private void prepareTemp(float[] temps, int index) {
+        float max = temps[0];
+        float min = temps[0];
+        for (int i = index; i < index + 7; i++) {
+            if (temps[i + 1] > max)
+                max = temps[i + 1];
+            if (temps[i + 1] < min)
+                min = temps[i + 1];
+        }
+        setTempForecastMax(max);
+        setTempForecastMin(min);
     }
 
-    public FloatProperty rainToday2Property() {
-        return rainToday2;
+    private int prepareIndex() {
+        int index = 1;
+        int hour = Calendar.HOUR_OF_DAY;
+        boolean nextDay = false;
+        while (!nextDay) {
+                if ((hour + 3) <= 24) {
+                    hour += 3;
+                    index++;
+                } else {
+                    index++;
+                    nextDay = true;
+                }
+        }
+        return index;
     }
 
-    public float getRainToday3() {
-        return rainToday3.get();
+    public void reinitialize(String rainStatusToday, String rainStatusTomorrow, float tempForecastMax, float tempForecastMin) {
+        this.rainStatusTomorrow.setValue(rainStatusTomorrow);
+        this.rainStatusToday.setValue(rainStatusToday);
+        this.tempForecastMin.setValue(tempForecastMin);
+        this.tempForecastMax.setValue(tempForecastMax);
     }
 
-    public FloatProperty rainToday3Property() {
-        return rainToday3;
+    public String getRainStatusToday() {
+        return rainStatusToday.get();
     }
 
-    public void reinitialize(float rainToday1, float rainToday2, float rainToday3){
-        this.rainToday1.setValue(rainToday1);
-        this.rainToday2.setValue(rainToday2);
-        this.rainToday3.setValue(rainToday3);
+    public StringProperty rainStatusTodayProperty() {
+        return rainStatusToday;
+    }
+
+    public void setRainStatusToday(String rainStatusToday) {
+        this.rainStatusToday.set(rainStatusToday);
+    }
+
+    public String getRainStatusTomorrow() {
+        return rainStatusTomorrow.get();
+    }
+
+    public StringProperty rainStatusTomorrowProperty() {
+        return rainStatusTomorrow;
+    }
+
+    public void setRainStatusTomorrow(String rainStatusTomorrow) {
+        this.rainStatusTomorrow.set(rainStatusTomorrow);
+    }
+
+    public float getTempForecastMax() {
+        return tempForecastMax.get();
+    }
+
+    public FloatProperty tempForecastMaxProperty() {
+        return tempForecastMax;
+    }
+
+    public void setTempForecastMax(float tempForecastMax) {
+        this.tempForecastMax.set(tempForecastMax);
+    }
+
+    public float getTempForecastMin() {
+        return tempForecastMin.get();
+    }
+
+    public FloatProperty tempForecastMinProperty() {
+        return tempForecastMin;
+    }
+
+    public void setTempForecastMin(float tempForecastMin) {
+        this.tempForecastMin.set(tempForecastMin);
     }
 }
