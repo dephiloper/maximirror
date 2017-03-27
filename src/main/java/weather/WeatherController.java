@@ -2,6 +2,7 @@ package weather;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import config.Config;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
@@ -47,9 +48,11 @@ public class WeatherController {
     private Weather fetchWeather(){
         URL url = null;
         try {
-            url = new URL("http://api.openweathermap.org/data/2.5/weather?lat=52.5527728&lon=13.424989&lang=de&units=metric&appid=19ef84c997c7a3491e789422242ebcc1");
+
+            url = new URL(String.format("http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&lang=de&units=metric&appid=%s",
+                    Config.instance.LOCATION_LAT, Config.instance.LOCATION_LON, Config.instance.API_KEY));
         } catch (MalformedURLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         if (url != null) {
             try (BufferedReader buff = new BufferedReader(new InputStreamReader(url.openStream()))) {
@@ -67,7 +70,7 @@ public class WeatherController {
                 return gson.fromJson(msg, Weather.class);
 
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                System.err.println(e.getMessage());
             }
         }
         return null;
@@ -76,9 +79,10 @@ public class WeatherController {
     private ForecastInfo fetchForecastWeather (){
         URL url = null;
         try {
-            url = new URL("http://api.openweathermap.org/data/2.5/forecast?lat=52.5527728&lon=13.424989&lang=de&units=metric&appid=19ef84c997c7a3491e789422242ebcc1");
+            url = new URL(String.format("http://api.openweathermap.org/data/2.5/forecast?lat=%s&lon=%s&lang=de&units=metric&appid=%s",
+                    Config.instance.LOCATION_LAT, Config.instance.LOCATION_LON, Config.instance.API_KEY));
         } catch (MalformedURLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         if (url != null) {
             try (BufferedReader buff = new BufferedReader(new InputStreamReader(url.openStream()))) {
@@ -95,7 +99,7 @@ public class WeatherController {
                 return gson.fromJson(msg, ForecastInfo.class);
 
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                System.err.println(e.getMessage());
             }
         }
         return null;

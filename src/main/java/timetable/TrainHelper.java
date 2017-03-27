@@ -1,6 +1,7 @@
 package timetable;
 
 import com.google.common.base.Strings;
+import config.Config;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,7 +25,7 @@ public class TrainHelper {
 
         try {
 
-            Document doc = Jsoup.connect("http://fahrinfo.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&&input=" + TRAIN_LOCATION_ID + "&boardType=depRT&start=yes").get();
+            Document doc = Jsoup.connect(String.format("http://fahrinfo.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&&input=%s&boardType=depRT&start=yes", Config.instance.TRAIN_STATIONS[0])).get();
             Element table = doc.select("table").get(0); //select the first table.
             Elements rows = table.select("tr");
 
@@ -43,7 +44,7 @@ public class TrainHelper {
             System.out.println(trains.size());
         }
         catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
 
         return trains.subList(0, length);

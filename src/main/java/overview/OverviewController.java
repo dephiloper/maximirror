@@ -2,13 +2,17 @@ package overview;
 
 import calendar.CalendarController;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import timetable.TimeTableController;
 import weather.WeatherController;
 
+import java.awt.event.ActionListener;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
@@ -26,9 +30,10 @@ public class OverviewController {
     Parent calendarWidget;
     @FXML
     Parent timeTableWidget;
-
     @FXML
     Label clock;
+    @FXML
+    Button button;
 
     private boolean isRunning = true;
 
@@ -38,6 +43,7 @@ public class OverviewController {
 	    weatherWidgetController.updateForecast();
 	    calendarWidgetController.update();
 	    timeTableWidgetController.update();
+        button.setOnAction(actionEvent -> System.exit(0));
     }
 
     private void updateClock() {

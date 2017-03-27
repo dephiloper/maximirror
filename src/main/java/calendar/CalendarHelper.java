@@ -50,7 +50,7 @@ class CalendarHelper {
             HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
         } catch (Throwable t) {
-            t.printStackTrace();
+            System.err.println(t.getMessage());
             System.exit(1);
         }
     }
