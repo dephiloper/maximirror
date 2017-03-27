@@ -5,7 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import weather.WeatherController;
+import timetable.TrainHelper;
+
+import java.util.Arrays;
+
 
 public class Main extends Application {
     private OverviewController overviewController;
@@ -27,8 +30,10 @@ public class Main extends Application {
         overviewController.stopRunning();
     }
 
-
     public static void main(String[] args) {
+        if (args.length == 1)
+            TrainHelper.TRAIN_LOCATION_ID = args[0];
+
         launch(args);
     }
 }
