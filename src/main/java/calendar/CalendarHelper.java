@@ -15,7 +15,6 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import config.Config;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -77,11 +76,10 @@ class CalendarHelper {
                         .setDataStoreFactory(DATA_STORE_FACTORY)
                         .setAccessType("offline")
                         .build();
-        Credential credential = new AuthorizationCodeInstalledApp(
+        //System.out.println(
+        //        "Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
+        return new AuthorizationCodeInstalledApp(
                 flow, new LocalServerReceiver()).authorize("user");
-        System.out.println(
-                "Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
-        return credential;
     }
 
     /**
@@ -106,8 +104,15 @@ class CalendarHelper {
 
         // List the next 10 events from the primary calendar.
         DateTime now = new DateTime(System.currentTimeMillis());
+
+        int maxResults = Config.instance.CALENDAR_UPCOMING_EVENT_COUNT;
+
+        if (maxResults < 1) {
+            maxResults = Integer.MAX_VALUE;
+        }
+
         Events events = service.events().list("primary")
-                .setMaxResults(Config.instance.CALENDAR_UPCOMING_EVENT_COUNT)
+                .setMaxResults(maxResults)
                 .setTimeMin(now)
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
@@ -116,10 +121,7 @@ class CalendarHelper {
         List<Event> items = events.getItems();
         List<String> list = new ArrayList<>();
 
-        if (items.size() == 0) {
-            System.out.println("No upcoming events found.");
-        } else {
-            System.out.println("Upcoming events");
+        if (items.size() != 0) {
             for (Event event : items) {
                 DateTime start;
                 DateTime end;
@@ -137,6 +139,6 @@ class CalendarHelper {
             }
         }
 
-    return list;
+        return list;
     }
 }

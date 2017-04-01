@@ -76,7 +76,6 @@ public class WeatherController {
 
                 Gson gson = new GsonBuilder().registerTypeAdapter(Weather.class, new WeatherDeserializer())
                         .create();
-                System.out.println("Weather fetched");
                 return gson.fromJson(msg.toString(), Weather.class);
 
             } catch (IOException e) {
@@ -105,7 +104,6 @@ public class WeatherController {
                 }
 
                 Gson gson = new GsonBuilder().registerTypeAdapter(ForecastInfo.class, new ForecastDeserializer()).create();
-                System.out.println("Weatherforecast fetched");
                 return gson.fromJson(msg.toString(), ForecastInfo.class);
 
             } catch (IOException e) {
@@ -150,7 +148,7 @@ public class WeatherController {
         service.start();
 
         service.setOnSucceeded(event -> {
-            weatherDataHelper.Reinitialize(
+            weatherDataHelper.reinitialize(
             service.getValue().getMinTemp(),
             service.getValue().getMaxTemp(),
             service.getValue().getTemp(),
@@ -192,7 +190,6 @@ public class WeatherController {
                         }
                         ForecastDataHelper forecastDataHelper = new ForecastDataHelper(
                                 forecastInfo.getWeatherTypes(), forecastInfo.getTemp());
-                        System.out.println("Forecast Success!");
                         updateValue(forecastDataHelper);
                         return forecastDataHelper;
                     }

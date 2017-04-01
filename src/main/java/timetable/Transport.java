@@ -3,12 +3,13 @@ package timetable;
 import java.time.LocalTime;
 
 public class Transport {
-    private String name;
+    private String lineName;
     private LocalTime time;
+    private long arrivalTime;
     private String direction;
 
-    void setName(String name) {
-        this.name = name;
+    void setLineName(String lineName) {
+        this.lineName = lineName;
     }
 
     void setTime(LocalTime time) {
@@ -19,8 +20,13 @@ public class Transport {
         this.direction = direction;
     }
 
+    void setArrivalTime(long arrivalTime) {
+
+        this.arrivalTime = arrivalTime;
+    }
+
     @Override
     public String toString() {
-        return this.time + " - " + this.name + " - " + this.direction;
+        return String.format("%s - %s - in %s min", lineName, direction, arrivalTime);
     }
 }

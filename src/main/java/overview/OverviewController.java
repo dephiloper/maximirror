@@ -39,19 +39,11 @@ public class OverviewController {
     private boolean isRunning = true;
 
     void init(){
-        if (Config.instance.SHOW_CLOCK)
-            updateClock();
-
-        if (Config.instance.SHOW_CALENDAR)
-    	    calendarWidgetController.update();
-
-        if (Config.instance.SHOW_TIMETABLE)
-	        timeTableWidgetController.update();
-
-        if (Config.instance.SHOW_WEATHER)
-            weatherWidgetController.update();
-        if (Config.instance.SHOW_FORECAST)
-	        weatherWidgetController.updateForecast();
+        if (Config.instance.SHOW_CLOCK) updateClock();
+        if (Config.instance.SHOW_CALENDAR) calendarWidgetController.update();
+        if (Config.instance.SHOW_TIMETABLE) timeTableWidgetController.update();
+        if (Config.instance.SHOW_WEATHER) weatherWidgetController.update();
+        if (Config.instance.SHOW_FORECAST) weatherWidgetController.updateForecast();
 
         createBindings();
 

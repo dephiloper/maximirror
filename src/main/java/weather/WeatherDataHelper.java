@@ -111,7 +111,7 @@ import javafx.scene.image.Image;
         return weatherIcon;
     }
 
-    void Reinitialize(float minTemp, float maxTemp, float temp, float windSpeed, float windDegree, int clouds, String description, String type, int humidity, String currentLocation) {
+    void reinitialize(float minTemp, float maxTemp, float temp, float windSpeed, float windDegree, int clouds, String description, String type, int humidity, String currentLocation) {
         this.minTemp.setValue(minTemp);
         this.maxTemp.setValue(maxTemp);
         this.temp.setValue(temp);

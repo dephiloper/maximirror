@@ -10,7 +10,7 @@ public class Config {
     public int WINDOW_WIDTH;
     public String LOCATION_LAT;
     public String LOCATION_LON;
-    public String[] TRAIN_STATIONS;
+    public TransportStation[] TRANSPORT_STATIONS;
     public String API_KEY;
     public String CLOCK_FORMAT;
     public double CLOCK_SLEEP_SECONDS;
@@ -23,9 +23,10 @@ public class Config {
     public boolean SHOW_CALENDAR;
     public boolean SHOW_DATE;
     public boolean SHOW_TIMETABLE;
-    public transient static Config instance;
     public boolean SHOW_WEATHER;
     public boolean SHOW_FORECAST;
+    public boolean ENABLE_FULLSCREEN;
+    public transient static Config instance;
 
     public static void create() {
         if (instance == null)
@@ -58,4 +59,9 @@ public class Config {
     }
 
 
+    public class TransportStation {
+        public String ID;
+        public String[] LINE_NAME_FILTER;
+        public Long WALK_DURATION_MINUTES;
+    }
 }
