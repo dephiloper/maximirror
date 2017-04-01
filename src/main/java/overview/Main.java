@@ -6,10 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import timetable.Train;
-import timetable.TrainHelper;
-
-import java.util.Arrays;
 
 
 public class Main extends Application {
@@ -35,11 +31,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        if (args.length == 1)
-            TrainHelper.TRAIN_LOCATION_ID = args[0];
-        else
-            TrainHelper.TRAIN_LOCATION_ID = "9110001";
-
         launch(args);
     }
 }

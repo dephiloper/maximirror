@@ -4,49 +4,57 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.Config;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import weather.forecast.ForecastDataHelper;
+import weather.forecast.ForecastDeserializer;
+import weather.forecast.ForecastInfo;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by maxigh on 01.03.17.
- */
 public class WeatherController {
     @FXML
-    Label windSpeed;
+    public VBox weatherPane;
     @FXML
-    Label clouds;
+    public VBox forecastPane;
     @FXML
-    Label description;
+    private Label windSpeed;
     @FXML
-    Label humidity;
+    private Label clouds;
     @FXML
-    Label currentLocation;
+    private Label description;
     @FXML
-    Label temp;
+    private Label humidity;
     @FXML
-    ImageView weatherIcon;
+    private Label currentLocation;
     @FXML
-    Label rainStatusToday;
+    private Label temp;
     @FXML
-    Label tempForecastMax;
+    private ImageView weatherIcon;
     @FXML
-    Label tempForecastMin;
+    private Label rainStatusToday;
     @FXML
-    Label rainStatusTomorrow;
+    private Label tempForecastMax;
+    @FXML
+    private Label tempForecastMin;
+    @FXML
+    private Label rainStatusTomorrow;
 
 
     private boolean isRunning = true;
-    private WeatherDataHelper weatherDataHelper = new WeatherDataHelper();
-    private ForecastDataHelper forecastDataHelper = new ForecastDataHelper();
+    private final WeatherDataHelper weatherDataHelper = new WeatherDataHelper();
+    private final ForecastDataHelper forecastDataHelper = new ForecastDataHelper();
+
     private Weather fetchWeather(){
         URL url = null;
         try {
@@ -60,16 +68,16 @@ public class WeatherController {
             try (BufferedReader buff = new BufferedReader(new InputStreamReader(url.openStream()))) {
 
                 String data;
-                String msg = "";
+                StringBuilder msg = new StringBuilder();
 
                 while ((data = buff.readLine()) != null) {
-                    msg += data;
+                    msg.append(data);
                 }
 
                 Gson gson = new GsonBuilder().registerTypeAdapter(Weather.class, new WeatherDeserializer())
                         .create();
                 System.out.println("Weather fetched");
-                return gson.fromJson(msg, Weather.class);
+                return gson.fromJson(msg.toString(), Weather.class);
 
             } catch (IOException e) {
                 System.err.println(e.getMessage());
@@ -90,15 +98,15 @@ public class WeatherController {
             try (BufferedReader buff = new BufferedReader(new InputStreamReader(url.openStream()))) {
 
                 String data;
-                String msg = "";
+                StringBuilder msg = new StringBuilder();
 
                 while ((data = buff.readLine()) != null) {
-                    msg += data;
+                    msg.append(data);
                 }
 
                 Gson gson = new GsonBuilder().registerTypeAdapter(ForecastInfo.class, new ForecastDeserializer()).create();
                 System.out.println("Weatherforecast fetched");
-                return gson.fromJson(msg, ForecastInfo.class);
+                return gson.fromJson(msg.toString(), ForecastInfo.class);
 
             } catch (IOException e) {
                 System.err.println(e.getMessage());
@@ -106,6 +114,7 @@ public class WeatherController {
         }
         return null;
     }
+
     public void  update(){
         ScheduledService<WeatherDataHelper> service = new ScheduledService<WeatherDataHelper>() {
             @Override
@@ -114,6 +123,10 @@ public class WeatherController {
                     @Override
                     protected WeatherDataHelper call() throws Exception {
                         Weather weather = fetchWeather();
+                        if (weather == null) {
+                            System.err.println("Error fetching Weather!");
+                            return null;
+                        }
                         WeatherDataHelper weatherDataHelper = new WeatherDataHelper(
                                 weather.getMinTemp(),
                                 weather.getMaxTemp(),
@@ -133,7 +146,7 @@ public class WeatherController {
             }
         };
 
-        service.setPeriod(Duration.minutes(30));
+        service.setPeriod(Duration.seconds(Config.instance.WEATHER_SLEEP_SECONDS));
         service.start();
 
         service.setOnSucceeded(event -> {
@@ -163,6 +176,7 @@ public class WeatherController {
         Bindings.bindBidirectional(this.weatherIcon.imageProperty(), weatherDataHelper.weatherIconProperty());
 
     }
+
     public void updateForecast() {
         ScheduledService<ForecastDataHelper> service = new ScheduledService<ForecastDataHelper>() {
             @Override
@@ -172,6 +186,10 @@ public class WeatherController {
                     protected ForecastDataHelper call() throws Exception {
 
                         ForecastInfo forecastInfo = fetchForecastWeather();
+                        if (forecastInfo == null) {
+                            System.err.println("Error fetching Weather!");
+                            return null;
+                        }
                         ForecastDataHelper forecastDataHelper = new ForecastDataHelper(
                                 forecastInfo.getWeatherTypes(), forecastInfo.getTemp());
                         System.out.println("Forecast Success!");
@@ -182,7 +200,7 @@ public class WeatherController {
             }
         };
 
-        service.setPeriod(Duration.minutes(60));
+        service.setPeriod(Duration.minutes(Config.instance.WEATHER_SLEEP_SECONDS));
         service.start();
 
         service.setOnSucceeded(event -> {
@@ -202,8 +220,14 @@ public class WeatherController {
         tempForecastMax.textProperty().bind(forecastDataHelper.tempForecastMaxProperty().asString());
         tempForecastMin.textProperty().bind(forecastDataHelper.tempForecastMinProperty().asString());
     }
+
     public void stopRunning() {
         isRunning = false;
+    }
+
+    public void createBindings() {
+        weatherPane.visibleProperty().bind(new SimpleBooleanProperty(Config.instance.SHOW_WEATHER));
+        forecastPane.visibleProperty().bind(new SimpleBooleanProperty(Config.instance.SHOW_FORECAST));
     }
 }
 

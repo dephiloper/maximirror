@@ -1,8 +1,7 @@
-package weather;
+package weather.forecast;
 
-/**
- * Created by maxig on 21.03.2017.
- */
+import weather.WeatherType;
+
 public class ForecastInfo {
     private WeatherType[] weatherTypes = new WeatherType[16];
     private float[] temp = new float[16];
@@ -11,7 +10,7 @@ public class ForecastInfo {
         return weatherTypes;
     }
 
-    public void setWeatherTypes(WeatherType[] weatherTypes) {
+    void setWeatherTypes(WeatherType[] weatherTypes) {
         this.weatherTypes = weatherTypes;
     }
 
@@ -19,7 +18,7 @@ public class ForecastInfo {
         return temp;
     }
 
-    public void setTemp(float[] temp) {
+    void setTemp(float[] temp) {
         this.temp = temp;
     }
 }

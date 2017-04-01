@@ -1,59 +1,78 @@
 package overview;
 
 import calendar.CalendarController;
+import config.Config;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import timetable.TimeTableController;
 import weather.WeatherController;
 
-import java.awt.event.ActionListener;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 public class OverviewController {
+
     @FXML
-    WeatherController weatherWidgetController;
+    public Parent calendarWidget;
     @FXML
-    CalendarController calendarWidgetController;
+    public Parent timeTableWidget;
     @FXML
-    TimeTableController timeTableWidgetController;
+    public Parent weatherWidget;
     @FXML
-    Parent weatherWidget;
+    private WeatherController weatherWidgetController;
     @FXML
-    Parent calendarWidget;
+    private CalendarController calendarWidgetController;
     @FXML
-    Parent timeTableWidget;
+    private TimeTableController timeTableWidgetController;
     @FXML
-    Label clock;
+    private Label clock;
     @FXML
-    Button button;
+    private Button button;
 
     private boolean isRunning = true;
 
-    public void init(){
-        updateClock();
-        weatherWidgetController.update();
-	    weatherWidgetController.updateForecast();
-	    calendarWidgetController.update();
-	    timeTableWidgetController.update();
+    void init(){
+        if (Config.instance.SHOW_CLOCK)
+            updateClock();
+
+        if (Config.instance.SHOW_CALENDAR)
+    	    calendarWidgetController.update();
+
+        if (Config.instance.SHOW_TIMETABLE)
+	        timeTableWidgetController.update();
+
+        if (Config.instance.SHOW_WEATHER)
+            weatherWidgetController.update();
+        if (Config.instance.SHOW_FORECAST)
+	        weatherWidgetController.updateForecast();
+
+        createBindings();
+
         button.setOnAction(actionEvent -> System.exit(0));
+    }
+
+    private void createBindings() {
+        calendarWidget.visibleProperty().bind(new SimpleBooleanProperty(Config.instance.SHOW_CALENDAR));
+        timeTableWidget.visibleProperty().bind(new SimpleBooleanProperty(Config.instance.SHOW_TIMETABLE));
+        clock.visibleProperty().bind(new SimpleBooleanProperty(Config.instance.SHOW_CLOCK));
+        weatherWidgetController.createBindings();
     }
 
     private void updateClock() {
 
-        Task task = new Task<String>() {
+        Task<String> task = new Task<String>() {
             @Override
             protected String call() throws Exception {
                 while (isRunning) { //loop statusabfrage bis programmende
-                    updateValue(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))); //aktualisiert Zeit und sagt jedem abbonenten bescheid
-                    TimeUnit.MILLISECONDS.sleep(500);
+                    updateValue(LocalTime.now().format(DateTimeFormatter.ofPattern(Config.instance.CLOCK_FORMAT))); //aktualisiert Zeit und sagt jedem abbonenten bescheid
+                    TimeUnit.MILLISECONDS.sleep((long) (Config.instance.CLOCK_SLEEP_SECONDS*1000));
                 }
 
                 return null;
@@ -64,10 +83,11 @@ public class OverviewController {
         new Thread(task).start();
     }
 
-    public void stopRunning() {
+    void stopRunning() {
         isRunning = false;
         weatherWidgetController.stopRunning();
         calendarWidgetController.stopRunning();
+        timeTableWidgetController.stopRunning();
     }
 
 }

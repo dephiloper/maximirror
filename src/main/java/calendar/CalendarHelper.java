@@ -14,21 +14,24 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
+import config.Config;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static constants.CalendarConstants.*;
 
 class CalendarHelper {
     /** Global instance of the {@link FileDataStoreFactory}. */
-    private static FileDataStoreFactory DATA_STORE_FACTORY;
+    private FileDataStoreFactory DATA_STORE_FACTORY;
+
+    /** Directory to store user credentials for this application. */
+    private static final java.io.File DATA_STORE_DIR =
+            new java.io.File(System.getProperty("user.home"), String.format(".credentials/%s", Config.instance.APPLICATION_NAME));
 
     /** Global instance of the JSON factory. */
     private static final JsonFactory JSON_FACTORY =
@@ -45,7 +48,7 @@ class CalendarHelper {
     private static final List<String> SCOPES =
             Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
 
-    static {
+    {
         try {
             HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
@@ -90,7 +93,7 @@ class CalendarHelper {
         Credential credential = authorize();
         return new com.google.api.services.calendar.Calendar.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, credential)
-                .setApplicationName(APPLICATION_NAME)
+                .setApplicationName(Config.instance.APPLICATION_NAME)
                 .build();
     }
 
@@ -104,7 +107,7 @@ class CalendarHelper {
         // List the next 10 events from the primary calendar.
         DateTime now = new DateTime(System.currentTimeMillis());
         Events events = service.events().list("primary")
-                .setMaxResults(CALENDAR_RESULT_COUNT)
+                .setMaxResults(Config.instance.CALENDAR_UPCOMING_EVENT_COUNT)
                 .setTimeMin(now)
                 .setOrderBy("startTime")
                 .setSingleEvents(true)

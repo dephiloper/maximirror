@@ -12,16 +12,12 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by phil on 23.03.17.
- */
-public class TrainHelper {
+class TransportHelper {
 
-    public static String TRAIN_LOCATION_ID;
-    private List<String> trains;
+    private List<String> transports;
 
-    List<String> getTrains(int length) {
-        if (Strings.isNullOrEmpty(TRAIN_LOCATION_ID)) return null;
+    List<String> getTransports() {
+        if (Strings.isNullOrEmpty(Config.instance.TRAIN_STATIONS[0])) return null;
 
         try {
 
@@ -29,24 +25,24 @@ public class TrainHelper {
             Element table = doc.select("table").get(0); //select the first table.
             Elements rows = table.select("tr");
 
-            trains = new ArrayList<>();
+            transports = new ArrayList<>();
 
             for (Element row : rows) {
                 if (row.getElementsByTag("strong").size() > 0) {
-                    Train train = new Train();
-                    train.setTime(LocalTime.parse(row.getElementsByTag("strong").get(0).text().replace(" *","")));
-                    train.setName(row.getElementsByTag("strong").get(1).text());
-                    train.setDirection(row.getElementsByTag("td").get(2).text());
-                    trains.add(train.toString());
+                    Transport transport = new Transport();
+                    transport.setTime(LocalTime.parse(row.getElementsByTag("strong").get(0).text().replace(" *","")));
+                    transport.setName(row.getElementsByTag("strong").get(1).text());
+                    transport.setDirection(row.getElementsByTag("td").get(2).text());
+                    transports.add(transport.toString());
                 }
             }
 
-            System.out.println(trains.size());
+            System.out.println(transports.size());
         }
         catch (IOException e) {
             System.err.println(e.getMessage());
         }
 
-        return trains.subList(0, length);
+        return transports.subList(0, Config.instance.TIMETABLE_UPCOMING_TRANSPORT_COUNT);
     }
 }

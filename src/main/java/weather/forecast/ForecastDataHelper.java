@@ -1,10 +1,10 @@
-package weather;
+package weather.forecast;
+
 import javafx.beans.property.*;
+import weather.WeatherType;
+
 import java.util.Calendar;
 
-/**
- * Created by maxig on 21.03.2017.
- */
 public class ForecastDataHelper {
     private StringProperty rainStatusToday = new SimpleStringProperty();
     private StringProperty rainStatusTomorrow = new SimpleStringProperty();
@@ -12,6 +12,7 @@ public class ForecastDataHelper {
     private FloatProperty tempForecastMin = new SimpleFloatProperty();
 
     public ForecastDataHelper() {
+
     }
 
     public ForecastDataHelper(WeatherType[] weatherTypes, float[] temps) {
@@ -24,9 +25,9 @@ public class ForecastDataHelper {
         String rainStatusToday = null;
         String rainStatusTomorrow = null;
         for (int i = 0; i <= index + 8; i++) {
-            if (i<index&&weatherTypes[i].toString().toLowerCase().contains("rain"))
+            if (i < index && weatherTypes[i].toString().toLowerCase().contains("rain"))
                 rainStatusToday = "Regen";
-            if (i>=index&&weatherTypes[i].toString().toLowerCase().contains("rain")) {
+            if (i >= index && weatherTypes[i].toString().toLowerCase().contains("rain")) {
                 rainStatusTomorrow = "Regen";
             }
         }
@@ -58,13 +59,13 @@ public class ForecastDataHelper {
         int hour = Calendar.HOUR_OF_DAY;
         boolean nextDay = false;
         while (!nextDay) {
-                if ((hour + 3) <= 24) {
-                    hour += 3;
-                    index++;
-                } else {
-                    index++;
-                    nextDay = true;
-                }
+            if ((hour + 3) <= 24) {
+                hour += 3;
+                index++;
+            } else {
+                index++;
+                nextDay = true;
+            }
         }
         return index;
     }
@@ -84,10 +85,6 @@ public class ForecastDataHelper {
         return rainStatusToday;
     }
 
-    public void setRainStatusToday(String rainStatusToday) {
-        this.rainStatusToday.set(rainStatusToday);
-    }
-
     public String getRainStatusTomorrow() {
         return rainStatusTomorrow.get();
     }
@@ -96,31 +93,27 @@ public class ForecastDataHelper {
         return rainStatusTomorrow;
     }
 
-    public void setRainStatusTomorrow(String rainStatusTomorrow) {
-        this.rainStatusTomorrow.set(rainStatusTomorrow);
-    }
-
     public float getTempForecastMax() {
         return tempForecastMax.get();
+    }
+
+    private void setTempForecastMax(float tempForecastMax) {
+        this.tempForecastMax.set(tempForecastMax);
     }
 
     public FloatProperty tempForecastMaxProperty() {
         return tempForecastMax;
     }
 
-    public void setTempForecastMax(float tempForecastMax) {
-        this.tempForecastMax.set(tempForecastMax);
-    }
-
     public float getTempForecastMin() {
         return tempForecastMin.get();
     }
 
-    public FloatProperty tempForecastMinProperty() {
-        return tempForecastMin;
+    private void setTempForecastMin(float tempForecastMin) {
+        this.tempForecastMin.set(tempForecastMin);
     }
 
-    public void setTempForecastMin(float tempForecastMin) {
-        this.tempForecastMin.set(tempForecastMin);
+    public FloatProperty tempForecastMinProperty() {
+        return tempForecastMin;
     }
 }
