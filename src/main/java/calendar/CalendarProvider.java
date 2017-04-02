@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-class CalendarHelper {
+class CalendarProvider {
     /** Global instance of the {@link FileDataStoreFactory}. */
     private FileDataStoreFactory DATA_STORE_FACTORY;
 
@@ -65,7 +65,7 @@ class CalendarHelper {
     private Credential authorize() throws IOException {
         // Load client secrets.
         InputStream in =
-                CalendarHelper.class.getResourceAsStream("/client_secret.json");
+                CalendarProvider.class.getResourceAsStream("/client_secret.json");
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 

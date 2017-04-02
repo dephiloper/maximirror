@@ -12,14 +12,14 @@ public class Config {
     public String LOCATION_LON;
     public TransportStation[] TRANSPORT_STATIONS;
     public String API_KEY;
-    public String CLOCK_FORMAT;
+    public String TIME_FORMAT;
     public double CLOCK_SLEEP_SECONDS;
     public double TIMETABLE_SLEEP_SECONDS;
     public double CALENDAR_SLEEP_SECONDS;
     public long WEATHER_SLEEP_SECONDS;
     public int CALENDAR_UPCOMING_EVENT_COUNT;
     public int TIMETABLE_UPCOMING_TRANSPORT_COUNT;
-    public boolean SHOW_CLOCK;
+    public boolean SHOW_TIME;
     public boolean SHOW_CALENDAR;
     public boolean SHOW_DATE;
     public boolean SHOW_TIMETABLE;
@@ -27,6 +27,7 @@ public class Config {
     public boolean SHOW_FORECAST;
     public boolean ENABLE_FULLSCREEN;
     public transient static Config instance;
+    public String DATE_FORMAT;
 
     public static void create() {
         if (instance == null)

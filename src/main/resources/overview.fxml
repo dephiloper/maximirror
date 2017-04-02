@@ -5,7 +5,10 @@
 <?import javafx.scene.control.Button?>
 <BorderPane fx:controller="overview.OverviewController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" styleClass="overview">
     <top>
-        <Label fx:id="clock" styleClass="clock-font" BorderPane.alignment="CENTER"/>
+        <VBox alignment="CENTER">
+            <Label fx:id="time" styleClass="clock-font"/>
+            <Label fx:id="date" styleClass="clock-font"/>
+        </VBox>
     </top>
     <left>
         <VBox alignment="CENTER_LEFT">

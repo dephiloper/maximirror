@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class StationHelper {
+class StationProvider {
 
     private List<String> transports;
     private String stationName;

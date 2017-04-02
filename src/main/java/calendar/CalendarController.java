@@ -18,14 +18,14 @@ public class CalendarController {
 
     private List<String> list = new ArrayList<>();
     private boolean isRunning = true;
-    private CalendarHelper calendarHelper = new CalendarHelper();
-    private Task<ObservableList<String>> task = null;
+    private CalendarProvider calendarProvider = new CalendarProvider();
+    private Task<ObservableList<String>> calendarTask = null;
     public void update() {
-                task = new Task<ObservableList<String>>() {
+                calendarTask = new Task<ObservableList<String>>() {
             protected ObservableList<String> call() throws InterruptedException, IOException {
                 while (isRunning) {
                     list.clear();
-                    list = calendarHelper.getEvents();
+                    list = calendarProvider.getEvents();
                     updateValue(FXCollections.observableArrayList(list));
                     TimeUnit.HOURS.sleep((long) Config.instance.CALENDAR_SLEEP_SECONDS);
                 }
@@ -34,12 +34,12 @@ public class CalendarController {
             }
         };
 
-        listView.itemsProperty().bind(task.valueProperty());
-        new Thread(task).start();
+        listView.itemsProperty().bind(calendarTask.valueProperty());
+        new Thread(calendarTask).start();
     }
 
     public void stopRunning() {
-        if (task != null)
-            task.cancel();
+        if (calendarTask.isRunning())
+            calendarTask.cancel();
     }
 }

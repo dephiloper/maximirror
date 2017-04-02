@@ -17,21 +17,18 @@ public class TimeTableController {
     public Label stationName;
     @FXML
     private ListView<String> transportsListView;
-    private boolean isRunning = true;
-    private final StationHelper stationHelper = new StationHelper();
+    private final StationProvider stationProvider = new StationProvider();
     private final StationDataHelper stationDataHelper = new StationDataHelper();
-    private Task<ObservableList<String>> task = null;
+    private ScheduledService<StationDataHelper> timeTableService;
 
     public void update() {
-        ScheduledService<StationDataHelper> service = new ScheduledService<StationDataHelper>() {
+        timeTableService = new ScheduledService<StationDataHelper>() {
             @Override
             protected Task<StationDataHelper> createTask() {
-
-                System.out.println(LocalDateTime.now());
                 return new Task<StationDataHelper>() {
                     @Override
                     protected StationDataHelper call() throws Exception {
-                        Station station = stationHelper.fetchStation();
+                        Station station = stationProvider.fetchStation();
                         StationDataHelper stationDataHelper = new StationDataHelper(
                                 FXCollections.observableArrayList(station.getTransports()),
                                 station.getStationName()
@@ -44,12 +41,12 @@ public class TimeTableController {
                 };
             }
         };
-        service.setPeriod(Duration.seconds(Config.instance.TIMETABLE_SLEEP_SECONDS));
-        service.start();
+        timeTableService.setPeriod(Duration.seconds(Config.instance.TIMETABLE_SLEEP_SECONDS));
+        timeTableService.start();
 
-        service.setOnSucceeded(event -> stationDataHelper.reinitialize(
-            service.getValue().getTransports(),
-            service.getValue().getStationName()
+        timeTableService.setOnSucceeded(event -> stationDataHelper.reinitialize(
+            timeTableService.getValue().getTransports(),
+            timeTableService.getValue().getStationName()
         ));
 
         stationName.textProperty().bind(stationDataHelper.stationNameProperty());
@@ -57,7 +54,8 @@ public class TimeTableController {
     }
 
     public void stopRunning() {
-        if (task != null)
-            task.cancel();
+        if (timeTableService.isRunning())
+            timeTableService.cancel();
+
     }
 }
