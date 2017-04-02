@@ -3,10 +3,7 @@ package weather;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
 
-/**
- * Created by maxigh on 04.03.17.
- */
-public class WeatherDataHelper {
+    class WeatherDataHelper {
     private FloatProperty minTemp = new SimpleFloatProperty();
     private FloatProperty maxTemp = new SimpleFloatProperty();
     private FloatProperty temp = new SimpleFloatProperty();
@@ -19,10 +16,10 @@ public class WeatherDataHelper {
     private StringProperty currentLocation = new SimpleStringProperty();
     private ObjectProperty<Image> weatherIcon = new SimpleObjectProperty<>();
 
-    public WeatherDataHelper() {
+    WeatherDataHelper() {
     }
 
-    public WeatherDataHelper(float minTemp, float maxTemp, float temp, float windSpeed, float windDegree, int clouds, String description, String type, int humidity, String currentLocation) {
+    WeatherDataHelper(float minTemp, float maxTemp, float temp, float windSpeed, float windDegree, int clouds, String description, String type, int humidity, String currentLocation) {
         this.minTemp.setValue(minTemp);
         this.maxTemp.setValue(maxTemp);
         this.temp.setValue(temp);
@@ -38,98 +35,83 @@ public class WeatherDataHelper {
 
     private Image resolveCurrentIcon() {
         WeatherType type = WeatherType.findIconId(this.type.getValue());
-        return new Image(type.getFileName());
+        if (type != null) {
+            return new Image(type.getFileName());
+        }
+
+        System.err.println("Error can't read icon name.");
+        return null;
     }
 
-    public float getMinTemp() {
+    float getMinTemp() {
         return minTemp.get();
     }
 
-    public FloatProperty minTempProperty() {
-        return minTemp;
-    }
-
-    public float getMaxTemp() {
+    float getMaxTemp() {
         return maxTemp.get();
     }
 
-    public FloatProperty maxTempProperty() {
-        return maxTemp;
-    }
-
-    public float getTemp() {
+    float getTemp() {
         return temp.get();
     }
 
-    public FloatProperty tempProperty() {
+    FloatProperty tempProperty() {
         return temp;
     }
 
-    public float getWindSpeed() {
+    float getWindSpeed() {
         return windSpeed.get();
     }
 
-    public FloatProperty windSpeedProperty() {
+    FloatProperty windSpeedProperty() {
         return windSpeed;
     }
 
-    public float getWindDegree() {
+    float getWindDegree() {
         return windDegree.get();
     }
 
-    public FloatProperty windDegreeProperty() {
-        return windDegree;
-    }
-
-    public int getClouds() {
+    int getClouds() {
         return clouds.get();
     }
 
-    public IntegerProperty cloudsProperty() {
+    IntegerProperty cloudsProperty() {
         return clouds;
     }
 
-    public String getDescription() {
+    String getDescription() {
         return description.get();
     }
 
-    public StringProperty descriptionProperty() {
+    StringProperty descriptionProperty() {
         return description;
     }
 
-    public String getType() {
+    String getType() {
         return type.get();
     }
 
-    public StringProperty typeProperty() {
-        return type;
-    }
-
-    public int getHumidity() {
+    int getHumidity() {
         return humidity.get();
     }
 
-    public IntegerProperty humidityProperty() {
+    IntegerProperty humidityProperty() {
         return humidity;
     }
 
-    public String getCurrentLocation() {
+    String getCurrentLocation() {
         return currentLocation.get();
     }
 
-    public StringProperty currentLocationProperty() {
+    StringProperty currentLocationProperty() {
         return currentLocation;
     }
 
-    public Image getWeatherIcon() {
-        return weatherIcon.get();
-    }
-
-    public ObjectProperty<Image> weatherIconProperty() {
+    ObjectProperty<Image> weatherIconProperty() {
         return weatherIcon;
     }
 
-    public void Reinitialize(float minTemp, float maxTemp, float temp, float windSpeed, float windDegree, int clouds, String description, String type, int humidity, String currentLocation) {
+    void reinitialize(float minTemp, float maxTemp, float temp, float windSpeed, float windDegree, int clouds, String description, String type, int humidity, String currentLocation) {
         this.minTemp.setValue(minTemp);
         this.maxTemp.setValue(maxTemp);
         this.temp.setValue(temp);

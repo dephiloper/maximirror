@@ -68,8 +68,7 @@ public class WeatherDeserializer implements JsonDeserializer<Weather> {
                 .get(0)
                 .getAsJsonObject()
                 .get("id")
-                .getAsString()
-        );
+                .getAsString());
 
         JsonElement windDegElement = jsonElement
         .getAsJsonObject()

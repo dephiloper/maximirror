@@ -1,9 +1,6 @@
 package weather;
 
-/**
- * Created by maxigh on 01.03.17.
- */
-public class Weather {
+class Weather {
     private float minTemp;
     private float maxTemp;
     private float temp;
@@ -15,84 +12,83 @@ public class Weather {
     private int humidity;
     private String currentLocation;
 
-
-    public int getHumidity() {
+    int getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(int humidity) {
+    void setHumidity(int humidity) {
         this.humidity = humidity;
     }
 
-    public float getMinTemp() {
+    float getMinTemp() {
         return minTemp;
     }
 
-    public void setMinTemp(float minTemp) {
+    void setMinTemp(float minTemp) {
         this.minTemp = minTemp;
     }
 
-    public float getMaxTemp() {
+    float getMaxTemp() {
         return maxTemp;
     }
 
-    public void setMaxTemp(float maxTemp) {
+    void setMaxTemp(float maxTemp) {
         this.maxTemp = maxTemp;
     }
 
-    public float getTemp() {
+    float getTemp() {
         return temp;
     }
 
-    public void setTemp(float temp) {
+    void setTemp(float temp) {
         this.temp = temp;
     }
 
-    public float getWindSpeed() {
+    float getWindSpeed() {
         return windSpeed;
     }
 
-    public void setWindSpeed(float windSpeed) {
+    void setWindSpeed(float windSpeed) {
         this.windSpeed = windSpeed;
     }
 
-    public float getWindDegree() {
+    float getWindDegree() {
         return windDegree;
     }
 
-    public void setWindDegree(float windDegree) {
+    void setWindDegree(float windDegree) {
         this.windDegree = windDegree;
     }
 
-    public int getClouds() {
+    int getClouds() {
         return clouds;
     }
 
-    public void setClouds(int clouds) {
+    void setClouds(int clouds) {
         this.clouds = clouds;
     }
 
-    public String getDescription() {
+    String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
 
-    public String getType() {
+    String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    void setType(String type) {
         this.type = type;
     }
 
-    public String getCurrentLocation() {
+    String getCurrentLocation() {
         return currentLocation;
     }
 
-    public void setCurrentLocation(String currentLocation) {
+    void setCurrentLocation(String currentLocation) {
         this.currentLocation = currentLocation;
     }
 }

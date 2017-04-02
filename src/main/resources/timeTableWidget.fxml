@@ -1,0 +1,10 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<FlowPane fx:controller="timetable.TimeTableController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
+    <VBox>
+        <Label styleClass="calendar-main-font, label-time-margin">Abfahrtsplan</Label>
+        <Label styleClass="label-time-margin, calendar-font" fx:id="stationName"/>
+        <ListView fx:id="transportsListView" styleClass="list-cell" minWidth="500" prefHeight="400"/>
+    </VBox>
+</FlowPane>

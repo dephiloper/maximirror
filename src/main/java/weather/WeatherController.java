@@ -2,112 +2,77 @@ package weather;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import config.Config;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import overview.VisibilityDataHelper;
+import weather.forecast.ForecastDataHelper;
+import weather.forecast.ForecastDeserializer;
+import weather.forecast.ForecastInfo;
+import weather.forecast.ForecastProvider;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by maxigh on 01.03.17.
- */
 public class WeatherController {
     @FXML
-    Label windSpeed;
+    public VBox weatherPane;
     @FXML
-    Label clouds;
+    public VBox forecastPane;
     @FXML
-    Label description;
+    private Label windSpeed;
     @FXML
-    Label humidity;
+    private Label clouds;
     @FXML
-    Label currentLocation;
+    private Label description;
     @FXML
-    Label temp;
+    private Label humidity;
     @FXML
-    ImageView weatherIcon;
+    private Label currentLocation;
     @FXML
-    Label rain1;
+    private Label temp;
     @FXML
-    Label rain2;
+    private ImageView weatherIcon;
     @FXML
-    Label rain3;
+    private Label rainStatusToday;
+    @FXML
+    private Label tempForecastMax;
+    @FXML
+    private Label tempForecastMin;
+    @FXML
+    private Label rainStatusTomorrow;
 
+    private ScheduledService<ForecastDataHelper> forecastService;
+    private ScheduledService<WeatherDataHelper> weatherService;
 
-    private boolean isRunning = true;
-    private WeatherDataHelper weatherDataHelper = new WeatherDataHelper();
-    private ForecastDataHelper forecastDataHelper = new ForecastDataHelper();
-    private Weather fetchWeather(){
-        URL url = null;
-        try {
-            url = new URL("http://api.openweathermap.org/data/2.5/weather?lat=52.5527728&lon=13.424989&lang=de&units=metric&appid=19ef84c997c7a3491e789422242ebcc1");
-        } catch (MalformedURLException e) {
-            System.out.println(e.getMessage());
-        }
-        if (url != null) {
-            try (BufferedReader buff = new BufferedReader(new InputStreamReader(url.openStream()))) {
+    private final WeatherDataHelper weatherDataHelper = new WeatherDataHelper();
+    private final ForecastDataHelper forecastDataHelper = new ForecastDataHelper();
+    private final WeatherProvider weatherProvider = new WeatherProvider();
+    private final ForecastProvider forecastProvider = new ForecastProvider();
 
-                String data;
-                String msg = "";
-
-                while ((data = buff.readLine()) != null) {
-                    msg += data;
-                }
-
-                Gson gson = new GsonBuilder().registerTypeAdapter(Weather.class, new WeatherDeserializer())
-                        .create();
-                System.out.println("Weather fetched");
-                return gson.fromJson(msg, Weather.class);
-
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        return null;
-    }
-
-    private ForecastInfo fetchForecastWeather (){
-        URL url = null;
-        try {
-            url = new URL("http://api.openweathermap.org/data/2.5/forecast?lat=52.5527728&lon=13.424989&lang=de&units=metric&appid=19ef84c997c7a3491e789422242ebcc1");
-        } catch (MalformedURLException e) {
-            System.out.println(e.getMessage());
-        }
-        if (url != null) {
-            try (BufferedReader buff = new BufferedReader(new InputStreamReader(url.openStream()))) {
-
-                String data;
-                String msg = "";
-
-                while ((data = buff.readLine()) != null) {
-                    msg += data;
-                }
-
-                Gson gson = new GsonBuilder().registerTypeAdapter(ForecastInfo.class, new ForecastDeserializer()).create();
-                System.out.println("Weatherforecast fetched");
-                return gson.fromJson(msg, ForecastInfo.class);
-
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        return null;
-    }
     public void  update(){
-        ScheduledService<WeatherDataHelper> service = new ScheduledService<WeatherDataHelper>() {
+        weatherService = new ScheduledService<WeatherDataHelper>() {
             @Override
             protected Task<WeatherDataHelper> createTask() {
                 return new Task<WeatherDataHelper>() {
                     @Override
                     protected WeatherDataHelper call() throws Exception {
-                        Weather weather = fetchWeather();
+                        Weather weather = weatherProvider.fetchWeather();
+                        if (weather == null) {
+                            System.err.println("Error fetching Weather!");
+                            return null;
+                        }
                         WeatherDataHelper weatherDataHelper = new WeatherDataHelper(
                                 weather.getMinTemp(),
                                 weather.getMaxTemp(),
@@ -127,26 +92,20 @@ public class WeatherController {
             }
         };
 
-        service.setPeriod(Duration.minutes(30));
-        service.start();
+        weatherService.setPeriod(Duration.seconds(Config.instance.WEATHER_SLEEP_SECONDS));
+        weatherService.start();
 
-        service.setOnSucceeded(event -> {
-            weatherDataHelper.Reinitialize(
-            service.getValue().getMinTemp(),
-            service.getValue().getMaxTemp(),
-            service.getValue().getTemp(),
-            service.getValue().getWindSpeed(),
-            service.getValue().getWindDegree(),
-            service.getValue().getClouds(),
-            service.getValue().getDescription(),
-            service.getValue().getType(),
-            service.getValue().getHumidity(),
-            service.getValue().getCurrentLocation());
-
-            if (!isRunning)
-                service.cancel();
-
-        });
+        weatherService.setOnSucceeded(event -> weatherDataHelper.reinitialize(
+        weatherService.getValue().getMinTemp(),
+        weatherService.getValue().getMaxTemp(),
+        weatherService.getValue().getTemp(),
+        weatherService.getValue().getWindSpeed(),
+        weatherService.getValue().getWindDegree(),
+        weatherService.getValue().getClouds(),
+        weatherService.getValue().getDescription(),
+        weatherService.getValue().getType(),
+        weatherService.getValue().getHumidity(),
+        weatherService.getValue().getCurrentLocation()));
 
         temp.textProperty().bind(weatherDataHelper.tempProperty().asString());
         windSpeed.textProperty().bind(weatherDataHelper.windSpeedProperty().asString());
@@ -157,20 +116,23 @@ public class WeatherController {
         Bindings.bindBidirectional(this.weatherIcon.imageProperty(), weatherDataHelper.weatherIconProperty());
 
     }
-    public void updateForecast(){
-        ScheduledService<ForecastDataHelper> service = new ScheduledService<ForecastDataHelper>() {
+
+    public void updateForecast() {
+        forecastService = new ScheduledService<ForecastDataHelper>() {
             @Override
             protected Task<ForecastDataHelper> createTask() {
+
                 return new Task<ForecastDataHelper>() {
                     @Override
                     protected ForecastDataHelper call() throws Exception {
 
-                        ForecastInfo forecastInfo = fetchForecastWeather();
+                        ForecastInfo forecastInfo = forecastProvider.fetchForecastWeather();
+                        if (forecastInfo == null) {
+                            System.err.println("Error fetching Weather!");
+                            return null;
+                        }
                         ForecastDataHelper forecastDataHelper = new ForecastDataHelper(
-                                forecastInfo.getRainToday1(),
-                                forecastInfo.getRainToday2(),
-                                forecastInfo.getRainToday3());
-                        System.out.println("Forcast Success!");
+                                forecastInfo.getWeatherTypes(), forecastInfo.getTemp());
                         updateValue(forecastDataHelper);
                         return forecastDataHelper;
                     }
@@ -178,25 +140,32 @@ public class WeatherController {
             }
         };
 
-        service.setPeriod(Duration.minutes(60));
-        service.start();
+        forecastService.setPeriod(Duration.minutes(Config.instance.WEATHER_SLEEP_SECONDS));
+        forecastService.start();
 
-        service.setOnSucceeded(event -> {
-            forecastDataHelper.reinitialize(
-                    service.getValue().getRainToday1(),
-                    service.getValue().getRainToday2(),
-                    service.getValue().getRainToday3());
+        forecastService.setOnSucceeded(event -> forecastDataHelper.reinitialize(
+                forecastService.getValue().getRainStatusToday(),
+                forecastService.getValue().getRainStatusTomorrow(),
+                forecastService.getValue().getTempForecastMax(),
+                forecastService.getValue().getTempForecastMin()));
 
-            if (!isRunning)
-                service.cancel();
-
-        });
-        rain1.textProperty().bind(forecastDataHelper.rainToday1Property().asString());
-        rain2.textProperty().bind(forecastDataHelper.rainToday2Property().asString());
-        rain3.textProperty().bind(forecastDataHelper.rainToday3Property().asString());
+        rainStatusToday.textProperty().bind(forecastDataHelper.rainStatusTodayProperty());
+        rainStatusTomorrow.textProperty().bind(forecastDataHelper.rainStatusTomorrowProperty());
+        tempForecastMax.textProperty().bind(forecastDataHelper.tempForecastMaxProperty().asString());
+        tempForecastMin.textProperty().bind(forecastDataHelper.tempForecastMinProperty().asString());
     }
+
     public void stopRunning() {
-        isRunning = false;
+        if (weatherService.isRunning())
+            weatherService.cancel();
+        if (forecastService.isRunning())
+            forecastService.cancel();
+
+    }
+
+    public void createBindings(VisibilityDataHelper visibilityDataHelper) {
+        weatherPane.visibleProperty().bind(visibilityDataHelper.showWeatherProperty());
+        forecastPane.visibleProperty().bind(visibilityDataHelper.showForecastProperty());
     }
 }
 

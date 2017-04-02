@@ -1,5 +1,6 @@
 package calendar;
 
+import config.Config;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -13,34 +14,32 @@ import java.util.concurrent.TimeUnit;
 
 public class CalendarController {
     @FXML
-    ListView listView;
+    private ListView<String> listView;
 
     private List<String> list = new ArrayList<>();
     private boolean isRunning = true;
-    private CalendarHelper calendarHelper = new CalendarHelper();
-    private Task task = null;
+    private CalendarProvider calendarProvider = new CalendarProvider();
+    private Task<ObservableList<String>> calendarTask = null;
     public void update() {
-                task = new Task() {
+                calendarTask = new Task<ObservableList<String>>() {
             protected ObservableList<String> call() throws InterruptedException, IOException {
                 while (isRunning) {
                     list.clear();
-                    list = calendarHelper.getEvents();
-                    //noinspection unchecked
+                    list = calendarProvider.getEvents();
                     updateValue(FXCollections.observableArrayList(list));
-                    TimeUnit.HOURS.sleep(1);
+                    TimeUnit.HOURS.sleep((long) Config.instance.CALENDAR_SLEEP_SECONDS);
                 }
 
                 return null;
             }
         };
 
-        //noinspection unchecked
-        listView.itemsProperty().bind(task.valueProperty());
-        new Thread(task).start();
+        listView.itemsProperty().bind(calendarTask.valueProperty());
+        new Thread(calendarTask).start();
     }
 
     public void stopRunning() {
-        if (task != null)
-            task.cancel();
+        if (calendarTask.isRunning())
+            calendarTask.cancel();
     }
 }

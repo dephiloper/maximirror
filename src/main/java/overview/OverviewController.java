@@ -1,59 +1,109 @@
 package overview;
 
 import calendar.CalendarController;
+import config.Config;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import timetable.TimeTableController;
 import weather.WeatherController;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 public class OverviewController {
-    @FXML
-    WeatherController weatherWidgetController;
-    @FXML
-    CalendarController calendarWidgetController;
-    @FXML
-    Parent weatherWidget;
-    @FXML
-    Parent calendarWidget;
-    @FXML
-    Label clock;
 
-    private boolean isRunning = true;
+    @FXML
+    public Parent calendarWidget;
+    @FXML
+    public Parent timeTableWidget;
+    @FXML
+    public Parent weatherWidget;
+    @FXML
+    private WeatherController weatherWidgetController;
+    @FXML
+    private CalendarController calendarWidgetController;
+    @FXML
+    private TimeTableController timeTableWidgetController;
+    @FXML
+    private Label time;
+    @FXML
+    private Label date;
+    @FXML
+    private Button button;
 
-    public void init(){
-        updateClock();
-        weatherWidgetController.update();
-	    weatherWidgetController.updateForecast();
-	    calendarWidgetController.update();
+    private VisibilityDataHelper visibilityDataHelper = new VisibilityDataHelper();
+    private Task<String> dateTimeTask;
+    private boolean isRunning;
+
+    void init(){
+        isRunning = true;
+        if (Config.instance.SHOW_TIME || Config.instance.SHOW_DATE) updateDateTime();
+        if (Config.instance.SHOW_CALENDAR) calendarWidgetController.update();
+        if (Config.instance.SHOW_TIMETABLE) timeTableWidgetController.update();
+        if (Config.instance.SHOW_WEATHER) weatherWidgetController.update();
+        if (Config.instance.SHOW_FORECAST) weatherWidgetController.updateForecast();
+
+        createBindings();
+
+        button.setOnAction(actionEvent -> {
+            if (isRunning)
+                stopRunning();
+            else
+                init();
+
+            visibilityDataHelper.setShowTime(!visibilityDataHelper.isShowTime());
+            visibilityDataHelper.setShowDate(!visibilityDataHelper.isShowDate());
+            visibilityDataHelper.setShowCalendar(!visibilityDataHelper.isShowCalendar());
+            visibilityDataHelper.setShowForecast(!visibilityDataHelper.isShowForecast());
+            visibilityDataHelper.setShowWeather(!visibilityDataHelper.isShowWeather());
+            visibilityDataHelper.setShowTimeTable(!visibilityDataHelper.isShowTimeTable());
+        });
     }
 
-    private void updateClock() {
+    private void createBindings() {
+        calendarWidget.visibleProperty().bind(visibilityDataHelper.showCalendarProperty());
+        timeTableWidget.visibleProperty().bind(visibilityDataHelper.showTimeTableProperty());
+        time.visibleProperty().bind(visibilityDataHelper.showTimeProperty());
+        date.visibleProperty().bind(visibilityDataHelper.showDateProperty());
+        weatherWidgetController.createBindings(visibilityDataHelper);
+    }
 
-        Task task = new Task<String>() {
+    private void updateDateTime() {
+
+        dateTimeTask = new Task<String>() {
             @Override
             protected String call() throws Exception {
-                while (isRunning) { //loop statusabfrage bis programmende
-                    updateValue(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))); //aktualisiert Zeit und sagt jedem abbonenten bescheid
-                    TimeUnit.MILLISECONDS.sleep(500);
-                }
+            while (isRunning) {
+                if (Config.instance.SHOW_TIME)
+                    updateValue(LocalTime.now().format(DateTimeFormatter.ofPattern(Config.instance.TIME_FORMAT)));
+                if (Config.instance.SHOW_DATE)
+                    updateTitle(LocalDate.now().format(DateTimeFormatter.ofPattern(Config.instance.DATE_FORMAT)));
 
-                return null;
+                TimeUnit.MILLISECONDS.sleep((long) (Config.instance.CLOCK_SLEEP_SECONDS*1000));
+            }
+
+            return null;
             }
         };
 
-        clock.textProperty().bind(task.valueProperty());
-        new Thread(task).start();
+        date.textProperty().bind(dateTimeTask.titleProperty());
+        time.textProperty().bind(dateTimeTask.valueProperty());
+        new Thread(dateTimeTask).start();
     }
 
-    public void stopRunning() {
-        isRunning = false;
+    void stopRunning() {
+        isRunning = false ;
+        if (dateTimeTask.isRunning())
+            dateTimeTask.cancel();
+
         weatherWidgetController.stopRunning();
         calendarWidgetController.stopRunning();
+        timeTableWidgetController.stopRunning();
     }
 
 }
