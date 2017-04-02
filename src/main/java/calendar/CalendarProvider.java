@@ -14,21 +14,23 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
-
+import config.Config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static constants.CalendarConstants.*;
 
-class CalendarHelper {
+class CalendarProvider {
     /** Global instance of the {@link FileDataStoreFactory}. */
-    private static FileDataStoreFactory DATA_STORE_FACTORY;
+    private FileDataStoreFactory DATA_STORE_FACTORY;
+
+    /** Directory to store user credentials for this application. */
+    private static final java.io.File DATA_STORE_DIR =
+            new java.io.File(System.getProperty("user.home"), String.format(".credentials/%s", Config.instance.APPLICATION_NAME));
 
     /** Global instance of the JSON factory. */
     private static final JsonFactory JSON_FACTORY =
@@ -45,7 +47,7 @@ class CalendarHelper {
     private static final List<String> SCOPES =
             Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
 
-    static {
+    {
         try {
             HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
@@ -63,7 +65,7 @@ class CalendarHelper {
     private Credential authorize() throws IOException {
         // Load client secrets.
         InputStream in =
-                CalendarHelper.class.getResourceAsStream("/client_secret.json");
+                CalendarProvider.class.getResourceAsStream("/client_secret.json");
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
@@ -74,11 +76,10 @@ class CalendarHelper {
                         .setDataStoreFactory(DATA_STORE_FACTORY)
                         .setAccessType("offline")
                         .build();
-        Credential credential = new AuthorizationCodeInstalledApp(
+        //System.out.println(
+        //        "Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
+        return new AuthorizationCodeInstalledApp(
                 flow, new LocalServerReceiver()).authorize("user");
-        System.out.println(
-                "Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
-        return credential;
     }
 
     /**
@@ -90,7 +91,7 @@ class CalendarHelper {
         Credential credential = authorize();
         return new com.google.api.services.calendar.Calendar.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, credential)
-                .setApplicationName(APPLICATION_NAME)
+                .setApplicationName(Config.instance.APPLICATION_NAME)
                 .build();
     }
 
@@ -103,8 +104,15 @@ class CalendarHelper {
 
         // List the next 10 events from the primary calendar.
         DateTime now = new DateTime(System.currentTimeMillis());
+
+        int maxResults = Config.instance.CALENDAR_UPCOMING_EVENT_COUNT;
+
+        if (maxResults < 1) {
+            maxResults = Integer.MAX_VALUE;
+        }
+
         Events events = service.events().list("primary")
-                .setMaxResults(CALENDAR_RESULT_COUNT)
+                .setMaxResults(maxResults)
                 .setTimeMin(now)
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
@@ -113,10 +121,7 @@ class CalendarHelper {
         List<Event> items = events.getItems();
         List<String> list = new ArrayList<>();
 
-        if (items.size() == 0) {
-            System.out.println("No upcoming events found.");
-        } else {
-            System.out.println("Upcoming events");
+        if (items.size() != 0) {
             for (Event event : items) {
                 DateTime start;
                 DateTime end;
@@ -134,6 +139,6 @@ class CalendarHelper {
             }
         }
 
-    return list;
+        return list;
     }
 }

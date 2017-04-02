@@ -1,8 +1,5 @@
 package weather;
 
-/**
- * Created by phil on 20.03.17.
- */
 public enum WeatherType {
     THUNDERSTORM("2","drawables/cloud.png"),
     DRIZZLE("3","drawables/cloud.png"),
@@ -17,7 +14,7 @@ public enum WeatherType {
     private final String weatherId;
     private final String fileName;
 
-    private WeatherType(String weatherId, String fileName) {
+    WeatherType(String weatherId, String fileName) {
         this.weatherId = weatherId;
         this.fileName = fileName;
     }

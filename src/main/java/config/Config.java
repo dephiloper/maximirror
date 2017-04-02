@@ -4,21 +4,30 @@ import com.google.gson.Gson;
 
 import java.io.*;
 
-/**
- * Created by phil on 27.03.17.
- */
 public class Config {
+    public String APPLICATION_NAME;
     public int WINDOW_HEIGHT;
     public int WINDOW_WIDTH;
     public String LOCATION_LAT;
     public String LOCATION_LON;
-    public String[] TRAIN_STATIONS;
+    public TransportStation[] TRANSPORT_STATIONS;
     public String API_KEY;
+    public String TIME_FORMAT;
+    public double CLOCK_SLEEP_SECONDS;
+    public double TIMETABLE_SLEEP_SECONDS;
+    public double CALENDAR_SLEEP_SECONDS;
+    public long WEATHER_SLEEP_SECONDS;
+    public int CALENDAR_UPCOMING_EVENT_COUNT;
+    public int TIMETABLE_UPCOMING_TRANSPORT_COUNT;
+    public boolean SHOW_TIME;
+    public boolean SHOW_CALENDAR;
+    public boolean SHOW_DATE;
+    public boolean SHOW_TIMETABLE;
+    public boolean SHOW_WEATHER;
+    public boolean SHOW_FORECAST;
+    public boolean ENABLE_FULLSCREEN;
     public transient static Config instance;
-
-    private Config() {
-
-    }
+    public String DATE_FORMAT;
 
     public static void create() {
         if (instance == null)
@@ -34,7 +43,7 @@ public class Config {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             StringBuilder content = new StringBuilder();
-            String line = "";
+            String line;
 
             while ((line = reader.readLine()) != null) {
                 content.append(line);
@@ -51,4 +60,9 @@ public class Config {
     }
 
 
+    public class TransportStation {
+        public String ID;
+        public String[] LINE_NAME_FILTER;
+        public Long WALK_DURATION_MINUTES;
+    }
 }

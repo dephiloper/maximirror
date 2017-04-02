@@ -1,9 +1,9 @@
-package weather;
+package weather.forecast;
 import com.google.gson.*;
+import weather.WeatherType;
+
 import java.lang.reflect.Type;
-/**
- * Created by maxig on 21.03.2017.
- */
+
 public class ForecastDeserializer implements JsonDeserializer<ForecastInfo> {
     @Override
     public ForecastInfo deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
