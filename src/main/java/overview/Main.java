@@ -20,7 +20,7 @@ public class Main extends Application {
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(Config.instance.ENABLE_FULLSCREEN);
-        //primaryStage.show();
+        primaryStage.show();
         overviewController.init();
 
     }
