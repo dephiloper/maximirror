@@ -5,12 +5,12 @@ package weather;
  */
 public enum WeatherType {
     THUNDERSTORM("2","drawables/cloud.png"),
-    DRIZZLE("3","drawables/cloud.png"),
-    RAIN("5","drawables/cloud.png"),
-    SNOW("6","drawables/cloud.png"),
+    DRIZZLE("3","drawables/drizzle.png"),
+    RAIN("5","drawables/rain.png"),
+    SNOW("6","drawables/snow.png"),
     ATMOSPHERE("7","drawables/cloud.png"),
-    CLEAR("800","drawables/cloud.png"),
-    CLOUDS("80","drawables/cloud.png"),
+    CLEAR("800","drawables/clear.png"),
+    CLOUDS("80","drawables/clouds.png"),
     EXTREME("90","drawables/cloud.png"),
     ADDITIONAL("9","drawables/cloud.png");
 
