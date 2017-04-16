@@ -30,7 +30,7 @@ class StationProvider {
 
         try {
 
-            Document doc = Jsoup.connect(String.format("http://fahrinfo.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&&input=%s&boardType=depRT&start=yes", Config.instance.TRANSPORT_STATIONS[counter].ID)).get();
+                Document doc = Jsoup.connect(String.format("http://fahrinfo.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&&input=%s&boardType=depRT&start=yes", Config.instance.TRANSPORT_STATIONS[counter].ID)).get();
             stationName = doc.getElementsByTag("strong").first().text();
 
             if (Strings.isNullOrEmpty(stationName))

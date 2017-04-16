@@ -55,6 +55,11 @@
                 <artifactId>jsoup</artifactId>
                 <version>LATEST</version>
         </dependency>
+        <dependency>
+            <groupId>net.sf.biweekly</groupId>
+            <artifactId>biweekly</artifactId>
+            <version>LATEST</version>
+        </dependency>
 
     </dependencies>
     

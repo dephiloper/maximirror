@@ -19,13 +19,16 @@ public class CalendarController {
     private List<String> list = new ArrayList<>();
     private boolean isRunning = true;
     private CalendarProvider calendarProvider = new CalendarProvider();
+    //private CalProvider calProvider = new CalProvider();
     private Task<ObservableList<String>> calendarTask = null;
+
     public void update() {
                 calendarTask = new Task<ObservableList<String>>() {
             protected ObservableList<String> call() throws InterruptedException, IOException {
                 while (isRunning) {
                     list.clear();
                     list = calendarProvider.getEvents();
+                    //calProvider.getEvents();
                     updateValue(FXCollections.observableArrayList(list));
                     TimeUnit.HOURS.sleep((long) Config.instance.CALENDAR_SLEEP_SECONDS);
                 }
