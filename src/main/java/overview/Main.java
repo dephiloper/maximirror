@@ -5,11 +5,19 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import tk.plogitech.darksky.api.jackson.DarkSkyJacksonClient;
 
+import java.beans.EventHandler;
+
 
 public class Main extends Application {
+    private final KeyCombination QUIT_KEYS = new KeyCodeCombination(KeyCode.Q,
+            KeyCombination.CONTROL_DOWN);
     private OverviewController overviewController;
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -21,7 +29,14 @@ public class Main extends Application {
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(Config.instance.ENABLE_FULLSCREEN);
-        primaryStage.show();
+
+        scene.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (QUIT_KEYS.match(event)) {
+                System.exit(0);
+            }
+        });
+
+                primaryStage.show();
         overviewController.init();
 
     }
