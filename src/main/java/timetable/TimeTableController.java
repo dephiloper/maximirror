@@ -31,8 +31,7 @@ public class TimeTableController {
                         Station station = stationProvider.fetchStation();
                         StationDataHelper stationDataHelper = new StationDataHelper(
                                 FXCollections.observableArrayList(station.getTransports()),
-                                station.getStationName()
-                                );
+                                station.getStationName());
 
                         updateValue(stationDataHelper);
 

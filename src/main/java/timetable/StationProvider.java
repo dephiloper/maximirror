@@ -8,6 +8,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -15,10 +17,12 @@ import java.util.Arrays;
 import java.util.List;
 
 class StationProvider {
-
+    private static long Millis = 0;
+    private static final String BVG_URI = "http://fahrinfo.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&&input=%s&boardType=depRT&start=yes";
     private List<String> transports;
     private String stationName;
     private int counter = 0;
+
 
     Station fetchStation() {
         if (counter == Config.instance.TRANSPORT_STATIONS.length)
@@ -30,7 +34,7 @@ class StationProvider {
 
         try {
 
-            Document doc = Jsoup.connect(String.format("http://fahrinfo.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&&input=%s&boardType=depRT&start=yes", Config.instance.TRANSPORT_STATIONS[counter].ID)).get();
+            Document doc = Jsoup.connect(String.format(BVG_URI, Config.instance.TRANSPORT_STATIONS[counter].ID)).get();
             stationName = doc.getElementsByTag("strong").first().text();
 
             if (Strings.isNullOrEmpty(stationName))
@@ -70,7 +74,8 @@ class StationProvider {
         catch (IOException e) {
             System.err.println(e.getMessage());
         }
-
+        System.out.printf("Sekunden: %d\n", (System.currentTimeMillis() - Millis) / 1000);
+        Millis = System.currentTimeMillis();
         return new Station(stationName, transports.subList(0, Config.instance.TIMETABLE_UPCOMING_TRANSPORT_COUNT));
     }
 }
