@@ -7,8 +7,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
 import timetable.TimeTableController;
-import weather.WeatherController;
+import forecast.ForecastController;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,9 +23,9 @@ public class OverviewController {
     @FXML
     public Parent timeTableWidget;
     @FXML
-    public Parent weatherWidget;
+    public Parent forecastWidget;
     @FXML
-    private WeatherController weatherWidgetController;
+    private ForecastController forecastWidgetController;
     @FXML
     private CalendarController calendarWidgetController;
     @FXML
@@ -45,8 +46,7 @@ public class OverviewController {
         if (Config.instance.SHOW_TIME || Config.instance.SHOW_DATE) updateDateTime();
         if (Config.instance.SHOW_CALENDAR) calendarWidgetController.update();
         if (Config.instance.SHOW_TIMETABLE) timeTableWidgetController.update();
-        if (Config.instance.SHOW_WEATHER) weatherWidgetController.update();
-        if (Config.instance.SHOW_FORECAST) weatherWidgetController.updateForecast();
+        if (Config.instance.SHOW_WEATHER) forecastWidgetController.update();
 
         createBindings();
 
@@ -70,7 +70,7 @@ public class OverviewController {
         timeTableWidget.visibleProperty().bind(visibilityDataHelper.showTimeTableProperty());
         time.visibleProperty().bind(visibilityDataHelper.showTimeProperty());
         date.visibleProperty().bind(visibilityDataHelper.showDateProperty());
-        weatherWidgetController.createBindings(visibilityDataHelper);
+        forecastWidgetController.createBindings(visibilityDataHelper);
     }
 
     private void updateDateTime() {
@@ -101,7 +101,7 @@ public class OverviewController {
         if (dateTimeTask.isRunning())
             dateTimeTask.cancel();
 
-        weatherWidgetController.stopRunning();
+        forecastWidgetController.stopRunning();
         calendarWidgetController.stopRunning();
         timeTableWidgetController.stopRunning();
     }

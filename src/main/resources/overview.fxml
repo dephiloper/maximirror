@@ -17,7 +17,7 @@
         </VBox>
     </left>
     <right>
-        <fx:include source="weatherWidget.fxml" alignment="CENTER_RIGHT" fx:id="weatherWidget"/>
+        <fx:include source="forecastWidget.fxml" alignment="CENTER_RIGHT" fx:id="forecastWidget"/>
     </right>
     <center>
         <Button fx:id="button">

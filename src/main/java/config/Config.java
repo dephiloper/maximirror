@@ -8,8 +8,8 @@ public class Config {
     public String APPLICATION_NAME;
     public int WINDOW_HEIGHT;
     public int WINDOW_WIDTH;
-    public String LOCATION_LAT;
-    public String LOCATION_LON;
+    public double LOCATION_LAT;
+    public double LOCATION_LON;
     public TransportStation[] TRANSPORT_STATIONS;
     public String API_KEY;
     public String TIME_FORMAT;

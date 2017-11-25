@@ -1,44 +1,42 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
-<FlowPane fx:controller="weather.WeatherController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="VERTICAL">
-    <VBox fx:id="weatherPane">
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Region?>
+<FlowPane fx:controller="forecast.ForecastController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="VERTICAL">
+    <VBox fx:id="forecastPane">
         <HBox alignment="CENTER_LEFT">
-            <padding><Insets top="0" right="100" bottom="0" left="0"/></padding>
-            <ImageView fx:id="weatherIcon" fitWidth="200" fitHeight="200"/>
-            <Label styleClass="label-suffix-margin, weather-main-font, icon-before-text-margin" fx:id="temp" />
+            <Label styleClass="label-suffix-margin, weather-main-font" fx:id="temperature" />
             <Label styleClass="label-margin, weather-main-font">°C</Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <ImageView fx:id="icon" fitHeight="100.0" fitWidth="100.0" layoutX="60.0" pickOnBounds="true"/>
         </HBox>
         <HBox>
-            <Label styleClass="label-margin, weather-font" fx:id="description"/>
-            <padding><Insets top="0" right="0" bottom="50" left="40"/></padding>        
+            <Label styleClass="label-margin, weather-font">Standort:</Label>
+            <Label styleClass="label-margin, weather-font" fx:id="timeZone"/>
         </HBox>
-        <HBox alignment="CENTER">
+        <HBox>
+            <Label styleClass="label-margin, weather-font" fx:id="summary"/>
+        </HBox>
+        <HBox>
             <Label styleClass="label-margin, weather-font">Wolken:</Label>
-            <Label styleClass="label-suffix-margin, weather-font" fx:id="clouds"/>
+            <Label styleClass="label-suffix-margin, weather-font" fx:id="cloudCover"/>
             <Label styleClass="label-margin, weather-font">%</Label>
         </HBox>
 
-        <HBox alignment="CENTER">
+        <HBox>
             <Label styleClass="label-margin, weather-font">Luftfeuchtigkeit:</Label>
             <Label styleClass="label-suffix-margin, weather-font" fx:id="humidity"/>
-	    <Label styleClass="label-margin, weather-font">%</Label>
+	        <Label styleClass="label-margin, weather-font">%</Label>
     	</HBox>
-    	<HBox alignment="CENTER">
+    	<HBox>
             <Label styleClass="label-margin, weather-font">Windgeschwindigkeit:</Label>
             <Label styleClass="label-suffix-margin, weather-font" fx:id="windSpeed"/>
             <Label styleClass="label-margin, weather-font">km/h</Label>
         </HBox>
-
-        <HBox alignment="CENTER">
-            <Label styleClass="label-margin, weather-font">Standort:</Label>
-            <Label styleClass="label-margin, weather-font" fx:id="currentLocation"/>
-        </HBox>
     </VBox>
-    <VBox fx:id="forecastPane" alignment="CENTER">
+    <!--<VBox fx:id="forecastPane" alignment="CENTER">
 	<VBox>
             <Label styleClass="subHeading, label-margin">Regenprognose:</Label>
             <HBox alignment="CENTER">
@@ -61,5 +59,5 @@
                 <Label styleClass="label-margin, weather-font" fx:id="tempForecastMax"/>
             </HBox>
         </VBox>
-    </VBox>
+    </VBox>-->
 </FlowPane>

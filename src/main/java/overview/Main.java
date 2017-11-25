@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import tk.plogitech.darksky.api.jackson.DarkSkyJacksonClient;
 
 
 public class Main extends Application {
