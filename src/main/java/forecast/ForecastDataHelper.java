@@ -3,30 +3,30 @@ package forecast;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
 
-    class ForecastDataHelper {
+class ForecastDataHelper {
     private DoubleProperty temperature = new SimpleDoubleProperty();
     private DoubleProperty windSpeed = new SimpleDoubleProperty();
-    private IntegerProperty windBearing = new SimpleIntegerProperty();
     private DoubleProperty cloudCover = new SimpleDoubleProperty();
     private StringProperty summary = new SimpleStringProperty();
     private StringProperty precipType = new SimpleStringProperty();
     private DoubleProperty humidity = new SimpleDoubleProperty();
     private StringProperty timeZone = new SimpleStringProperty();
     private ObjectProperty<Image> icon = new SimpleObjectProperty<>();
+    private StringProperty futureSummary = new SimpleStringProperty();
 
     ForecastDataHelper() {
     }
 
-    ForecastDataHelper(double temperature, double windSpeed, int windBearing, double cloudCover, String summary, String precipType, double humidity, String timeZone, Image icon) {
+    ForecastDataHelper(double temperature, double windSpeed, double cloudCover, String summary, String precipType, double humidity, String timeZone, Image icon, String futureSummary) {
         this.temperature.setValue(temperature);
         this.windSpeed.setValue(windSpeed);
-        this.windBearing.setValue(windBearing);
         this.cloudCover.setValue(cloudCover);
         this.summary.setValue(summary);
         this.precipType.setValue(precipType);
         this.humidity.setValue(humidity);
         this.timeZone.setValue(timeZone);
         this.icon.setValue(icon);
+        this.futureSummary.setValue(futureSummary);
     }
 
     double getTemperature() {
@@ -43,10 +43,6 @@ import javafx.scene.image.Image;
 
     DoubleProperty windSpeedProperty() {
         return windSpeed;
-    }
-
-    int getWindBearing() {
-        return windBearing.get();
     }
 
     DoubleProperty cloudCoverProperty() {
@@ -89,17 +85,25 @@ import javafx.scene.image.Image;
         return timeZone;
     }
 
+    StringProperty futureSummaryProperty() {
+            return futureSummary;
+    }
+
+    String getFutureSummary() {
+        return futureSummary.get();
+    }
+
     Image getIcon() { return icon.get(); }
 
-        void reinitialize(double temperature, double windSpeed, int windBearing, double cloudCover, String summary, String precipType, double humidity, String timeZone, Image weatherIcon) {
+        void reinitialize(double temperature, double windSpeed, double cloudCover, String summary, String precipType, double humidity, String timeZone, Image icon, String futureSummary) {
         this.temperature.setValue(temperature);
         this.windSpeed.setValue(windSpeed);
-        this.windBearing.setValue(windBearing);
         this.cloudCover.setValue(cloudCover);
         this.summary.setValue(summary);
         this.precipType.setValue(precipType);
         this.humidity.setValue(humidity);
         this.timeZone.setValue(timeZone);
-        this.icon.setValue(weatherIcon);
-    }
+        this.icon.setValue(icon);
+        this.futureSummary.setValue(futureSummary);
+        }
 }

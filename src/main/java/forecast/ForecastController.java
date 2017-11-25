@@ -12,10 +12,15 @@ import javafx.util.Duration;
 import overview.VisibilityDataHelper;
 import tk.plogitech.darksky.forecast.model.Currently;
 import tk.plogitech.darksky.forecast.model.Forecast;
+import tk.plogitech.darksky.forecast.model.Hourly;
 
 public class ForecastController {
     @FXML
     public VBox forecastPane;
+    @FXML
+    public Label futureSummary;
+    @FXML
+    private Label temperature;
     @FXML
     private Label windSpeed;
     @FXML
@@ -26,8 +31,6 @@ public class ForecastController {
     private Label humidity;
     @FXML
     private Label timeZone;
-    @FXML
-    private Label temperature;
     @FXML
     private ImageView icon;
 
@@ -49,16 +52,18 @@ public class ForecastController {
                             return null;
                         }
                         Currently currently = forecast.getCurrently();
+                        Hourly hourly = forecast.getHourly();
                         ForecastDataHelper forecastDataHelper = new ForecastDataHelper(
                                 currently.getTemperature(),
                                 currently.getWindSpeed(),
-                                currently.getWindBearing(),
                                 currently.getCloudCover(),
                                 currently.getSummary(),
                                 currently.getPrecipType(),
                                 currently.getHumidity(),
                                 forecast.getTimezone(),
-                                forecastProvider.convertSvg(currently.getIcon()));
+                                forecastProvider.convertSvg(currently.getIcon()),
+                                hourly.getSummary()
+                                );
 
                         updateValue(forecastDataHelper);
                         return forecastDataHelper;
@@ -73,13 +78,13 @@ public class ForecastController {
         forecastService.setOnSucceeded(event -> forecastDataHelper.reinitialize(
         forecastService.getValue().getTemperature(),
         forecastService.getValue().getWindSpeed(),
-        forecastService.getValue().getWindBearing(),
         forecastService.getValue().getCloudCover(),
         forecastService.getValue().getSummary(),
         forecastService.getValue().getPrecipType(),
         forecastService.getValue().getHumidity(),
         forecastService.getValue().getTimeZone(),
-        forecastService.getValue().getIcon()));
+        forecastService.getValue().getIcon(),
+        forecastService.getValue().getFutureSummary()));
 
         temperature.textProperty().bind(forecastDataHelper.temperatureProperty().asString("%.2f"));
         windSpeed.textProperty().bind(forecastDataHelper.windSpeedProperty().asString("%.2f"));
@@ -87,8 +92,8 @@ public class ForecastController {
         summary.textProperty().bind(forecastDataHelper.summaryProperty());
         humidity.textProperty().bind(forecastDataHelper.humidityProperty().asString("%.0f"));
         timeZone.textProperty().bind(forecastDataHelper.timeZoneProperty());
+        futureSummary.textProperty().bind(forecastDataHelper.futureSummaryProperty());
         Bindings.bindBidirectional(this.icon.imageProperty(), forecastDataHelper.iconProperty());
-        //icon.imageProperty().bindBidirectional(forecastDataHelper.getIcon());
     }
 
     public void stopRunning() {
