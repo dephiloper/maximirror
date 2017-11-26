@@ -23,11 +23,18 @@ public class Config {
     public boolean SHOW_CALENDAR;
     public boolean SHOW_DATE;
     public boolean SHOW_TIMETABLE;
-    public boolean SHOW_WEATHER;
     public boolean SHOW_FORECAST;
     public boolean ENABLE_FULLSCREEN;
     public transient static Config instance;
     public String DATE_FORMAT;
+
+    public class TransportStation {
+        public String ID;
+        public String[] LINE_NAME_FILTER;
+        public Long WALK_DURATION_MINUTES;
+    }
+
+    private static final String CONFIG_PATH = "/config.json";
 
     public static void create() {
         if (instance == null)
@@ -39,7 +46,7 @@ public class Config {
         Config config = null;
 
         InputStream in =
-                Config.class.getResourceAsStream("/config.json");
+                Config.class.getResourceAsStream(CONFIG_PATH);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             StringBuilder content = new StringBuilder();
@@ -57,12 +64,5 @@ public class Config {
 
 
         return config;
-    }
-
-
-    public class TransportStation {
-        public String ID;
-        public String[] LINE_NAME_FILTER;
-        public Long WALK_DURATION_MINUTES;
     }
 }

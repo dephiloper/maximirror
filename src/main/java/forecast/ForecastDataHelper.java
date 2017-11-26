@@ -18,6 +18,10 @@ class ForecastDataHelper {
     }
 
     ForecastDataHelper(double temperature, double windSpeed, double cloudCover, String summary, String precipType, double humidity, String timeZone, Image icon, String futureSummary) {
+        reinitialize(temperature, windSpeed, cloudCover, summary, precipType, humidity, timeZone, icon, futureSummary);
+    }
+
+    void reinitialize(double temperature, double windSpeed, double cloudCover, String summary, String precipType, double humidity, String timeZone, Image icon, String futureSummary) {
         this.temperature.setValue(temperature);
         this.windSpeed.setValue(windSpeed);
         this.cloudCover.setValue(cloudCover);
@@ -94,16 +98,4 @@ class ForecastDataHelper {
     }
 
     Image getIcon() { return icon.get(); }
-
-        void reinitialize(double temperature, double windSpeed, double cloudCover, String summary, String precipType, double humidity, String timeZone, Image icon, String futureSummary) {
-        this.temperature.setValue(temperature);
-        this.windSpeed.setValue(windSpeed);
-        this.cloudCover.setValue(cloudCover);
-        this.summary.setValue(summary);
-        this.precipType.setValue(precipType);
-        this.humidity.setValue(humidity);
-        this.timeZone.setValue(timeZone);
-        this.icon.setValue(icon);
-        this.futureSummary.setValue(futureSummary);
-        }
 }

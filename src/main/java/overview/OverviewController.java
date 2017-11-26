@@ -2,12 +2,11 @@ package overview;
 
 import calendar.CalendarController;
 import config.Config;
+import interfaces.Controller;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
 import timetable.TimeTableController;
 import forecast.ForecastController;
 
@@ -16,7 +15,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
-public class OverviewController {
+public class OverviewController implements Controller {
 
     @FXML
     public Parent calendarWidget;
@@ -34,46 +33,25 @@ public class OverviewController {
     private Label time;
     @FXML
     private Label date;
-    @FXML
-    private Button button;
 
     private VisibilityDataHelper visibilityDataHelper = new VisibilityDataHelper();
     private Task<String> dateTimeTask;
     private boolean isRunning;
 
-    void init(){
+    @Override
+    public void init(){
         isRunning = true;
-        if (Config.instance.SHOW_TIME || Config.instance.SHOW_DATE) updateDateTime();
-        if (Config.instance.SHOW_CALENDAR) calendarWidgetController.update();
-        if (Config.instance.SHOW_TIMETABLE) timeTableWidgetController.update();
-        if (Config.instance.SHOW_WEATHER) forecastWidgetController.update();
-
+        startUpdate();
+        forecastWidgetController.startUpdate();
+        calendarWidgetController.startUpdate();
+        timeTableWidgetController.startUpdate();
         createBindings();
-
-        button.setOnAction(actionEvent -> {
-            if (isRunning)
-                stopRunning();
-            else
-                init();
-
-            visibilityDataHelper.setShowTime(!visibilityDataHelper.isShowTime());
-            visibilityDataHelper.setShowDate(!visibilityDataHelper.isShowDate());
-            visibilityDataHelper.setShowCalendar(!visibilityDataHelper.isShowCalendar());
-            visibilityDataHelper.setShowForecast(!visibilityDataHelper.isShowForecast());
-            visibilityDataHelper.setShowWeather(!visibilityDataHelper.isShowWeather());
-            visibilityDataHelper.setShowTimeTable(!visibilityDataHelper.isShowTimeTable());
-        });
     }
 
-    private void createBindings() {
-        calendarWidget.visibleProperty().bind(visibilityDataHelper.showCalendarProperty());
-        timeTableWidget.visibleProperty().bind(visibilityDataHelper.showTimeTableProperty());
-        time.visibleProperty().bind(visibilityDataHelper.showTimeProperty());
-        date.visibleProperty().bind(visibilityDataHelper.showDateProperty());
-        forecastWidgetController.createBindings(visibilityDataHelper);
-    }
-
-    private void updateDateTime() {
+    @Override
+    public void startUpdate() {
+        if (!(Config.instance.SHOW_TIME || Config.instance.SHOW_DATE))
+            return;
 
         dateTimeTask = new Task<String>() {
             @Override
@@ -84,22 +62,33 @@ public class OverviewController {
                 if (Config.instance.SHOW_DATE)
                     updateTitle(LocalDate.now().format(DateTimeFormatter.ofPattern(Config.instance.DATE_FORMAT)));
 
-                TimeUnit.MILLISECONDS.sleep((long) (Config.instance.CLOCK_SLEEP_SECONDS*1000));
+                TimeUnit.SECONDS.sleep((long) (Config.instance.CLOCK_SLEEP_SECONDS));
             }
 
-            return null;
+            return LocalTime.now().format(DateTimeFormatter.ofPattern(Config.instance.TIME_FORMAT));
             }
         };
 
-        date.textProperty().bind(dateTimeTask.titleProperty());
-        time.textProperty().bind(dateTimeTask.valueProperty());
         new Thread(dateTimeTask).start();
     }
 
-    void stopRunning() {
+    @Override
+    public void createBindings() {
+        forecastWidget.visibleProperty().bind(visibilityDataHelper.showForecastProperty());
+        calendarWidget.visibleProperty().bind(visibilityDataHelper.showCalendarProperty());
+        timeTableWidget.visibleProperty().bind(visibilityDataHelper.showTimeTableProperty());
+        time.visibleProperty().bind(visibilityDataHelper.showTimeProperty());
+        date.visibleProperty().bind(visibilityDataHelper.showDateProperty());
+        date.textProperty().bind(dateTimeTask.titleProperty());
+        time.textProperty().bind(dateTimeTask.valueProperty());
+    }
+
+    @Override
+    public void stopRunning() {
         isRunning = false ;
-        if (dateTimeTask.isRunning())
-            dateTimeTask.cancel();
+        if (dateTimeTask != null)
+            if (dateTimeTask.isRunning())
+                dateTimeTask.cancel();
 
         forecastWidgetController.stopRunning();
         calendarWidgetController.stopRunning();

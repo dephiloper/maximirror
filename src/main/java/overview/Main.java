@@ -18,15 +18,19 @@ import java.beans.EventHandler;
 public class Main extends Application {
     private final KeyCombination QUIT_KEYS = new KeyCodeCombination(KeyCode.Q,
             KeyCombination.CONTROL_DOWN);
+    private final String OVERVIEW_FXML = "/overview.fxml";
+    private final String STYLE = "style.css";
+
     private OverviewController overviewController;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         Config.create();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/overview.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(OVERVIEW_FXML));
         Parent root = loader.load();
         overviewController = loader.getController();
         Scene scene = new Scene(root,Config.instance.WINDOW_WIDTH,Config.instance.WINDOW_HEIGHT);
-        scene.getStylesheets().add("style.css");
+        scene.getStylesheets().add(STYLE);
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(Config.instance.ENABLE_FULLSCREEN);
 
@@ -36,7 +40,7 @@ public class Main extends Application {
             }
         });
 
-                primaryStage.show();
+        primaryStage.show();
         overviewController.init();
 
     }

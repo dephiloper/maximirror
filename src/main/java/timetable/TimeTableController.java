@@ -1,8 +1,8 @@
 package timetable;
 
 import config.Config;
+import interfaces.Controller;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -10,29 +10,41 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.util.Duration;
 
-import java.time.LocalDateTime;
-
-public class TimeTableController {
+public class TimeTableController implements Controller {
     @FXML
     public Label stationName;
     @FXML
     private ListView<String> transportsListView;
+
     private final StationProvider stationProvider = new StationProvider();
     private final StationDataHelper stationDataHelper = new StationDataHelper();
     private ScheduledService<StationDataHelper> timeTableService;
 
-    public void update() {
+    @Override
+    public void init() {
+        createBindings();
+    }
+    @Override
+    public void startUpdate() {
+        if (!Config.instance.SHOW_TIMETABLE) return;
+
+        stationProvider.fetchStationsCyclical();
         timeTableService = new ScheduledService<StationDataHelper>() {
             @Override
             protected Task<StationDataHelper> createTask() {
                 return new Task<StationDataHelper>() {
                     @Override
                     protected StationDataHelper call() throws Exception {
-                        Station station = stationProvider.fetchStation();
-                        StationDataHelper stationDataHelper = new StationDataHelper(
-                                FXCollections.observableArrayList(station.getTransports()),
-                                station.getStationName());
+                        Station station = stationProvider.provideData();
+                        StationDataHelper stationDataHelper;
 
+                        if (station != null) {
+                            stationDataHelper = new StationDataHelper(FXCollections.observableArrayList(
+                                    station.getTransports()),
+                                    station.getStationName());
+                        } else {
+                            stationDataHelper = stationProvider.getPlaceholderDataHelper();
+                        }
                         updateValue(stationDataHelper);
 
                         return stationDataHelper;
@@ -40,6 +52,7 @@ public class TimeTableController {
                 };
             }
         };
+        init();
         timeTableService.setPeriod(Duration.seconds(Config.instance.TIMETABLE_SLEEP_SECONDS));
         timeTableService.start();
 
@@ -47,14 +60,18 @@ public class TimeTableController {
             timeTableService.getValue().getTransports(),
             timeTableService.getValue().getStationName()
         ));
-
-        stationName.textProperty().bind(stationDataHelper.stationNameProperty());
-        transportsListView.itemsProperty().bind(stationDataHelper.transportsProperty());
     }
 
     public void stopRunning() {
-        if (timeTableService.isRunning())
-            timeTableService.cancel();
+        if (timeTableService != null)
+            if (timeTableService.isRunning())
+                timeTableService.cancel();
+        stationProvider.setRunning(false);
+    }
 
+    @Override
+    public void createBindings() {
+        stationName.textProperty().bind(stationDataHelper.stationNameProperty());
+        transportsListView.itemsProperty().bind(stationDataHelper.transportsProperty());
     }
 }

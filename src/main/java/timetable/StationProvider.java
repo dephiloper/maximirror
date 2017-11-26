@@ -2,80 +2,113 @@ package timetable;
 
 import com.google.common.base.Strings;
 import config.Config;
+import interfaces.Provider;
+import javafx.collections.FXCollections;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.security.Timestamp;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-class StationProvider {
-    private static long Millis = 0;
+class StationProvider implements Provider<Station> {
     private static final String BVG_URI = "http://fahrinfo.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&&input=%s&boardType=depRT&start=yes";
-    private List<String> transports;
+    private final Station[] stations;
     private String stationName;
-    private int counter = 0;
+    private int currentFetchedStationIndex = 0;
+    private int providedStationIndex = 0;
+    private int stationCount = Config.instance.TRANSPORT_STATIONS.length;
+    private boolean isRunning = true;
 
+    void setRunning(boolean isRunning) {
+        this.isRunning = isRunning;
+    }
 
-    Station fetchStation() {
-        if (counter == Config.instance.TRANSPORT_STATIONS.length)
-            counter = 0;
-        else
-            counter++;
+    StationProvider() {
+        stations = new Station[stationCount];
+        fetchStationsCyclical();
+    }
 
-        if (Strings.isNullOrEmpty(Config.instance.TRANSPORT_STATIONS[counter].ID)) return null;
+    void fetchStationsCyclical() {
+        new Thread(() -> {
+            while (isRunning) {
+                String currentStationId = Config.instance.TRANSPORT_STATIONS[currentFetchedStationIndex].ID;
+                if (Strings.isNullOrEmpty(currentStationId)) return;
 
-        try {
+                try {
+                    Document doc = Jsoup.connect(String.format(BVG_URI, currentStationId)).get();
+                    stationName = doc.getElementsByTag("strong").first().text();
 
-            Document doc = Jsoup.connect(String.format(BVG_URI, Config.instance.TRANSPORT_STATIONS[counter].ID)).get();
-            stationName = doc.getElementsByTag("strong").first().text();
+                    if (Strings.isNullOrEmpty(stationName))
+                    {
+                        System.err.println(String.format("Station %s does not exist.",  currentStationId));
+                        return;
+                    }
 
-            if (Strings.isNullOrEmpty(stationName))
-            {
-                System.err.println(String.format("Station %s does not exist.",  Config.instance.TRANSPORT_STATIONS[counter].ID));
-                return null;
-            }
+                    Element table = doc.select("table").get(0); //select the first table.
+                    Elements rows = table.select("tr");
 
-            Element table = doc.select("table").get(0); //select the first table.
-            Elements rows = table.select("tr");
+                    List<String> transports = new ArrayList<>();
+                    for (Element row : rows) {
+                        if (row.getElementsByTag("strong").size() > 0) {
+                            Transport transport = new Transport();
+                            LocalTime time = LocalTime.parse(row.getElementsByTag("strong").get(0).text().replace(" *",""));
+                            long arrivalTime = ChronoUnit.MINUTES.between(LocalTime.now(),time);
+                            String lineName = row.getElementsByTag("strong").get(1).text().replace("Tram ", "");
+                            String[] lineNameFilters = Config.instance.TRANSPORT_STATIONS[currentFetchedStationIndex].LINE_NAME_FILTER;
+                            boolean isLineNameMatching = Arrays.asList(lineNameFilters).contains(lineName);
 
-            transports = new ArrayList<>();
-
-            for (Element row : rows) {
-                if (row.getElementsByTag("strong").size() > 0) {
-                    Transport transport = new Transport();
-                    LocalTime time = LocalTime.parse(row.getElementsByTag("strong").get(0).text().replace(" *",""));
-                    long arrivalTime = ChronoUnit.MINUTES.between(LocalTime.now(),time);
-                    String lineName = row.getElementsByTag("strong").get(1).text().replace("Tra ", "");
-                    boolean isLineNameMatching = Arrays.asList(Config.instance.TRANSPORT_STATIONS[counter].LINE_NAME_FILTER).contains(lineName);
-
-                    if (Config.instance.TRANSPORT_STATIONS[counter].LINE_NAME_FILTER.length == 0 ||
-                            Config.instance.TRANSPORT_STATIONS[counter].LINE_NAME_FILTER[0].equals("ALL") ||
-                            isLineNameMatching) {
-                        if (arrivalTime > Config.instance.TRANSPORT_STATIONS[counter].WALK_DURATION_MINUTES) {
-                            transport.setArrivalTime(arrivalTime);
-                            transport.setTime(time);
-                            transport.setLineName(lineName);
-                            transport.setDirection(row.getElementsByTag("td").get(2).text());
-                            transports.add(transport.toString());
+                            if (lineNameFilters.length == 0 ||
+                                    Arrays.asList(lineNameFilters).contains("ALL") ||
+                                    isLineNameMatching) {
+                                if (arrivalTime > Config.instance.TRANSPORT_STATIONS[currentFetchedStationIndex].WALK_DURATION_MINUTES) {
+                                    transport.setTime(time);
+                                    transport.setLineName(lineName);
+                                    transport.setDirection(row.getElementsByTag("td").get(2).text());
+                                    transports.add(transport.toString());
+                                }
+                            }
                         }
                     }
+                    synchronized(stations) {
+                        if (transports.size() > Config.instance.TIMETABLE_UPCOMING_TRANSPORT_COUNT)
+                            transports = transports.subList(0, Config.instance.TIMETABLE_UPCOMING_TRANSPORT_COUNT);
+                        stations[currentFetchedStationIndex] = new Station(stationName, transports);
+                    }
                 }
-            }
+                catch (IOException e) {
+                    System.err.println(e.getMessage());
+                }
 
-        }
-        catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-        System.out.printf("Sekunden: %d\n", (System.currentTimeMillis() - Millis) / 1000);
-        Millis = System.currentTimeMillis();
-        return new Station(stationName, transports.subList(0, Config.instance.TIMETABLE_UPCOMING_TRANSPORT_COUNT));
+                if (currentFetchedStationIndex == stationCount-1) {
+                    try {
+                        TimeUnit.MINUTES.sleep(1);
+                    }
+                    catch (InterruptedException e) {
+                        System.err.println(e.getMessage());
+                    }
+                }
+
+                currentFetchedStationIndex = (currentFetchedStationIndex+1) % stationCount;
+            }
+        }).start();
+    }
+
+    StationDataHelper getPlaceholderDataHelper() {
+        return new StationDataHelper(FXCollections.observableArrayList(
+                "Fetching Data","Fetching Data", "Fetching Data"),"Please Stand By");
+    }
+
+    @Override
+    synchronized public Station provideData() {
+        Station providedStation = stations[providedStationIndex];
+        providedStationIndex = (providedStationIndex+1) % stationCount;
+        return providedStation;
     }
 }

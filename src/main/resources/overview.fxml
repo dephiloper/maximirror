@@ -2,7 +2,6 @@
 <?import javafx.scene.control.Label?>
 
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Button?>
 <BorderPane fx:controller="overview.OverviewController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" styleClass="overview">
     <top>
         <VBox alignment="CENTER">
@@ -19,9 +18,4 @@
     <right>
         <fx:include source="forecastWidget.fxml" alignment="CENTER_RIGHT" fx:id="forecastWidget"/>
     </right>
-    <center>
-        <Button fx:id="button">
-            Shutdown
-        </Button>
-    </center>
 </BorderPane>

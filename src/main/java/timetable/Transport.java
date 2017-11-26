@@ -1,32 +1,28 @@
 package timetable;
 
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 public class Transport {
     private String lineName;
-    private LocalTime time;
     private long arrivalTime;
     private String direction;
+    private LocalTime time;
 
     void setLineName(String lineName) {
         this.lineName = lineName;
-    }
-
-    void setTime(LocalTime time) {
-        this.time = time;
     }
 
     void setDirection(String direction) {
         this.direction = direction;
     }
 
-    void setArrivalTime(long arrivalTime) {
-
-        this.arrivalTime = arrivalTime;
+    void setTime(LocalTime time) {
+        this.time = time;
     }
 
     @Override
     public String toString() {
-        return String.format("%s - %s - in %s min", lineName, direction, arrivalTime);
+        return String.format("%s - %s - in %s min", lineName, direction, ChronoUnit.MINUTES.between(LocalTime.now(),time));
     }
 }

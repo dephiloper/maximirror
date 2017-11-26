@@ -14,8 +14,7 @@ class StationDataHelper {
     }
 
     StationDataHelper(ObservableList<String> transports, String stationName) {
-        this.transports.setValue(transports);
-        this.stationName.setValue(stationName);
+        reinitialize(transports,stationName);
     }
 
     void reinitialize(ObservableList<String> transports, String stationName) {
