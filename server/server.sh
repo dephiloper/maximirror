@@ -13,4 +13,6 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 MAIN=${DIR}/main.py
 echo running ${MAIN}...
 export FLASK_APP=$MAIN
-flask run
+
+# make it visible across the network with --host=0.0.0.0
+flask run --host=0.0.0.0
