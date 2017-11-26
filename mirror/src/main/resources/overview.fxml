@@ -1,0 +1,21 @@
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Label?>
+
+<?import javafx.scene.layout.VBox?>
+<BorderPane fx:controller="overview.OverviewController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" styleClass="overview">
+    <top>
+        <VBox alignment="CENTER">
+            <Label fx:id="time" styleClass="clock-font"/>
+            <Label fx:id="date" styleClass="clock-font"/>
+        </VBox>
+    </top>
+    <left>
+        <VBox alignment="CENTER_LEFT">
+            <fx:include source="calendarWidget.fxml" alignment="CENTER_LEFT" fx:id="calendarWidget"/>
+            <fx:include source="timeTableWidget.fxml" alignment="TOP_LEFT" fx:id="timeTableWidget"/>
+        </VBox>
+    </left>
+    <right>
+        <fx:include source="forecastWidget.fxml" alignment="CENTER_RIGHT" fx:id="forecastWidget"/>
+    </right>
+</BorderPane>
