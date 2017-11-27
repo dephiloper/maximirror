@@ -18,4 +18,7 @@
     <right>
         <fx:include source="forecastWidget.fxml" alignment="CENTER_RIGHT" fx:id="forecastWidget"/>
     </right>
+    <center>
+        <fx:include source="newsWidget.fxml" alignment="BOTTOM_CENTER" fx:id="newsWidget"/>
+    </center>
 </BorderPane>

@@ -28,7 +28,6 @@ public class TimeTableController implements Controller {
     public void startUpdate() {
         if (!Config.instance.SHOW_TIMETABLE) return;
 
-        stationProvider.fetchStationsCyclical();
         timeTableService = new ScheduledService<StationDataHelper>() {
             @Override
             protected Task<StationDataHelper> createTask() {
@@ -36,7 +35,7 @@ public class TimeTableController implements Controller {
                     @Override
                     protected StationDataHelper call() throws Exception {
                         Station station = stationProvider.provideData();
-                        StationDataHelper stationDataHelper;
+                        StationDataHelper stationDataHelper = null;
 
                         if (station != null) {
                             stationDataHelper = new StationDataHelper(FXCollections.observableArrayList(

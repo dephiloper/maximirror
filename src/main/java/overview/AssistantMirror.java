@@ -15,7 +15,7 @@ import tk.plogitech.darksky.api.jackson.DarkSkyJacksonClient;
 import java.beans.EventHandler;
 
 
-public class Main extends Application {
+public class AssistantMirror extends Application {
     private final KeyCombination QUIT_KEYS = new KeyCodeCombination(KeyCode.Q,
             KeyCombination.CONTROL_DOWN);
     private final String OVERVIEW_FXML = "/overview.fxml";

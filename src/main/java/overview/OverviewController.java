@@ -7,6 +7,8 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
+import news.NewsController;
 import timetable.TimeTableController;
 import forecast.ForecastController;
 
@@ -24,11 +26,15 @@ public class OverviewController implements Controller {
     @FXML
     public Parent forecastWidget;
     @FXML
+    public Parent newsWidget;
+    @FXML
     private ForecastController forecastWidgetController;
     @FXML
     private CalendarController calendarWidgetController;
     @FXML
     private TimeTableController timeTableWidgetController;
+    @FXML
+    private NewsController newsWidgetController;
     @FXML
     private Label time;
     @FXML
@@ -42,9 +48,11 @@ public class OverviewController implements Controller {
     public void init(){
         isRunning = true;
         startUpdate();
+
         forecastWidgetController.startUpdate();
         calendarWidgetController.startUpdate();
         timeTableWidgetController.startUpdate();
+        newsWidgetController.startUpdate();
         createBindings();
     }
 

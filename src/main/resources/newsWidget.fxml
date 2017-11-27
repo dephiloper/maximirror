@@ -1,0 +1,9 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<FlowPane fx:controller="news.NewsController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
+    <VBox>
+        <Label styleClass="calendar-main-font, label-time-margin">News</Label>
+        <Label styleClass="calendar-main-font, label-time-margin" fx:id="news"/>
+    </VBox>
+</FlowPane>
