@@ -65,7 +65,6 @@ public class TimeTableController implements Controller {
         if (timeTableService != null)
             if (timeTableService.isRunning())
                 timeTableService.cancel();
-        stationProvider.setRunning(false);
     }
 
     @Override

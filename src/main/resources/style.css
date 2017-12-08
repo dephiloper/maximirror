@@ -1,38 +1,49 @@
 @font-face {
     font-family: 'Orbitron';
-    src: url('Orbitron-Medium.ttf');
+    src: url('fonts/Orbitron-Medium.ttf');
 }
 @font-face {
     font-family: 'Roboto';
-    src: url('Roboto-Light.ttf');
+    src: url('fonts/Roboto-Light.ttf');
+}
+
+@font-face {
+    font-family: 'Open Sans Condensed';
+    src: url('fonts/OpenSansCondensed-Light.ttf');
 }
 
 .clock-font {
-    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-family: 'Open Sans Condensed';
     -fx-font-size:60px;
     -fx-text-fill: white;
 }
 
+.date-font {
+    -fx-font-family: 'Open Sans Condensed';
+    -fx-font-size:40px;
+    -fx-text-fill: white;
+}
+
 .weather-font {
-    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-family: 'Open Sans Condensed';
     -fx-font-size: 20px;
     -fx-text-fill: white;
 }
 
 .weather-main-font {
-    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-family: 'Open Sans Condensed';
     -fx-font-size: 40px;
     -fx-text-fill: white;
 }
 
 .calendar-font {
-    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-family: 'Open Sans Condensed';
     -fx-font-size: 20px;
     -fx-text-fill: white;
 }
 
 .calendar-main-font {
-    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-family: 'Open Sans Condensed';
     -fx-font-size: 30px;
     -fx-text-fill: white;
 }
@@ -68,7 +79,7 @@
 
 .list-cell {
     -fx-background-color: black;
-    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-family: 'Open Sans Condensed';
     -fx-font-size: 20px;
     -fx-text-fill: white;
 }
@@ -86,7 +97,7 @@
 }
 
 .subHeading {
-    -fx-font-size: 30px;
-    -fx-font-family: Roboto;
+    -fx-font-family: 'Open Sans Condensed';
+    -fx-font-size: 20px;
     -fx-text-fill: white;
 }

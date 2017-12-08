@@ -46,7 +46,7 @@ class ForecastProvider implements Provider<Forecast> {
     @Override
     public Forecast provideData() {
         ForecastRequest request = new ForecastRequestBuilder()
-                .key(new APIKey(Config.instance.API_KEY))
+                .key(new APIKey(Config.instance.WEATHER_API_KEY))
                 .location(new GeoCoordinates(new Longitude(Config.instance.LOCATION_LON), new Latitude(Config.instance.LOCATION_LAT))).build();
 
         DarkSkyJacksonClient client = new DarkSkyJacksonClient();

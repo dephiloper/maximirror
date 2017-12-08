@@ -2,7 +2,6 @@ package news;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 
 class NewsDataHelper {
     private StringProperty source = new SimpleStringProperty();
@@ -40,10 +39,10 @@ class NewsDataHelper {
     }
 
     StringProperty titleProperty() {
-        return description;
+        return title;
     }
 
     StringProperty sourceProperty() {
-        return description;
+        return source;
     }
 }

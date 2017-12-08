@@ -15,39 +15,36 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 class StationProvider implements Provider<Station> {
     private static final String BVG_URI = "http://fahrinfo.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&&input=%s&boardType=depRT&start=yes";
     private final Station[] stations;
     private String stationName;
-    private int currentFetchedStationIndex = 0;
     private int providedStationIndex = 0;
     private int stationCount = Config.instance.TRANSPORT_STATIONS.length;
-    private boolean isRunning = true;
 
-    void setRunning(boolean isRunning) {
-        this.isRunning = isRunning;
-    }
 
     StationProvider() {
         stations = new Station[stationCount];
         fetchStationsCyclical();
     }
 
-    void fetchStationsCyclical() {
-        new Thread(() -> {
-            while (isRunning) {
-                String currentStationId = Config.instance.TRANSPORT_STATIONS[currentFetchedStationIndex].ID;
+    private void fetchStationsCyclical() {
+        ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
+        executorService.scheduleAtFixedRate(() -> {
+            for (int i = 0; i < stationCount; i++) {
+                String currentStationId = Config.instance.TRANSPORT_STATIONS[i].ID;
                 if (Strings.isNullOrEmpty(currentStationId)) return;
 
                 try {
                     Document doc = Jsoup.connect(String.format(BVG_URI, currentStationId)).get();
                     stationName = doc.getElementsByTag("strong").first().text();
 
-                    if (Strings.isNullOrEmpty(stationName))
-                    {
-                        System.err.println(String.format("Station %s does not exist.",  currentStationId));
+                    if (Strings.isNullOrEmpty(stationName)) {
+                        System.err.println(String.format("Station %s does not exist.", currentStationId));
                         return;
                     }
 
@@ -58,16 +55,16 @@ class StationProvider implements Provider<Station> {
                     for (Element row : rows) {
                         if (row.getElementsByTag("strong").size() > 0) {
                             Transport transport = new Transport();
-                            LocalTime time = LocalTime.parse(row.getElementsByTag("strong").get(0).text().replace(" *",""));
-                            long arrivalTime = ChronoUnit.MINUTES.between(LocalTime.now(),time);
+                            LocalTime time = LocalTime.parse(row.getElementsByTag("strong").get(0).text().replace(" *", ""));
+                            long arrivalTime = ChronoUnit.MINUTES.between(LocalTime.now(), time);
                             String lineName = row.getElementsByTag("strong").get(1).text().replace("Tram ", "");
-                            String[] lineNameFilters = Config.instance.TRANSPORT_STATIONS[currentFetchedStationIndex].LINE_NAME_FILTER;
+                            String[] lineNameFilters = Config.instance.TRANSPORT_STATIONS[i].LINE_NAME_FILTER;
                             boolean isLineNameMatching = Arrays.asList(lineNameFilters).contains(lineName);
 
                             if (lineNameFilters.length == 0 ||
                                     Arrays.asList(lineNameFilters).contains("ALL") ||
                                     isLineNameMatching) {
-                                if (arrivalTime > Config.instance.TRANSPORT_STATIONS[currentFetchedStationIndex].WALK_DURATION_MINUTES) {
+                                if (arrivalTime > Config.instance.TRANSPORT_STATIONS[i].WALK_DURATION_MINUTES) {
                                     transport.setTime(time);
                                     transport.setLineName(lineName);
                                     transport.setDirection(row.getElementsByTag("td").get(2).text());
@@ -76,28 +73,16 @@ class StationProvider implements Provider<Station> {
                             }
                         }
                     }
-                    synchronized(stations) {
+                    synchronized (stations) {
                         if (transports.size() > Config.instance.TIMETABLE_UPCOMING_TRANSPORT_COUNT)
                             transports = transports.subList(0, Config.instance.TIMETABLE_UPCOMING_TRANSPORT_COUNT);
-                        stations[currentFetchedStationIndex] = new Station(stationName, transports);
+                        stations[i] = new Station(stationName, transports);
                     }
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     System.err.println(e.getMessage());
                 }
-
-                if (currentFetchedStationIndex == stationCount-1) {
-                    try {
-                        TimeUnit.MINUTES.sleep(1);
-                    }
-                    catch (InterruptedException e) {
-                        System.err.println(e.getMessage());
-                    }
-                }
-
-                currentFetchedStationIndex = (currentFetchedStationIndex+1) % stationCount;
             }
-        }).start();
+        }, 0,1, TimeUnit.MINUTES);
     }
 
     StationDataHelper getPlaceholderDataHelper() {

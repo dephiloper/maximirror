@@ -9,7 +9,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import tk.plogitech.darksky.api.jackson.DarkSkyJacksonClient;
 
 import java.beans.EventHandler;
@@ -34,6 +36,10 @@ public class AssistantMirror extends Application {
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(Config.instance.ENABLE_FULLSCREEN);
 
+        primaryStage.setOnCloseRequest(event -> {
+            stop();
+        });
+
         scene.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (QUIT_KEYS.match(event)) {
                 System.exit(0);
@@ -44,6 +50,7 @@ public class AssistantMirror extends Application {
         overviewController.init();
 
     }
+
 
     @Override
     public void stop(){

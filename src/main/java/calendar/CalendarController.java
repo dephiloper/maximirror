@@ -11,6 +11,8 @@ import javafx.scene.control.ListView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class CalendarController implements Controller {
@@ -18,7 +20,6 @@ public class CalendarController implements Controller {
     private ListView<String> listView = new ListView<>();
 
     private List<String> list = new ArrayList<>();
-    private boolean isRunning = true;
     private CalendarProvider calendarProvider = new CalendarProvider();
     private Task<ObservableList<String>> calendarTask;
 
@@ -31,29 +32,29 @@ public class CalendarController implements Controller {
     public void startUpdate() {
         if (!Config.instance.SHOW_CALENDAR)
             return;
-
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         calendarTask = new Task<ObservableList<String>>() {
             protected ObservableList<String> call() throws InterruptedException, IOException {
-                while (isRunning) {
                     list.clear();
                     list = calendarProvider.getEvents();
                     updateValue(FXCollections.observableArrayList(list));
-                    TimeUnit.HOURS.sleep((long) Config.instance.CALENDAR_SLEEP_SECONDS);
-                }
-
                 return FXCollections.observableArrayList(list);
             }
         };
 
+        executor.scheduleAtFixedRate(calendarTask, 0, (long) Config.instance.CALENDAR_SLEEP_SECONDS, TimeUnit.HOURS);
+
         init();
-        new Thread(calendarTask).start();
     }
 
     @Override
     public void stopRunning() {
-        if (calendarTask != null)
-            if (calendarTask.isRunning())
+        if (calendarTask != null) {
+            if (calendarTask.isRunning()) {
                 calendarTask.cancel();
+            }
+
+        }
     }
 
     @Override

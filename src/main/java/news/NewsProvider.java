@@ -4,6 +4,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import config.Config;
 import interfaces.Provider;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,12 +12,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class NewsProvider implements Provider<News> {
     private List<News> newsList;
     private int providedNewsIndex = 0;
-    private final String[] sources = new String[] {"der-tagesspiegel","bild"};
+    private final String[] sources = new String[] {"der-tagesspiegel", };
 
     NewsProvider() {
         newsList = Collections.synchronizedList(new ArrayList<News>());
@@ -24,20 +28,14 @@ public class NewsProvider implements Provider<News> {
     }
 
     private void fetchNewsCyclical() {
-        new Thread(() -> {
-            while (true) {
-                for (String source : sources) {
-                        newsList.addAll(fetchFromNewsSource(String.format("https://newsapi.org/v2/top-headlines?sources=%s&apiKey=f2489c450f0b48a58feda297ebb6cf90", source)));
-                }
-                providedNewsIndex = 0;
-
-                try {
-                    TimeUnit.MINUTES.sleep((long)30);
-                } catch (InterruptedException e) {
-                    System.err.println(e.getMessage());
-                }
+        final int fetchingPeriod = 30;
+        ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
+        executorService.scheduleAtFixedRate(() -> {
+            for (String source : sources) {
+                newsList.addAll(fetchFromNewsSource(String.format("https://newsapi.org/v2/top-headlines?sources=%s&apiKey=%s", source, Config.instance.NEWS_API_KEY)));
             }
-        }).start();
+            providedNewsIndex = 0;
+        }, 0, fetchingPeriod, TimeUnit.MINUTES);
     }
 
     private List<News> fetchFromNewsSource(String url) {
@@ -63,7 +61,7 @@ public class NewsProvider implements Provider<News> {
 
             });
         }
-
+        Collections.shuffle(newsListSource);
         return newsListSource;
     }
 

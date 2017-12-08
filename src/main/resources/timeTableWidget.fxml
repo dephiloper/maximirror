@@ -5,6 +5,6 @@
     <VBox>
         <Label styleClass="calendar-main-font, label-time-margin">Abfahrtsplan</Label>
         <Label styleClass="label-time-margin, calendar-font" fx:id="stationName"/>
-        <ListView fx:id="transportsListView" styleClass="list-cell" minWidth="500" prefHeight="400"/>
+        <ListView fx:id="transportsListView" styleClass="list-cell" minWidth="500"/>
     </VBox>
 </FlowPane>

@@ -10,7 +10,11 @@ import javafx.util.Duration;
 
 public class NewsController implements Controller {
     @FXML
-    public Label news;
+    public Label source;
+    @FXML
+    public Label title;
+    @FXML
+    public Label description;
 
     private NewsProvider provider = new NewsProvider();
     private ScheduledService<NewsDataHelper> newsService;
@@ -49,7 +53,7 @@ public class NewsController implements Controller {
             }
         };
         init();
-        newsService.setPeriod(Duration.seconds(Config.instance.TIMETABLE_SLEEP_SECONDS));
+        newsService.setPeriod(Duration.seconds(Config.instance.NEWS_SLEEP_SECONDS));
         newsService.start();
 
         newsService.setOnSucceeded(event -> newsDataHelper.reinitialize(
@@ -61,11 +65,14 @@ public class NewsController implements Controller {
 
     @Override
     public void stopRunning() {
-
+        if (newsService.isRunning())
+            newsService.cancel();
     }
 
     @Override
     public void createBindings() {
-        news.textProperty().bind(newsDataHelper.descriptionProperty());
+        source.textProperty().bind(newsDataHelper.sourceProperty());
+        title.textProperty().bind(newsDataHelper.titleProperty());
+        description.textProperty().bind(newsDataHelper.descriptionProperty());
     }
 }

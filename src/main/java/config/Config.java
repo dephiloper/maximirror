@@ -11,7 +11,7 @@ public class Config {
     public double LOCATION_LAT;
     public double LOCATION_LON;
     public TransportStation[] TRANSPORT_STATIONS;
-    public String API_KEY;
+    public String WEATHER_API_KEY;
     public String TIME_FORMAT;
     public double CLOCK_SLEEP_SECONDS;
     public double TIMETABLE_SLEEP_SECONDS;
@@ -25,8 +25,10 @@ public class Config {
     public boolean SHOW_TIMETABLE;
     public boolean SHOW_FORECAST;
     public boolean ENABLE_FULLSCREEN;
-    public transient static Config instance;
     public String DATE_FORMAT;
+    public double NEWS_SLEEP_SECONDS;
+    public transient static Config instance;
+    public String NEWS_API_KEY;
 
     public class TransportStation {
         public String ID;
