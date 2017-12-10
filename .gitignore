@@ -3,3 +3,5 @@ out/
 *.iml
 .idea/
 target/
+configurator/app/src/main/res/raw/
+
