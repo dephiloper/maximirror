@@ -2,17 +2,21 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_weight="1"
+    android:orientation="horizontal">
     <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_marginStart="10dp"
         android:id="@+id/list_item_key"
-        android:height="40dp"
         android:layout_weight="1">
     </TextView>
     <EditText
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_width="0dp"
         android:id="@+id/list_item_value_string"
         android:layout_weight="1"/>
 </LinearLayout>
