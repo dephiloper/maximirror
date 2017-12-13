@@ -5,7 +5,7 @@ class News {
     private String title;
     private String description;
 
-    public News(String source, String title, String description) {
+    News(String source, String title, String description) {
         this.source = source;
         this.title = title;
         this.description = description;

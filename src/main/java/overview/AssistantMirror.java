@@ -12,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.fop.fonts.FontLoader;
 import tk.plogitech.darksky.api.jackson.DarkSkyJacksonClient;
 
 import java.beans.EventHandler;
@@ -28,6 +29,10 @@ public class AssistantMirror extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Config.create();
+        Font.loadFont(
+                AssistantMirror.class.getResource("/fonts/OpenSansCondensed-Light.ttf").toExternalForm(),
+                10
+        );
         FXMLLoader loader = new FXMLLoader(getClass().getResource(OVERVIEW_FXML));
         Parent root = loader.load();
         overviewController = loader.getController();

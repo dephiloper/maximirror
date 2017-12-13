@@ -3,8 +3,8 @@
 <?import javafx.scene.layout.VBox?>
 <FlowPane fx:controller="timetable.TimeTableController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
     <VBox>
-        <Label styleClass="calendar-main-font, label-time-margin">Abfahrtsplan</Label>
-        <Label styleClass="label-time-margin, calendar-font" fx:id="stationName"/>
-        <ListView fx:id="transportsListView" styleClass="list-cell" minWidth="500"/>
+        <Label styleClass="time-table-main-font, default-label-margin">Abfahrtsplan</Label>
+        <Label styleClass="time-table-font, default-label-margin" fx:id="stationName"/>
+        <ListView fx:id="transportsListView" styleClass="list-cell"  prefWidth="1000" prefHeight="300"/>
     </VBox>
 </FlowPane>

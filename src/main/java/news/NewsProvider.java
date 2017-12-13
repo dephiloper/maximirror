@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 public class NewsProvider implements Provider<News> {
     private List<News> newsList;
     private int providedNewsIndex = 0;
-    private final String[] sources = new String[] {"der-tagesspiegel", };
 
     NewsProvider() {
         newsList = Collections.synchronizedList(new ArrayList<News>());
@@ -31,7 +30,7 @@ public class NewsProvider implements Provider<News> {
         final int fetchingPeriod = 30;
         ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
         executorService.scheduleAtFixedRate(() -> {
-            for (String source : sources) {
+            for (String source : Config.instance.NEWS_SOURCES) {
                 newsList.addAll(fetchFromNewsSource(String.format("https://newsapi.org/v2/top-headlines?sources=%s&apiKey=%s", source, Config.instance.NEWS_API_KEY)));
             }
             providedNewsIndex = 0;

@@ -29,6 +29,7 @@ public class Config {
     public double NEWS_SLEEP_SECONDS;
     public transient static Config instance;
     public String NEWS_API_KEY;
+    public String[] NEWS_SOURCES;
 
     public class TransportStation {
         public String ID;

@@ -18,10 +18,11 @@ import java.util.Objects;
 
 class ForecastProvider implements Provider<Forecast> {
     private static final String DRAWABLES_PATH = "/drawables/";
-    private static final String SVG_FILE_ENDING = ".svg";
+    //private static final String SVG_FILE_ENDING = ".svg";
+    private static final String PNG_FILE_ENDING = ".png";
     private static final String FALLBACK_IMG = "rainbow";
 
-    Image convertSvg(String iconName) {
+    /*Image convertSvg(String iconName) {
         BufferedImageConverter trans = new BufferedImageConverter();
 
         try (InputStream file = getClass().getResourceAsStream(DRAWABLES_PATH + iconName + SVG_FILE_ENDING)) {
@@ -41,7 +42,7 @@ class ForecastProvider implements Provider<Forecast> {
             return convertSvg(FALLBACK_IMG);
 
         return null;
-    }
+    }*/
 
     @Override
     public Forecast provideData() {
@@ -58,5 +59,20 @@ class ForecastProvider implements Provider<Forecast> {
         }
 
         return forecast;
+    }
+
+    public Image convertPng(String iconName) {
+        try (InputStream inputStream = getClass().getResourceAsStream(DRAWABLES_PATH + iconName + PNG_FILE_ENDING)) {
+            if (inputStream != null) {
+                return new Image(inputStream);
+            }
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+
+        if (!Objects.equals(iconName, FALLBACK_IMG))
+            return convertPng(FALLBACK_IMG);
+
+        return null;
     }
 }

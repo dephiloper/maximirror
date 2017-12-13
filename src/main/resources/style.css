@@ -1,50 +1,48 @@
-@font-face {
-    font-family: 'Orbitron';
-    src: url('fonts/Orbitron-Medium.ttf');
-}
-@font-face {
-    font-family: 'Roboto';
-    src: url('fonts/Roboto-Light.ttf');
-}
-
-@font-face {
-    font-family: 'Open Sans Condensed';
-    src: url('fonts/OpenSansCondensed-Light.ttf');
-}
-
-.clock-font {
-    -fx-font-family: 'Open Sans Condensed';
-    -fx-font-size:60px;
+.clock-main-font {
+    -fx-font-family: 'Open Sans Condensed Light';
+    -fx-font-size:80px;
     -fx-text-fill: white;
 }
 
 .date-font {
-    -fx-font-family: 'Open Sans Condensed';
-    -fx-font-size:40px;
+    -fx-font-family: 'Open Sans Condensed Light';
+    -fx-font-size:55px;
     -fx-text-fill: white;
 }
 
-.weather-font {
-    -fx-font-family: 'Open Sans Condensed';
-    -fx-font-size: 20px;
+.time-table-main-font {
+    -fx-font-family: 'Open Sans Condensed Light';
+    -fx-font-size: 35px;
+    -fx-text-fill: white;
+}
+
+.time-table-font {
+    -fx-font-family: 'Open Sans Condensed Light';
+    -fx-font-size: 25px;
     -fx-text-fill: white;
 }
 
 .weather-main-font {
-    -fx-font-family: 'Open Sans Condensed';
-    -fx-font-size: 40px;
+    -fx-font-family: 'Open Sans Condensed Light';
+    -fx-font-size: 55px;
     -fx-text-fill: white;
 }
 
-.calendar-font {
-    -fx-font-family: 'Open Sans Condensed';
-    -fx-font-size: 20px;
+.weather-font {
+    -fx-font-family: 'Open Sans Condensed Light';
+    -fx-font-size: 25px;
     -fx-text-fill: white;
 }
 
 .calendar-main-font {
-    -fx-font-family: 'Open Sans Condensed';
-    -fx-font-size: 30px;
+    -fx-font-family: 'Open Sans Condensed Light';
+    -fx-font-size: 35px;
+    -fx-text-fill: white;
+}
+
+.calendar-font {
+    -fx-font-family: 'Open Sans Condensed Light';
+    -fx-font-size: 25px;
     -fx-text-fill: white;
 }
 
@@ -68,7 +66,7 @@
     -fx-background-insets: 5px;
 }
 /*top right bottom left*/
-.label-time-margin {
+.default-label-margin {
     -fx-padding: 0px 0px 5px 10px;
     -fx-border-insets: 5px;
     -fx-background-insets: 5px;
@@ -79,8 +77,8 @@
 
 .list-cell {
     -fx-background-color: black;
-    -fx-font-family: 'Open Sans Condensed';
-    -fx-font-size: 20px;
+    -fx-font-family: 'Open Sans Condensed Light';
+    -fx-font-size: 25px;
     -fx-text-fill: white;
 }
 
@@ -94,10 +92,4 @@
 .list-view {
     -fx-background-insets: 0;
     -fx-padding: 0;
-}
-
-.subHeading {
-    -fx-font-family: 'Open Sans Condensed';
-    -fx-font-size: 20px;
-    -fx-text-fill: white;
 }

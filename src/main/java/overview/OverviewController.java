@@ -60,6 +60,10 @@ public class OverviewController implements Controller {
         timeTableWidgetController.startUpdate();
         newsWidgetController.startUpdate();
         createBindings();
+        //applyTransitions();
+    }
+
+    private void applyTransitions() {
         transitions.add(new FadeTransition(Duration.seconds(3), calendarWidget));
         transitions.add(new FadeTransition(Duration.seconds(3), timeTableWidget));
         transitions.add(new FadeTransition(Duration.seconds(3), forecastWidget));
