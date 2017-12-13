@@ -11,8 +11,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import assistantmirror.maxiphil.de.mirrorconfigurator.config.ConfigItem;
-import assistantmirror.maxiphil.de.mirrorconfigurator.config.ConfigItemBool;
-import assistantmirror.maxiphil.de.mirrorconfigurator.config.ConfigItemString;
 
 public class ConfigListAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
@@ -45,30 +43,30 @@ public class ConfigListAdapter extends BaseAdapter {
 
         if(convertView == null || !item.getClass().toString().equals(convertView.getTag())) {
             // If convertView is null we have to inflate a new layout
-            if (item instanceof ConfigItemBool) {
+            if (item.getTypeParameterClass().equals(Boolean.class)) {
                 convertView = this.inflater.inflate(R.layout.config_entry_checkbox_list_item, parent, false);
-                convertView.setTag(ConfigItemBool.class.toString());
-            } else if (item instanceof ConfigItemString) {
+                convertView.setTag(item.getTypeParameterClass());
+            } else if (item.getTypeParameterClass().equals(String.class)) {
                 convertView = this.inflater.inflate(R.layout.config_entry_text_list_item, parent, false);
-                convertView.setTag(ConfigItemString.class.toString());
+                convertView.setTag(item.getTypeParameterClass());
             }
         }
 
         if (convertView == null)
             return null;
 
-        if (item instanceof ConfigItemBool) {
+        if (item.getTypeParameterClass().equals(Boolean.class)) {
             // Retrieve the view holder from the convertView
-            ConfigItemBool itemBool = (ConfigItemBool) item;
+            ConfigItem<Boolean> itemBool = ConfigItem.cast(item);
 
             // Bind the values to the views
             TextView key = convertView.findViewById(R.id.list_item_key);
             CheckBox value = convertView.findViewById(R.id.list_item_value_bool);
             key.setText(itemBool.getKey());
-            value.setChecked(itemBool.isValue());
-        } else if (item instanceof ConfigItemString) {
+            value.setChecked(itemBool.getValue());
+        } else if (item.getTypeParameterClass().equals(String.class)) {
             // Retrieve the view holder from the convertView
-            ConfigItemString itemString = (ConfigItemString) item;
+            ConfigItem<String> itemString = ConfigItem.cast(item);
 
             // Bind the values to the views
             TextView key = convertView.findViewById(R.id.list_item_key);
