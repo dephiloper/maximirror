@@ -3,4 +3,5 @@
     <string name="configuration">Configuration:</string>
     <string name="loadingText">Loading...</string>
     <string name="postButtonText">Confirm</string>
+    <string name="errorVolleyGET">Failed to load data. Please restart the application and check your internet connection.</string>
 </resources>

@@ -1,85 +1,82 @@
 package assistantmirror.maxiphil.de.mirrorconfigurator;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.LayoutDirection;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
+import assistantmirror.maxiphil.de.mirrorconfigurator.config.Config;
+import assistantmirror.maxiphil.de.mirrorconfigurator.config.ConfigItem;
+import assistantmirror.maxiphil.de.mirrorconfigurator.config.ConfigItemBool;
+import assistantmirror.maxiphil.de.mirrorconfigurator.config.ConfigItemString;
 
 public class MainActivity extends AppCompatActivity {
 
-    RequestQueue requestQueue;
-    TextView textView;
+    ListView listView;
+    /*RequestQueue requestQueue;
     private Response.Listener listener;
-    private Response.ErrorListener errorListener;
+    private Response.ErrorListener errorListener;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkForUpdates();
-        textView = findViewById(R.id.textView1);
 
-        Log.i("main", "started service.");
+
+
+
+        Config config = Config.jsonToConfig(readTestJSON());
+        List<ConfigItem> itemList = null;
+        try {
+            itemList = config.generateConfigItems();
+        } catch (IllegalAccessException e) {
+            System.err.println(e.getMessage());
+        }
+
+        ConfigListAdapter adapter = new ConfigListAdapter(this, itemList);
+        listView = findViewById(R.id.config_entry_list);
+        listView.setAdapter(adapter);
+
+/*
         listener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JsonObject jObj = parseToJsonObject(response);
-                Log.i("FFFFFFFFF",jObj.toString());
+                Log.i("input JSON:",jObj.toString());
                 createTextViewsByKeys(jObj);
-                createInputsForUser();
             }
         };
+
+        printStructure();
 
         errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.errorVolleyGET), Toast.LENGTH_LONG);
+                toast.show();
             }
         };
 
-        requestServer();
+        requestServer();*/
     }
-
-    private void createInputsForUser() {
-        //not working currently
-        Button postButton = new Button(this.findViewById(android.R.id.content).getContext());
-        postButton.setText(R.string.postButtonText);
-    }
-
+/*
     private void requestServer() {
         String url = "https://api.chucknorris.io/jokes/random";
         requestQueue = Volley.newRequestQueue(this);
@@ -144,8 +141,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(subRelativeLayout);
 
         //pass all values in the declared layout
-        //JsonObject testJSONObj = readTestJSON();
-        Set<Map.Entry<String, JsonElement>> entrySet = jObj.entrySet();
+        JsonObject testJSONObj = readTestJSON();
+        Set<Map.Entry<String, JsonElement>> entrySet = testJSONObj.entrySet();
+        int counter = 0;
         for (Map.Entry<String, JsonElement> entry: entrySet) {
             final TextView newKeyTextView = new TextView(this);
             newKeyTextView.setWidth(valueLayoutParams.getMarginStart() - keyLayoutParams.getMarginStart() + 150);
@@ -154,9 +152,20 @@ public class MainActivity extends AppCompatActivity {
             newKeyTextView.setText(entry.getKey());
 
             if (entry.getValue() instanceof JsonArray){
-                newValueTextView.setText(getStringFromIntricatedJObj((JsonArray) entry.getValue()));
+                newKeyTextView.setTypeface(null, 1);
+//                for (int j = 0; j < ((JsonArray) entry.getValue()).size(); j++){
+//                    JsonObject jsonObject = (JsonObject) ((JsonArray) entry.getValue()).get(j);
+//                    TextView valueKeyTextView = new TextView(this);
+//                    EditText valueValueEditText = new EditText(this);
+//                    String[] keyValuePairs = getStringFromIntricatedJObj(jsonObject);
+//                    valueKeyTextView.setText(keyValuePairs[0]);
+//                    valueValueEditText.setText(keyValuePairs[1]);
+//                    keyLayout.addView(valueKeyTextView);
+//                    valueLayout.addView(valueValueEditText);
+//                }
             }else {
                 newValueTextView.setText(entry.getValue().toString());
+                valueLayout.addView(newValueTextView, valueLayoutParams);
             }
 
             //strange magical stuff
@@ -168,41 +177,46 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            //newKeyTextView.setTag(counter, "dynamicTextViewKey");
             newKeyTextView.setTextSize(14);
             newKeyTextView.setTextColor(Color.BLACK);
+            //newValueTextView.setTag(counter, "dynamicEditTextValue");
             newValueTextView.setTextSize(14);
             newValueTextView.setTextColor(Color.BLACK);
 
             keyLayout.addView(newKeyTextView, keyLayoutParams);
-            valueLayout.addView(newValueTextView, valueLayoutParams);
+            counter++;
         }
         Log.i("Views", "successfully created.");
+
+        Button postButton = new Button(this);
+        postButton.setText(R.string.postButtonText);
+        postButton.setX(1000);
+        placeholderForScrollLayout.addView(postButton);
     }
 
-    private String getStringFromIntricatedJObj(JsonArray jsonArray) {
+    private String[] getStringFromIntricatedJObj(JsonObject jsonObjectFromArray) {
+        StringBuilder keyArray = new StringBuilder();
         StringBuilder valueArray = new StringBuilder();
-        for (int i = 0; i < jsonArray.size(); i++){
-            JsonObject jobj = (JsonObject) jsonArray.get(i);
-            Set<Map.Entry<String, JsonElement>> entrySet = jobj.entrySet();
-            for (Map.Entry<String, JsonElement> entry : entrySet){
-                Log.i("jarray", "is read");
-                valueArray.append(entry.getKey()).append(":\n");
-                valueArray.append("  ");
-                valueArray.append(entry.getValue()).append("\n");
-            }
+        Set<Map.Entry<String, JsonElement>> entrySet = jsonObjectFromArray.entrySet();
+        for (Map.Entry<String, JsonElement> entry : entrySet){
+            Log.i("jarray", "is read");
+            keyArray.append(entry.getKey());
+            valueArray.append(entry.getValue());
         }
-        return valueArray.toString();
+        return new String[]{keyArray.toString(), valueArray.toString()};
     }
+*/
 
-    private JsonObject readTestJSON() {
-        StringBuilder lol = new StringBuilder();
+    private String readTestJSON() {
+        StringBuilder stringBuilder = new StringBuilder();
         InputStream in = getResources().openRawResource(R.raw.test);
         try {
             BufferedReader buf = new BufferedReader(new InputStreamReader(in));
             String line;
 
             while ((line = buf.readLine()) != null) {
-                lol.append(line);
+                stringBuilder.append(line);
             }
             buf.close();
         }
@@ -217,13 +231,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("h", "k");
             }
         }
-        return parseToJsonObject(lol.toString());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        CrashManager.register(this);
+        return stringBuilder.toString();
     }
 
     private void checkForUpdates() {
@@ -232,6 +240,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void unregisterManagers() {
         UpdateManager.unregister();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CrashManager.register(this);
     }
 
     @Override
@@ -246,11 +260,21 @@ public class MainActivity extends AppCompatActivity {
         unregisterManagers();
     }
 
-    @Override
-    protected void onStop () {
-        super.onStop();
-        if (requestQueue != null) {
-            requestQueue.cancelAll(this);
-        }
+  /*  private void printStructure() {
+       JsonObject obj = readTestJSON();
+       printObject(obj);
     }
+
+    private void printObject(JsonObject obj) {
+        Set<Map.Entry<String, JsonElement>> entrySet = obj.entrySet();
+        for (Map.Entry<String, JsonElement> entry : entrySet){
+            Log.i("Key", entry.getKey());
+            if (entry.getValue().isJsonArray())
+                for (JsonElement jsonElement : entry.getValue().getAsJsonArray())
+                    printObject(jsonElement.getAsJsonObject());
+            else
+                Log.i("Value", String.valueOf(entry.getValue()));
+
+        }
+    }*/
 }

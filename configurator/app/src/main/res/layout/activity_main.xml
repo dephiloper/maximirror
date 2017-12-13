@@ -6,9 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/relativeLayoutRoot"
     tools:context="assistantmirror.maxiphil.de.mirrorconfigurator.MainActivity">
-
-
-    <TextView
+    <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView1"
@@ -16,5 +14,9 @@
         android:layout_marginStart="10dp"
         android:textColor="@android:color/black"
         android:textSize="22sp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp" />-->
+    <ListView
+        android:id="@+id/config_entry_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>
