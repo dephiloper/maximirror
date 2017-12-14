@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import assistantmirror.maxiphil.de.mirrorconfigurator.config.Config;
 import assistantmirror.maxiphil.de.mirrorconfigurator.config.ConfigItem;
+import assistantmirror.maxiphil.de.mirrorconfigurator.config.MarkAsCaption;
 
 public class ConfigListAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
@@ -56,6 +58,9 @@ public class ConfigListAdapter extends BaseAdapter {
                 convertView.setTag(item.getTypeParameterClass());
             } else if (item.getTypeParameterClass().equals(String.class)) {
                 convertView = this.inflater.inflate(R.layout.config_entry_text_list_item, parent, false);
+                convertView.setTag(item.getTypeParameterClass());
+            } else if (item.getTypeParameterClass().equals(MarkAsCaption.class)){
+                convertView = this.inflater.inflate(R.layout.config_entry_caption_item, parent, false);
                 convertView.setTag(item.getTypeParameterClass());
             }
         }
@@ -104,6 +109,10 @@ public class ConfigListAdapter extends BaseAdapter {
             });
             key.setText(itemString.getKey());
             value.setText(itemString.getValue());
+        }else if (item.getTypeParameterClass().equals(MarkAsCaption.class)){
+            final ConfigItem<String> captionString = ConfigItem.cast(item);
+            TextView caption = convertView.findViewById(R.id.list_item_key);
+            caption.setText(captionString.getKey());
         }
 
         return convertView;
