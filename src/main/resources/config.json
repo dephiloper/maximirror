@@ -8,7 +8,7 @@
   ],
   "WEATHER_API_KEY":"25e78d885cd4f6c0eaedccfeb27ea1bc",
   "NEWS_API_KEY":"f2489c450f0b48a58feda297ebb6cf90",
-  "GOOGLE_ICAL_URL":"HIER_MUSS_DIE_URL_REIN",
+  "GOOGLE_ICAL_URL":"https://calendar.google.com/calendar/ical/philippboensch%40gmail.com/private-a464f5e9330cfcbc5f2a3cbae4b0c998/basic.ics",
   "CLOCK_SLEEP_SECONDS":0.5,
   "TIMETABLE_SLEEP_SECONDS":10,
   "CALENDAR_SLEEP_SECONDS":3600,

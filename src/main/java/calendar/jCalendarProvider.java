@@ -23,13 +23,13 @@ import static java.lang.StrictMath.min;
 public class jCalendarProvider {
     private Calendar calendar;
     private List<SimpleCalEvent> sortedCalEvents;
-    public static final int DEFAULT_DAYS_TO_PREDICT = 7;
-    public static final int DEFAULT_NUM_OF_EVENTS = 5;
-    public static final long MILLIS_TO_DAYS = 1000*3600*24;
+    private static final int DEFAULT_DAYS_TO_PREDICT = 365*3;
+    private static final int DEFAULT_NUM_OF_EVENTS = 5;
+    private static final long MILLIS_TO_DAYS = 1000*3600*24;
 
     private boolean loaded = false;
 
-    public void loadCalendar() {
+    private void loadCalendar() {
         String myCalendarString = "";
 
         try {
@@ -44,12 +44,9 @@ public class jCalendarProvider {
 
         try {
             calendar = builder.build(sin);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserException e) {
+        } catch (IOException | ParserException e) {
             e.printStackTrace();
         }
-
         loaded = true;
     }
 
@@ -82,7 +79,7 @@ public class jCalendarProvider {
         loadEvents(DEFAULT_DAYS_TO_PREDICT);
     }
 
-    public void loadEvents(int daysToPredict) {
+    private void loadEvents(int daysToPredict) {
         loadCalendar();
 
         List<SimpleCalEvent> simpleCalEvents = new ArrayList<>();
@@ -99,7 +96,7 @@ public class jCalendarProvider {
         return getEvents(DEFAULT_NUM_OF_EVENTS);
     }
 
-    public List<String> getEvents(int numEvents) {
+    private List<String> getEvents(int numEvents) {
 
         // wait until Events are loaded
         while (!loaded) {
