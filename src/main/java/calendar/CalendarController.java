@@ -20,12 +20,13 @@ public class CalendarController implements Controller {
     private ListView<String> listView = new ListView<>();
 
     private List<String> list = new ArrayList<>();
-    private CalendarProvider calendarProvider = new CalendarProvider();
+    private jCalendarProvider calendarProvider = new jCalendarProvider();
     private Task<ObservableList<String>> calendarTask;
 
     @Override
     public void init() {
         createBindings();
+        calendarProvider.loadEvents();
     }
 
     @Override
@@ -35,9 +36,9 @@ public class CalendarController implements Controller {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         calendarTask = new Task<ObservableList<String>>() {
             protected ObservableList<String> call() throws InterruptedException, IOException {
-                    list.clear();
-                    list = calendarProvider.getEvents();
-                    updateValue(FXCollections.observableArrayList(list));
+                list.clear();
+                list = calendarProvider.getEvents();
+                updateValue(FXCollections.observableArrayList(list));
                 return FXCollections.observableArrayList(list);
             }
         };
@@ -53,7 +54,6 @@ public class CalendarController implements Controller {
             if (calendarTask.isRunning()) {
                 calendarTask.cancel();
             }
-
         }
     }
 

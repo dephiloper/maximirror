@@ -13,6 +13,7 @@ public class Config {
     public TransportStation[] TRANSPORT_STATIONS;
     public String WEATHER_API_KEY;
     public String TIME_FORMAT;
+    public String GOOGLE_ICAL_URL;
     public double CLOCK_SLEEP_SECONDS;
     public double TIMETABLE_SLEEP_SECONDS;
     public double CALENDAR_SLEEP_SECONDS;
