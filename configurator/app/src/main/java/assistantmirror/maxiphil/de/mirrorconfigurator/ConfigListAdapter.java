@@ -1,11 +1,15 @@
 package assistantmirror.maxiphil.de.mirrorconfigurator;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.List;
@@ -20,6 +24,10 @@ public class ConfigListAdapter extends BaseAdapter {
     ConfigListAdapter(Context context, List<ConfigItem> items) {
         this.inflater = LayoutInflater.from(context);
         this.items = items;
+    }
+
+    public List<ConfigItem> getItems() {
+        return items;
     }
 
     @Override
@@ -57,20 +65,43 @@ public class ConfigListAdapter extends BaseAdapter {
 
         if (item.getTypeParameterClass().equals(Boolean.class)) {
             // Retrieve the view holder from the convertView
-            ConfigItem<Boolean> itemBool = ConfigItem.cast(item);
+            final ConfigItem<Boolean> itemBool = ConfigItem.cast(item);
 
             // Bind the values to the views
             TextView key = convertView.findViewById(R.id.list_item_key);
             CheckBox value = convertView.findViewById(R.id.list_item_value_bool);
+
+            value.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    itemBool.setValue(b);
+                }
+            });
             key.setText(itemBool.getKey());
             value.setChecked(itemBool.getValue());
         } else if (item.getTypeParameterClass().equals(String.class)) {
             // Retrieve the view holder from the convertView
-            ConfigItem<String> itemString = ConfigItem.cast(item);
+            final ConfigItem<String> itemString = ConfigItem.cast(item);
 
             // Bind the values to the views
             TextView key = convertView.findViewById(R.id.list_item_key);
-            TextView value = convertView.findViewById(R.id.list_item_value_string);
+            EditText value = convertView.findViewById(R.id.list_item_value_string);
+            value.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    itemString.setValue(charSequence.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
             key.setText(itemString.getKey());
             value.setText(itemString.getValue());
         }
