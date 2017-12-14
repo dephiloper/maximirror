@@ -18,5 +18,29 @@
     <ListView
         android:id="@+id/config_entry_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
+    <!--<Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/postButtonText"
+        android:id="@+id/post_Button"
+        android:textStyle="bold"
+        android:shadowColor="@color/colorPrimaryDark"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        />-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/post_FAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="auto"
+        app:useCompatPadding="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_check_circle_black_24dp"
+        android:contentDescription="@string/postButtonText"
+        android:onClick="postButtonPressed"/>
 </RelativeLayout>
