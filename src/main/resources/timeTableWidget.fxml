@@ -1,10 +1,16 @@
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 <FlowPane fx:controller="timetable.TimeTableController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
     <VBox>
-        <Label styleClass="calendar-main-font, label-time-margin">Abfahrtsplan</Label>
-        <Label styleClass="label-time-margin, calendar-font" fx:id="stationName"/>
-        <ListView fx:id="transportsListView" styleClass="list-cell" minWidth="500" prefHeight="400"/>
+<!--        <HBox alignment="CENTER_LEFT">
+            <ImageView id="boxImage">
+                <Image url="drawables/train_white.png" requestedHeight="48" requestedWidth="48"/>
+            </ImageView>
+        </HBox>-->
+        <Label styleClass="time-table-main-font, default-label-margin">Abfahrtsplan</Label>
+        <Label styleClass="time-table-font, default-label-margin" fx:id="stationName"/>
+        <ListView fx:id="transportsListView" styleClass="list-cell"  prefWidth="1000" prefHeight="300"/>
     </VBox>
 </FlowPane>

@@ -1,145 +1,120 @@
 package calendar;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.DateTime;
-import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.Events;
-import config.Config;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.StringReader;
+import java.time.LocalDateTime;
 
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-class CalendarProvider {
-    /** Global instance of the {@link FileDataStoreFactory}. */
-    private FileDataStoreFactory DATA_STORE_FACTORY;
+import config.Config;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
 
-    /** Directory to store user credentials for this application. */
-    private static final java.io.File DATA_STORE_DIR =
-            new java.io.File(System.getProperty("user.home"), String.format(".credentials/%s", Config.instance.APPLICATION_NAME));
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Calendar;
 
-    /** Global instance of the JSON factory. */
-    private static final JsonFactory JSON_FACTORY =
-            JacksonFactory.getDefaultInstance();
+import static java.lang.StrictMath.min;
 
-    /** Global instance of the HTTP transport. */
-    private static HttpTransport HTTP_TRANSPORT;
+public class CalendarProvider {
+    private Calendar calendar;
+    private List<SimpleCalEvent> sortedCalEvents;
+    private static final int DEFAULT_DAYS_TO_PREDICT = 365*3;
+    private static final int DEFAULT_NUM_OF_EVENTS = 5;
+    private static final long MILLIS_TO_DAYS = 1000*3600*24;
 
-    /** Global instance of the scopes required by this quickstart.
-     *
-     * If modifying these scopes, delete your previously saved credentials
-     * at ~/.credentials/calendar-java-quickstart
-     */
-    private static final List<String> SCOPES =
-            Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
+    private boolean loaded = false;
 
-    {
+    private void loadCalendar() {
+        String myCalendarString = "";
+
         try {
-            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-            DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            System.exit(1);
+            myCalendarString = Unirest.get(Config.instance.GOOGLE_ICAL_URL).asString().getBody();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+
+        StringReader sin = new StringReader(myCalendarString);
+
+        CalendarBuilder builder = new CalendarBuilder();
+
+        try {
+            calendar = builder.build(sin);
+        } catch (IOException | ParserException e) {
+            e.printStackTrace();
+        }
+        loaded = true;
+    }
+
+    private String getSummary(Component component) {
+        Property summaryProperty = component.getProperties().getProperty("SUMMARY");
+        if (summaryProperty != null) {
+            return summaryProperty.getValue();
+        } else {
+            return "";
         }
     }
 
-    /**
-     * Creates an authorized Credential object.
-     * @return an authorized Credential object.
-     * @throws IOException Throws exception when credentials could not be saved
-     */
-    private Credential authorize() throws IOException {
-        // Load client secrets.
-        InputStream in =
-                CalendarProvider.class.getResourceAsStream("/client_secret.json");
-        GoogleClientSecrets clientSecrets =
-                GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+    private List<SimpleCalEvent> getAllEventsOf(Component component, Period period) {
+        List<SimpleCalEvent> eventList = new ArrayList<>();
 
-        // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow flow =
-                new GoogleAuthorizationCodeFlow.Builder(
-                        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                        .setDataStoreFactory(DATA_STORE_FACTORY)
-                        .setAccessType("offline")
-                        .build();
-        //System.out.println(
-        //        "Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
-        return new AuthorizationCodeInstalledApp(
-                flow, new LocalServerReceiver()).authorize("user");
-    }
+        String summary = getSummary(component);
 
-    /**
-     * Build and return an authorized Calendar client service.
-     * @return an authorized Calendar client service
-     * @throws IOException Throws exception when user not authorized.
-     */
-    private com.google.api.services.calendar.Calendar getCalendarService() throws IOException {
-        Credential credential = authorize();
-        return new com.google.api.services.calendar.Calendar.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, credential)
-                .setApplicationName(Config.instance.APPLICATION_NAME)
-                .build();
-    }
-
-    List<String> getEvents() throws IOException {
-        // Build a new authorized API client service.
-        // Note: Do not confuse this class with the
-        //   com.google.api.services.calendar.model.Calendar class.
-        com.google.api.services.calendar.Calendar service =
-                getCalendarService();
-
-        // List the next 10 events from the primary calendar.
-        DateTime now = new DateTime(System.currentTimeMillis());
-
-        int maxResults = Config.instance.CALENDAR_UPCOMING_EVENT_COUNT;
-
-        if (maxResults < 1) {
-            maxResults = Integer.MAX_VALUE;
+        // add recurrent Dates - Current Dates are with in
+        PeriodList list = component.calculateRecurrenceSet(period);
+        Iterator iter = list.iterator();
+        while (iter.hasNext()) {
+            Period eventPeriod = (Period) iter.next();
+            eventList.add(new SimpleCalEvent(summary, eventPeriod.getStart().getTime()));
         }
 
-        Events events = service.events().list("primary")
-                .setMaxResults(maxResults)
-                .setTimeMin(now)
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
+        return eventList;
+    }
 
-        List<Event> items = events.getItems();
-        List<String> list = new ArrayList<>();
+    public void loadEvents() {
+        loadEvents(DEFAULT_DAYS_TO_PREDICT);
+    }
 
-        if (items.size() != 0) {
-            for (Event event : items) {
-                DateTime start;
-                DateTime end;
+    private void loadEvents(int daysToPredict) {
+        loadCalendar();
 
-                start = event.getStart().getDateTime() == null ? event.getStart().getDate() : event.getStart().getDateTime();
-                end = event.getEnd().getDateTime()  == null ? event.getEnd().getDate() : event.getEnd().getDateTime();
+        List<SimpleCalEvent> simpleCalEvents = new ArrayList<>();
 
-                String line = new SimpleDateFormat("dd.MM").format(start.getValue()) + " - " + event.getSummary();
+        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
+            Component component = (Component) i.next();
+            simpleCalEvents.addAll(getAllEventsOf(component, new Period(new DateTime(System.currentTimeMillis()), new DateTime(System.currentTimeMillis() + daysToPredict * MILLIS_TO_DAYS))));
+        }
 
-                if (!start.isDateOnly())
-                    line += " (" + new SimpleDateFormat("HH:mm").format(start.getValue()) + " - "
-                            + new SimpleDateFormat("HH:mm").format(end.getValue()) + ")";
+        this.sortedCalEvents = simpleCalEvents.stream().sorted(new EventComparator()).filter(e -> e.after(LocalDateTime.now())).collect(Collectors.toList());
+    }
 
-                list.add(line);
+    public List<String> getEvents() {
+        return getEvents(DEFAULT_NUM_OF_EVENTS);
+    }
+
+    private List<String> getEvents(int numEvents) {
+
+        // wait until Events are loaded
+        while (!loaded) {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 
-        return list;
+        List<String> eventList = new ArrayList<>();
+        int length = min(numEvents, sortedCalEvents.size());
+        if (numEvents == -1) {
+            length = sortedCalEvents.size();
+        }
+        for (int i = 0; i < length; i++) {
+            eventList.add(this.sortedCalEvents.get(i).toString());
+        }
+        return eventList;
     }
 }

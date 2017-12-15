@@ -1,0 +1,17 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<FlowPane fx:controller="news.NewsController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
+    <VBox prefWidth="700">
+<!--
+        <HBox alignment="CENTER_LEFT">
+            <ImageView id="boxImage">
+                <Image url="drawables/newspaper_white.png" requestedHeight="48" requestedWidth="48"/>
+            </ImageView>
+        </HBox>
+-->
+        <Label styleClass="label-margin, news-main-font" fx:id="source" wrapText="true"/>
+        <Label styleClass="label-margin, news-font" fx:id="title" wrapText="true"/>
+        <Label styleClass="label-margin, news-font" fx:id="description" wrapText="true"/>
+    </VBox>
+</FlowPane>

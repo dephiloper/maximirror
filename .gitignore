@@ -4,3 +4,4 @@ out/
 .idea/
 target/
 __pycache__/
+META-INF/

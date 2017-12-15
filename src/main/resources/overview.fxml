@@ -1,21 +1,30 @@
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.Label?>
-
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane fx:controller="overview.OverviewController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" styleClass="overview">
+<?import javafx.geometry.Insets?>
+<BorderPane fx:controller="overview.OverviewController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" styleClass="overview" >
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
     <top>
         <VBox alignment="CENTER">
-            <Label fx:id="time" styleClass="clock-font"/>
-            <Label fx:id="date" styleClass="clock-font"/>
+            <Label fx:id="time" styleClass="clock-main-font"/>
+            <Label fx:id="date" styleClass="date-font"/>
         </VBox>
+
     </top>
     <left>
-        <VBox alignment="CENTER_LEFT">
-            <fx:include source="calendarWidget.fxml" alignment="CENTER_LEFT" fx:id="calendarWidget"/>
-            <fx:include source="timeTableWidget.fxml" alignment="TOP_LEFT" fx:id="timeTableWidget"/>
+        <VBox>
+            <fx:include source="calendarWidget.fxml" fx:id="calendarWidget" />
+            <fx:include source="timeTableWidget.fxml" fx:id="timeTableWidget" />
         </VBox>
     </left>
     <right>
-        <fx:include source="forecastWidget.fxml" alignment="CENTER_RIGHT" fx:id="forecastWidget"/>
+        <fx:include source="forecastWidget.fxml" fx:id="forecastWidget" />
     </right>
+    <bottom>
+        <VBox>
+            <fx:include source="newsWidget.fxml" fx:id="newsWidget" alignment="TOP_CENTER"/>
+        </VBox>
+    </bottom>
 </BorderPane>

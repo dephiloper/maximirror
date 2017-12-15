@@ -70,7 +70,8 @@ public class ForecastController implements Controller {
                                 currently.getPrecipType(),
                                 currently.getHumidity(),
                                 forecast.getTimezone(),
-                                forecastProvider.convertSvg(currently.getIcon()),
+                                //forecastProvider.convertSvg(currently.getIcon())
+                                forecastProvider.convertPng(currently.getIcon()),
                                 hourly.getSummary());
 
                         updateValue(forecastDataHelper);

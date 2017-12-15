@@ -25,6 +25,7 @@ class Config:
         for k in data:
             self.dict[k] = data[k]
             self.status[k] = ""
+        return config_string
 
     def saveToFile(self):
         with open("config_out.json", mode="w+") as f:
@@ -54,10 +55,9 @@ class Config:
 @app.route("/config")
 def readconfig():
     config = Config()
-    config.loadFromFile()
-    return config.saveToFile()
+    return config.loadFromFile()
 
-@app.route("/updateconfig", methods=["GET"])
+@app.route("/updateconfig", methods=["POST"])
 def writeConfig():
     config = Config()
     config.loadFromFile()
@@ -67,7 +67,7 @@ def writeConfig():
         print("no config in args")
     return config.saveToFile()
 
-@app.route("/start")
+#@app.route("/start")
 def start():
     #call(["java", "-jar", target_filepath, "&"])
     os.system("java -jar " + target_filepath + " &")
@@ -78,6 +78,6 @@ def stop():
     os.system("pkill java")
     return "killing java..."
 
-@app.route("/restart")
+@app.route("/start")
 def restart():
     return stop() + "<br>" + start()

@@ -9,13 +9,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import tk.plogitech.darksky.api.jackson.DarkSkyJacksonClient;
-
-import java.beans.EventHandler;
 
 
-public class Main extends Application {
+public class AssistantMirror extends Application {
     private final KeyCombination QUIT_KEYS = new KeyCodeCombination(KeyCode.Q,
             KeyCombination.CONTROL_DOWN);
     private final String OVERVIEW_FXML = "/overview.fxml";
@@ -26,6 +24,10 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Config.create();
+        Font.loadFont(
+                AssistantMirror.class.getResource("/fonts/OpenSansCondensed-Light.ttf").toExternalForm(),
+                10
+        );
         FXMLLoader loader = new FXMLLoader(getClass().getResource(OVERVIEW_FXML));
         Parent root = loader.load();
         overviewController = loader.getController();
@@ -33,6 +35,10 @@ public class Main extends Application {
         scene.getStylesheets().add(STYLE);
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(Config.instance.ENABLE_FULLSCREEN);
+
+        primaryStage.setOnCloseRequest(event -> {
+            stop();
+        });
 
         scene.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (QUIT_KEYS.match(event)) {
@@ -44,6 +50,7 @@ public class Main extends Application {
         overviewController.init();
 
     }
+
 
     @Override
     public void stop(){
