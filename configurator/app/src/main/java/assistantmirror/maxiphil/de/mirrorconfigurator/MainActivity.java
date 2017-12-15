@@ -199,10 +199,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startServerButtonPressed(View view) {
+        fab.close(true);
         getCurrentRequestQueue().add(getStringRequestGET("start"));
     }
 
     public void stopServerButtonPressed(View view) {
+        fab.close(true);
         getCurrentRequestQueue().add(getStringRequestGET("stop"));
     }
 }
