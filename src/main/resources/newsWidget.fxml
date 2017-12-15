@@ -2,7 +2,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 <FlowPane fx:controller="news.NewsController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
-    <VBox prefWidth="700">
+    <VBox maxHeight="300" maxWidth="800">
 <!--
         <HBox alignment="CENTER_LEFT">
             <ImageView id="boxImage">

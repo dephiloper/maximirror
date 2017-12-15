@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 <FlowPane fx:controller="timetable.TimeTableController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
-    <VBox>
+    <VBox prefWidth="500" prefHeight="400">
 <!--        <HBox alignment="CENTER_LEFT">
             <ImageView id="boxImage">
                 <Image url="drawables/train_white.png" requestedHeight="48" requestedWidth="48"/>
@@ -11,6 +11,6 @@
         </HBox>-->
         <Label styleClass="time-table-main-font, default-label-margin">Abfahrtsplan</Label>
         <Label styleClass="time-table-font, default-label-margin" fx:id="stationName"/>
-        <ListView fx:id="transportsListView" styleClass="list-cell"  prefWidth="1000" prefHeight="300"/>
+        <ListView fx:id="transportsListView" styleClass="list-cell"/>
     </VBox>
 </FlowPane>

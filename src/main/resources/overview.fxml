@@ -4,10 +4,10 @@
 <?import javafx.geometry.Insets?>
 <BorderPane fx:controller="overview.OverviewController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" styleClass="overview" >
     <padding>
-        <Insets top="25" right="25" bottom="25" left="25"/>
+        <Insets top="15" right="15" bottom="15" left="15"/>
     </padding>
     <top>
-        <VBox alignment="CENTER">
+        <VBox alignment="CENTER" prefWidth="400">
             <Label fx:id="time" styleClass="clock-main-font" visible="false"/>
             <Label fx:id="date" styleClass="date-font" visible="false"/>
         </VBox>
@@ -24,7 +24,7 @@
     </right>
     <bottom>
         <VBox>
-            <fx:include source="newsWidget.fxml" fx:id="newsWidget" alignment="TOP_CENTER" visible="false"/>
+            <fx:include source="newsWidget.fxml" fx:id="newsWidget" alignment="BOTTOM_CENTER" visible="false"/>
         </VBox>
     </bottom>
 </BorderPane>

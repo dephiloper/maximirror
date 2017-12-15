@@ -3,13 +3,13 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 <FlowPane fx:controller="calendar.CalendarController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
-    <VBox>
+    <VBox prefWidth="500" prefHeight="400">
 <!--        <HBox alignment="CENTER_LEFT">
             <ImageView id="boxImage">
                 <Image url="drawables/event_white.png" requestedHeight="48" requestedWidth="48"/>
             </ImageView>
         </HBox>-->
         <Label styleClass="calendar-main-font, default-label-margin">Kalender</Label>
-        <ListView fx:id="listView" styleClass="list-cell" prefWidth="800" prefHeight="300"/>
+        <ListView fx:id="listView" styleClass="list-cell"/>
     </VBox>
 </FlowPane>

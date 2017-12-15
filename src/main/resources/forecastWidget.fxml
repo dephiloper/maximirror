@@ -2,7 +2,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <FlowPane fx:controller="forecast.ForecastController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="VERTICAL">
-    <VBox fx:id="forecastPane" maxWidth="350">
+    <VBox fx:id="forecastPane" prefWidth="500" prefHeight="400">
         <HBox alignment="CENTER_RIGHT">
             <Label styleClass="label-suffix-margin, weather-main-font" fx:id="temperature" />
             <Label styleClass="label-margin, weather-main-font">°C</Label>
