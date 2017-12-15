@@ -24,10 +24,16 @@ public class AssistantMirror extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Config.create();
-        Font.loadFont(
+        Font x = Font.loadFont(
                 AssistantMirror.class.getResource("/fonts/OpenSansCondensed-Light.ttf").toExternalForm(),
                 10
         );
+
+        System.out.println(x.getName());
+
+        System.out.println(Font.getFamilies());
+        System.out.println(Font.getFontNames());
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource(OVERVIEW_FXML));
         Parent root = loader.load();
         overviewController = loader.getController();
