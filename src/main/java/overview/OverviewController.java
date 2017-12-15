@@ -60,7 +60,7 @@ public class OverviewController implements Controller {
         timeTableWidgetController.startUpdate();
         newsWidgetController.startUpdate();
         createBindings();
-        //applyTransitions();
+        applyTransitions();
     }
 
     private void applyTransitions() {

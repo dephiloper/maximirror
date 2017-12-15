@@ -8,23 +8,23 @@
     </padding>
     <top>
         <VBox alignment="CENTER">
-            <Label fx:id="time" styleClass="clock-main-font"/>
-            <Label fx:id="date" styleClass="date-font"/>
+            <Label fx:id="time" styleClass="clock-main-font" visible="false"/>
+            <Label fx:id="date" styleClass="date-font" visible="false"/>
         </VBox>
 
     </top>
     <left>
         <VBox>
-            <fx:include source="calendarWidget.fxml" fx:id="calendarWidget" />
-            <fx:include source="timeTableWidget.fxml" fx:id="timeTableWidget" />
+            <fx:include source="calendarWidget.fxml" fx:id="calendarWidget" visible="false"/>
+            <fx:include source="timeTableWidget.fxml" fx:id="timeTableWidget" visible="false"/>
         </VBox>
     </left>
     <right>
-        <fx:include source="forecastWidget.fxml" fx:id="forecastWidget" />
+        <fx:include source="forecastWidget.fxml" fx:id="forecastWidget" visible="false"/>
     </right>
     <bottom>
         <VBox>
-            <fx:include source="newsWidget.fxml" fx:id="newsWidget" alignment="TOP_CENTER"/>
+            <fx:include source="newsWidget.fxml" fx:id="newsWidget" alignment="TOP_CENTER" visible="false"/>
         </VBox>
     </bottom>
 </BorderPane>
