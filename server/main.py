@@ -7,7 +7,7 @@ from flask import request
 app = Flask(__name__)
 
 this_dirpath = os.path.dirname(os.path.realpath(__file__))
-config_filepath = this_dirpath + "/config.json"
+config_filepath = this_dirpath + "/../target/config.json"
 target_filepath = this_dirpath + "/../target/AssistantMirror-1.0-SNAPSHOT-jar-with-dependencies.jar"
 
 class Config:
