@@ -17,7 +17,7 @@ public class Config {
     public double CLOCK_SLEEP_SECONDS;
     public double TIMETABLE_SLEEP_SECONDS;
     public double CALENDAR_SLEEP_SECONDS;
-    public long WEATHER_SLEEP_SECONDS;
+    public double WEATHER_SLEEP_SECONDS;
     public int CALENDAR_UPCOMING_EVENT_COUNT;
     public int TIMETABLE_UPCOMING_TRANSPORT_COUNT;
     public boolean SHOW_TIME;
@@ -38,35 +38,43 @@ public class Config {
         public Long WALK_DURATION_MINUTES;
     }
 
-    private static final String CONFIG_PATH = "/config.json";
+    private static final String CONFIG_PATH = "./config.json";
+    private static final String DEFAULT_CONFIG_PATH = "/config.json";
 
-    public static void create() {
+    public static void create() throws IOException {
         if (instance == null)
             instance = readConfig();
     }
 
-    private static Config readConfig() {
+    private static Config readConfig() throws IOException {
+        File f = new File(CONFIG_PATH);
 
-        Config config = null;
+        if(!f.exists()) {
+            InputStream in = Config.class.getResourceAsStream(DEFAULT_CONFIG_PATH);
+            String jsonString = inputStreamToString(in);
+            PrintWriter printWriter = new PrintWriter(CONFIG_PATH, "UTF-8");
+            printWriter.println(jsonString);
+            printWriter.close();
+        }
+        InputStream in = new FileInputStream(CONFIG_PATH);
+        String jsonString = inputStreamToString(in);
+        return new Gson().fromJson(jsonString, Config.class);
+    }
 
-        InputStream in =
-                Config.class.getResourceAsStream(CONFIG_PATH);
+    private static String inputStreamToString(InputStream inputStream) throws FileNotFoundException {
+        StringBuilder content = new StringBuilder();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            StringBuilder content = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
                 content.append(line);
             }
 
-            config = new Gson().fromJson(content.toString(), Config.class);
-
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
 
-
-        return config;
+        return content.toString();
     }
 }

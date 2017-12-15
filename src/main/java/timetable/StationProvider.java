@@ -23,10 +23,11 @@ class StationProvider implements Provider<Station> {
     private final Station[] stations;
     private String stationName;
     private int providedStationIndex = 0;
-    private int stationCount = Config.instance.TRANSPORT_STATIONS.length;
-
+    private String ignoredStationName = "Insert ID";
+    private int stationCount = 0;
 
     StationProvider() {
+        stationCount = getValidStationCount(Config.instance.TRANSPORT_STATIONS);
         stations = new Station[stationCount];
         fetchStationsCyclical();
     }
@@ -36,7 +37,7 @@ class StationProvider implements Provider<Station> {
         executorService.scheduleAtFixedRate(() -> {
             for (int i = 0; i < stationCount; i++) {
                 String currentStationId = Config.instance.TRANSPORT_STATIONS[i].ID;
-                if (currentStationId.equals("")) return;
+                if (currentStationId.equals("") || currentStationId.equals(ignoredStationName)) return;
 
                 try {
                     Document doc = Jsoup.connect(String.format(BVG_URI, currentStationId)).get();
@@ -94,5 +95,16 @@ class StationProvider implements Provider<Station> {
         Station providedStation = stations[providedStationIndex];
         providedStationIndex = (providedStationIndex+1) % stationCount;
         return providedStation;
+    }
+
+    private int getValidStationCount(Config.TransportStation[] transport_stations) {
+        int validStationCount = 0;
+        for (Config.TransportStation station : transport_stations) {
+            if (!station.ID.equals("") && !station.ID.equals(ignoredStationName)) {
+                validStationCount++;
+            }
+        }
+
+        return validStationCount;
     }
 }

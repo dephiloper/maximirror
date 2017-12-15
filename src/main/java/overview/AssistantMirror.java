@@ -45,7 +45,7 @@ public class AssistantMirror extends Application {
                 System.exit(0);
             }
         });
-
+        primaryStage.setTitle(Config.instance.APPLICATION_NAME);
         primaryStage.show();
         overviewController.init();
 

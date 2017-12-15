@@ -24,7 +24,6 @@ public class CalendarProvider {
     private Calendar calendar;
     private List<SimpleCalEvent> sortedCalEvents;
     private static final int DEFAULT_DAYS_TO_PREDICT = 365*3;
-    private static final int DEFAULT_NUM_OF_EVENTS = 5;
     private static final long MILLIS_TO_DAYS = 1000*3600*24;
 
     private boolean loaded = false;
@@ -93,7 +92,7 @@ public class CalendarProvider {
     }
 
     public List<String> getEvents() {
-        return getEvents(DEFAULT_NUM_OF_EVENTS);
+        return getEvents(Config.instance.CALENDAR_UPCOMING_EVENT_COUNT);
     }
 
     private List<String> getEvents(int numEvents) {

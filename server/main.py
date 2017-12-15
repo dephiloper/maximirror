@@ -7,7 +7,7 @@ from flask import request
 app = Flask(__name__)
 
 this_dirpath = os.path.dirname(os.path.realpath(__file__))
-config_filepath = this_dirpath + "/../src/main/resources/config.json"
+config_filepath = this_dirpath + "/config.json"
 target_filepath = this_dirpath + "/../target/AssistantMirror-1.0-SNAPSHOT-jar-with-dependencies.jar"
 
 class Config:
@@ -28,7 +28,7 @@ class Config:
         return config_string
 
     def saveToFile(self):
-        with open("config_out.json", mode="w+") as f:
+        with open(config_filepath, mode="w+") as f:
             f.write(json.dumps(self.dict, indent=4))
             f.close()
         return json.dumps({"data" : self.dict, "status": self.status})
@@ -46,7 +46,7 @@ class Config:
                             a[key] = b[key]
                             status[key] = "Ok"
                     else:
-                        print("ERROR: datatype differs")
+                        print("ERROR: datatype differs",key)
                         status[key] = "ERROR: datatype differs"
                 else:
                     pass
@@ -61,10 +61,7 @@ def readconfig():
 def writeConfig():
     config = Config()
     config.loadFromFile()
-    if "config" in request.args:
-        config.update(json.loads(request.args.get("config")))
-    else:
-        print("no config in args")
+    config.update(json.loads(request.data))
     return config.saveToFile()
 
 #@app.route("/start")
@@ -81,3 +78,4 @@ def stop():
 @app.route("/start")
 def restart():
     return stop() + "<br>" + start()
+start()
