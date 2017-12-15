@@ -57,6 +57,12 @@ def readconfig():
     config = Config()
     return config.loadFromFile()
 
+@app.route("/reset")
+def resetconfig():
+    stop()
+    os.system("rm -f " + config_filepath)
+    start()
+
 @app.route("/updateconfig", methods=["POST"])
 def writeConfig():
     config = Config()
