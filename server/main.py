@@ -62,6 +62,7 @@ def resetconfig():
     stop()
     os.system("rm -f " + config_filepath)
     start()
+    return "config reset done"
 
 @app.route("/updateconfig", methods=["POST"])
 def writeConfig():
