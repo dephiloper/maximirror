@@ -1,60 +1,4 @@
-.clock-main-font {
-    -fx-font-family: 'Open Sans Condensed Light';
-    -fx-font-size:80px;
-    -fx-text-fill: white;
-}
-
-.date-font {
-    -fx-font-family: 'Open Sans Condensed Light';
-    -fx-font-size:55px;
-    -fx-text-fill: white;
-}
-
-.time-table-main-font {
-    -fx-font-family: 'Open Sans Condensed Light';
-    -fx-font-size: 35px;
-    -fx-text-fill: white;
-}
-
-.time-table-font {
-    -fx-font-family: 'Open Sans Condensed Light';
-    -fx-font-size: 25px;
-    -fx-text-fill: white;
-}
-
-.weather-main-font {
-    -fx-font-family: 'Open Sans Condensed Light';
-    -fx-font-size: 55px;
-    -fx-text-fill: white;
-}
-
-.weather-font {
-    -fx-font-family: 'Open Sans Condensed Light';
-    -fx-font-size: 25px;
-    -fx-text-fill: white;
-}
-
-.news-main-font {
-    -fx-font-family: 'Open Sans Condensed Light';
-    -fx-font-size: 35px;
-    -fx-text-fill: white;
-}
-
-.news-font {
-    -fx-font-family: 'Open Sans Condensed Light';
-    -fx-font-size: 25px;
-    -fx-text-fill: white;
-}
-
-.calendar-main-font {
-    -fx-font-family: 'Open Sans Condensed Light';
-    -fx-font-size: 35px;
-    -fx-text-fill: white;
-}
-
-.calendar-font {
-    -fx-font-family: 'Open Sans Condensed Light';
-    -fx-font-size: 25px;
+.white-text-color {
     -fx-text-fill: white;
 }
 
@@ -87,13 +31,6 @@
     -fx-background-color: black;
 }
 
-.list-cell {
-    -fx-background-color: black;
-    -fx-font-family: 'Open Sans Condensed Light';
-    -fx-font-size: 25px;
-    -fx-text-fill: white;
-}
-
 .list-view .scroll-bar:horizontal .increment-arrow,
 .list-view .scroll-bar:horizontal .decrement-arrow,
 .list-view .scroll-bar:horizontal .increment-button,
@@ -101,7 +38,20 @@
     -fx-padding:0;
 }
 
+.list-view .scroll-bar:vertical .increment-arrow,
+.list-view .scroll-bar:vertical .decrement-arrow,
+.list-view .scroll-bar:vertical .increment-button,
+.list-view .scroll-bar:vertical .decrement-button {
+    -fx-padding:0;
+}
+
 .list-view {
+    -fx-background-color: black;
     -fx-background-insets: 0;
     -fx-padding: 0;
+}
+
+.list-cell {
+    -fx-background-color: black;
+    -fx-text-fill: white;
 }

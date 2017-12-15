@@ -9,7 +9,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
+import overview.AssistantMirror;
 import tk.plogitech.darksky.forecast.model.Currently;
 import tk.plogitech.darksky.forecast.model.Forecast;
 import tk.plogitech.darksky.forecast.model.Hourly;
@@ -19,6 +21,22 @@ public class ForecastController implements Controller {
     public VBox forecastPane;
     @FXML
     public Label futureSummary;
+    @FXML
+    public Label temperaturePrefix;
+    @FXML
+    public Label cloudCoverDescription;
+    @FXML
+    public Label timeZoneDescription;
+    @FXML
+    public Label windSpeedPrefix;
+    @FXML
+    public Label windSpeedDescription;
+    @FXML
+    public Label humidityPrefix;
+    @FXML
+    public Label humidityDescription;
+    @FXML
+    public Label cloudCoverPrefix;
     @FXML
     private Label temperature;
     @FXML
@@ -42,6 +60,24 @@ public class ForecastController implements Controller {
     @Override
     public void init() {
         createBindings();
+        setCustomFont();
+    }
+
+    private void setCustomFont() {
+        temperature.setFont(new Font(AssistantMirror.FONT_NAME, 45));
+        temperaturePrefix.setFont(new Font(AssistantMirror.FONT_NAME, 45));
+        futureSummary.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        cloudCoverDescription.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        timeZoneDescription.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        windSpeedPrefix.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        windSpeedDescription.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        cloudCoverPrefix.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        humidityDescription.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        windSpeed.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        cloudCover.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        summary.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        humidity.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        timeZone.setFont(new Font(AssistantMirror.FONT_NAME, 25));
     }
 
     @Override

@@ -4,12 +4,7 @@
 <?import javafx.scene.layout.VBox?>
 <FlowPane fx:controller="calendar.CalendarController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
     <VBox prefWidth="500" prefHeight="400">
-<!--        <HBox alignment="CENTER_LEFT">
-            <ImageView id="boxImage">
-                <Image url="drawables/event_white.png" requestedHeight="48" requestedWidth="48"/>
-            </ImageView>
-        </HBox>-->
-        <Label styleClass="calendar-main-font, default-label-margin">Kalender</Label>
-        <ListView fx:id="listView" styleClass="list-cell"/>
+        <Label styleClass="white-text-color, default-label-margin" fx:id="calendar">Kalender</Label>
+        <ListView fx:id="listView"/>
     </VBox>
 </FlowPane>

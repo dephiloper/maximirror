@@ -6,7 +6,9 @@ import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
+import overview.AssistantMirror;
 
 public class NewsController implements Controller {
     @FXML
@@ -23,6 +25,13 @@ public class NewsController implements Controller {
     @Override
     public void init() {
         createBindings();
+        setCustomFont();
+    }
+
+    private void setCustomFont() {
+        source.setFont(new Font(AssistantMirror.FONT_NAME, 35));
+        title.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        description.setFont(new Font(AssistantMirror.FONT_NAME, 25));
     }
 
     @Override

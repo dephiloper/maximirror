@@ -18,6 +18,7 @@ public class AssistantMirror extends Application {
             KeyCombination.CONTROL_DOWN);
     private final String OVERVIEW_FXML = "/overview.fxml";
     private final String STYLE = "style.css";
+    public static String FONT_NAME = "Open Sans Condensed Light";
 
     private OverviewController overviewController;
 
@@ -30,6 +31,7 @@ public class AssistantMirror extends Application {
         );
         FXMLLoader loader = new FXMLLoader(getClass().getResource(OVERVIEW_FXML));
         Parent root = loader.load();
+
         overviewController = loader.getController();
         Scene scene = new Scene(root,Config.instance.WINDOW_WIDTH,Config.instance.WINDOW_HEIGHT);
         scene.getStylesheets().add(STYLE);

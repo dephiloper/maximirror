@@ -6,7 +6,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.text.Font;
+import overview.AssistantMirror;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +20,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class CalendarController implements Controller {
+    @FXML
+    public Label calendar;
     @FXML
     private ListView<String> listView = new ListView<>();
 
@@ -27,6 +33,21 @@ public class CalendarController implements Controller {
     public void init() {
         createBindings();
         calendarProvider.loadEvents();
+        setCustomFont();
+    }
+
+    private void setCustomFont() {
+        calendar.setFont(Font.font(AssistantMirror.FONT_NAME, 30));
+        listView.setCellFactory(cell -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item);
+                    setFont(Font.font(AssistantMirror.FONT_NAME, 25));
+                }
+            }
+        });
     }
 
     @Override

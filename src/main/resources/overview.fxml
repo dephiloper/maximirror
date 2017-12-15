@@ -8,8 +8,8 @@
     </padding>
     <top>
         <VBox alignment="CENTER" prefWidth="400">
-            <Label fx:id="time" styleClass="clock-main-font" visible="false"/>
-            <Label fx:id="date" styleClass="date-font" visible="false"/>
+            <Label fx:id="time" styleClass="white-text-color" visible="false"/>
+            <Label fx:id="date" styleClass="white-text-color" visible="false"/>
         </VBox>
 
     </top>

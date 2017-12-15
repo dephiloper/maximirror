@@ -4,13 +4,8 @@
 <?import javafx.scene.layout.VBox?>
 <FlowPane fx:controller="timetable.TimeTableController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
     <VBox prefWidth="500" prefHeight="400">
-<!--        <HBox alignment="CENTER_LEFT">
-            <ImageView id="boxImage">
-                <Image url="drawables/train_white.png" requestedHeight="48" requestedWidth="48"/>
-            </ImageView>
-        </HBox>-->
-        <Label styleClass="time-table-main-font, default-label-margin">Abfahrtsplan</Label>
-        <Label styleClass="time-table-font, default-label-margin" fx:id="stationName"/>
-        <ListView fx:id="transportsListView" styleClass="list-cell"/>
+        <Label styleClass="white-text-color, default-label-margin" fx:id="stationNames">Abfahrtsplan</Label>
+        <Label styleClass="white-text-color, default-label-margin" fx:id="stationName"/>
+        <ListView fx:id="transportsListView" styleClass="black-background"/>
     </VBox>
 </FlowPane>

@@ -7,12 +7,17 @@ import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
+import overview.AssistantMirror;
 
 public class TimeTableController implements Controller {
     @FXML
     public Label stationName;
+    @FXML
+    public Label stationNames;
     @FXML
     private ListView<String> transportsListView;
 
@@ -23,7 +28,24 @@ public class TimeTableController implements Controller {
     @Override
     public void init() {
         createBindings();
+        setCustomFont();
     }
+
+    private void setCustomFont() {
+        stationNames.setFont(new Font(AssistantMirror.FONT_NAME, 30));
+        stationName.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        transportsListView.setCellFactory(cell -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item);
+                    setFont(Font.font(AssistantMirror.FONT_NAME, 25));
+                }
+            }
+        });
+    }
+
     @Override
     public void startUpdate() {
         if (!Config.instance.SHOW_TIMETABLE) return;

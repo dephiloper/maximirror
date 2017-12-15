@@ -9,6 +9,7 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import news.NewsController;
 import timetable.TimeTableController;
@@ -61,6 +62,12 @@ public class OverviewController implements Controller {
         newsWidgetController.startUpdate();
         createBindings();
         applyTransitions();
+        setCustomFont();
+    }
+
+    private void setCustomFont() {
+        time.setFont(new Font(AssistantMirror.FONT_NAME, 80));
+        date.setFont(new Font(AssistantMirror.FONT_NAME, 45));
     }
 
     private void applyTransitions() {
