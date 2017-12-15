@@ -74,12 +74,14 @@ def writeConfig():
 #@app.route("/start")
 def start():
     #call(["java", "-jar", target_filepath, "&"])
-    os.system("java -jar " + target_filepath + " &")
+    #os.system("java -jar " + target_filepath + " &")
+    os.system("startx&")
     return "starting " + target_filepath + "..."
 
 @app.route("/stop")
 def stop():
     os.system("pkill java")
+    os.system("pkill X")
     return "killing java..."
 
 @app.route("/start")
