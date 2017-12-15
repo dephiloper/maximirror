@@ -1,5 +1,7 @@
 package assistantmirror.maxiphil.de.mirrorconfigurator.config;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
@@ -33,11 +35,17 @@ public class Config {
     public double NEWS_SLEEP_SECONDS;
     public String NEWS_API_KEY;
     public String[] NEWS_SOURCES;
+    public String GOOGLE_ICAL_URL;
 
     public class TransportStation {
         public String ID;
         public String[] LINE_NAME_FILTER;
         public Long WALK_DURATION_MINUTES;
+        public TransportStation(String id, String[] line_name_filter, long walk_duration_minutes){
+            this.ID = id;
+            this.LINE_NAME_FILTER = line_name_filter;
+            this.WALK_DURATION_MINUTES = walk_duration_minutes;
+        }
     }
 
     public static Config jsonToConfig(String configString) {
@@ -82,8 +90,41 @@ public class Config {
         itemList.add(new ConfigItem<>("Update News (s):", String.valueOf(NEWS_SLEEP_SECONDS)));
         itemList.add(new ConfigItem<>("News API Key:", String.valueOf(NEWS_API_KEY)));
         itemList.add(new ConfigItem<>("News Quellen:", Arrays.toString(NEWS_SOURCES)));
-
+        itemList.add(new ConfigItem<>("Google ical URL:", GOOGLE_ICAL_URL));
 
         return itemList;
+    }
+
+    public Config generateConfigFromItemList(List<ConfigItem> itemList){
+        Config config = new Config();
+        config.APPLICATION_NAME = itemList.get(0).getValue().toString();
+        config.WINDOW_HEIGHT = Integer.parseInt(itemList.get(1).getValue().toString());
+        config.WINDOW_WIDTH = Integer.parseInt(itemList.get(2).getValue().toString());
+        config.LOCATION_LAT = Double.parseDouble(itemList.get(3).getValue().toString());
+        config.LOCATION_LON = Double.parseDouble(itemList.get(4).getValue().toString());
+        config.TRANSPORT_STATIONS = new TransportStation[]{
+                new TransportStation(itemList.get(6).getValue().toString(), new String[]{itemList.get(7).getValue().toString()}, Long.parseLong(itemList.get(8).getValue().toString())),
+                new TransportStation(itemList.get(10).getValue().toString(), new String[]{itemList.get(11).getValue().toString()}, Long.parseLong(itemList.get(12).getValue().toString()))};
+        config.WEATHER_API_KEY = itemList.get(13).getValue().toString();
+        config.TIME_FORMAT = itemList.get(14).getValue().toString();
+        config.CLOCK_SLEEP_SECONDS = Double.parseDouble(itemList.get(15).getValue().toString());
+        config.TIMETABLE_SLEEP_SECONDS = Double.parseDouble(itemList.get(16).getValue().toString());
+        config.CALENDAR_SLEEP_SECONDS = Double.parseDouble(itemList.get(17).getValue().toString());
+        config.WEATHER_SLEEP_SECONDS = Long.parseLong(itemList.get(18).getValue().toString());
+        config.CALENDAR_UPCOMING_EVENT_COUNT = Integer.parseInt(itemList.get(19).getValue().toString());
+        config.TIMETABLE_UPCOMING_TRANSPORT_COUNT = Integer.parseInt(itemList.get(20).getValue().toString());
+        config.SHOW_TIME = Boolean.parseBoolean(itemList.get(21).getValue().toString());
+        config.SHOW_CALENDAR = Boolean.parseBoolean(itemList.get(22).getValue().toString());
+        config.SHOW_DATE = Boolean.parseBoolean(itemList.get(23).getValue().toString());
+        config.SHOW_TIMETABLE = Boolean.parseBoolean(itemList.get(24).getValue().toString());
+        config.SHOW_FORECAST = Boolean.parseBoolean(itemList.get(25).getValue().toString());
+        config.ENABLE_FULLSCREEN = Boolean.parseBoolean(itemList.get(26).getValue().toString());
+        config.DATE_FORMAT = itemList.get(27).getValue().toString();
+        config.NEWS_SLEEP_SECONDS = Double.parseDouble(itemList.get(28).getValue().toString());
+        config.NEWS_API_KEY = itemList.get(29).getValue().toString();
+        config.NEWS_SOURCES = new String[]{itemList.get(30).getValue().toString()};
+        config.GOOGLE_ICAL_URL = itemList.get(31).getValue().toString();
+
+        return config;
     }
 }

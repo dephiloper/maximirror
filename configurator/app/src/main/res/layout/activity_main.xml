@@ -63,13 +63,42 @@
         fab:menu_backgroundColor="@android:color/transparent">
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_item"
+            android:id="@+id/menu_item_post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_check_circle_black_24dp"
             fab:fab_size="mini"
             android:onClick="postButtonPressed"
-            fab:fab_label="Menu item 1" />
+            fab:fab_label="Confirm" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item_restart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_refresh_black_24dp"
+            fab:fab_size="mini"
+            android:onClick="reloadButtonPressed"
+            fab:fab_label="Reload" />
+
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item_server_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_start_server"
+            fab:fab_size="mini"
+            android:onClick="startServerButtonPressed"
+            fab:fab_label="Start Mirror" />
+
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item_server_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_server_stop"
+            fab:fab_size="mini"
+            android:onClick="stopServerButtonPressed"
+            fab:fab_label="Stop Mirror" />
 
     </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>
