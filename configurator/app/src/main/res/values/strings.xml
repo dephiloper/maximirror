@@ -2,6 +2,8 @@
     <string name="app_name">Mirror Configurator</string>
     <string name="configuration">Configuration:</string>
     <string name="loadingText">Loading...</string>
-    <string name="postButtonText">Confirm</string>
+    <string name="IPButtonText">Confirm</string>
     <string name="errorVolleyGET">Failed to load data. Please restart the application and check your internet connection.</string>
+    <string name="server_ip_textview">Insert your Server IP here:</string>
+    <string name="server_ip">http://192.168.1.13:5000/</string>
 </resources>

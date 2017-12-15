@@ -1,12 +1,13 @@
 package assistantmirror.maxiphil.de.mirrorconfigurator;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,7 +28,6 @@ import net.hockeyapp.android.UpdateManager;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Map;
 
 import assistantmirror.maxiphil.de.mirrorconfigurator.config.Config;
 import assistantmirror.maxiphil.de.mirrorconfigurator.config.ConfigItem;
@@ -37,9 +37,11 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     Config config = null;
     FloatingActionMenu fab;
-    boolean focusedChanged = false;
     private RequestQueue requestQueue;
-    String postURL = "http://192.168.1.4:5000/updateconfig";
+    String serverURL;
+    Context context;
+    SharedPreferences sharedPreferences;
+    //String postURL = "http://192.168.1.13:5000/updateconfig";
 // Todo implement POST
     // Todo use databinding for easier workflow --> https://medium.com/google-developers/android-data-binding-list-tricks-ef3d5630555e
     // Todo add button to read all edittexts and checkboxed and put them back into the Config class to push them to the server
@@ -47,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getApplicationContext();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        serverURL = getServerIPFromSharedPrefs();
         setContentView(R.layout.activity_main);
         checkForUpdates();
         listView = findViewById(R.id.config_entry_list);
@@ -57,8 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private String getServerIPFromSharedPrefs() {
+        return sharedPreferences.getString("serverIP", "Treffen sich zwei, einer kommt.");
+    }
+
     private StringRequest getStringRequestGET(final String parameterString) {
-        return new StringRequest(Request.Method.GET, "http://192.168.1.4:5000/"+parameterString, new Response.Listener<String>() {
+        return new StringRequest(Request.Method.GET, serverURL+parameterString, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if (parameterString.equals("config")){
@@ -74,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Unable to load config, please check your Internet Connection to your WiFi.", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(), "Unable to load config, please check the connection to your WiFi.", Toast.LENGTH_LONG);
+                toast.show();
+                toast = Toast.makeText(getApplicationContext(), "cannot connect to: " + getServerIPFromSharedPrefs(), Toast.LENGTH_SHORT);
                 toast.show();
             }
         });
@@ -122,6 +133,24 @@ public class MainActivity extends AppCompatActivity {
         UpdateManager.unregister();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CrashManager.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterManagers();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterManagers();
+    }
+
     public void postButtonPressed(View view) {
         fab.close(true);
         List<ConfigItem> items = ((ConfigListAdapter)listView.getAdapter()).getItems();
@@ -130,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         config = config.generateConfigFromItemList(items);
         final String jsonString = Config.configToJson(config);
         //JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-        StringRequest postJsonObjectRequest = new StringRequest(Request.Method.POST, postURL, new Response.Listener<String>() {
+        StringRequest postJsonObjectRequest = new StringRequest(Request.Method.POST, serverURL+"updateconfig", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("post", "successfully");
@@ -175,24 +204,6 @@ public class MainActivity extends AppCompatActivity {
         getCurrentRequestQueue().add(postJsonObjectRequest);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        CrashManager.register(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        unregisterManagers();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unregisterManagers();
-    }
-
     public void reloadButtonPressed(View view) {
         fab.close(true);
         getCurrentRequestQueue().add(getStringRequestGET("config"));
@@ -206,5 +217,32 @@ public class MainActivity extends AppCompatActivity {
     public void stopServerButtonPressed(View view) {
         fab.close(true);
         getCurrentRequestQueue().add(getStringRequestGET("stop"));
+    }
+
+    public void updateNewMirrorSoftware(View view) {
+        fab.close(true);
+        getCurrentRequestQueue().add(getStringRequestGET("upgrade"));
+    }
+
+    public void resetConfigOnServer(View view) {
+        fab.close(true);
+        getCurrentRequestQueue().add(getStringRequestGET("reset"));
+    }
+
+    public void setUpIPForServer(View view) {
+        EditText ipEditText = findViewById(R.id.textEditIP);
+        String ip = ipEditText.getText().toString();
+        initializeServerIP(ip);
+        writeToFile(ip);
+    }
+
+    private void initializeServerIP(String serverURL){
+        this.serverURL = serverURL;
+    }
+
+    private void writeToFile(String ip) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("serverIP", ip);
+        editor.apply();
     }
 }
