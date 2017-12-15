@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionMenu fab;
     boolean focusedChanged = false;
     private RequestQueue requestQueue;
-    String postURL = "localhost:8080";
+    String postURL = "http://192.168.1.4:5000/updateconfig";
 // Todo implement POST
     // Todo use databinding for easier workflow --> https://medium.com/google-developers/android-data-binding-list-tricks-ef3d5630555e
     // Todo add button to read all edittexts and checkboxed and put them back into the Config class to push them to the server
@@ -57,15 +57,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private StringRequest getStringRequestGET(String parameterString) {
+    private StringRequest getStringRequestGET(final String parameterString) {
         return new StringRequest(Request.Method.GET, "http://192.168.1.4:5000/"+parameterString, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                config = Config.jsonToConfig(response);
-                try {
-                    listView.setAdapter(new ConfigListAdapter(getApplicationContext(), config.generateConfigItems()));
-                } catch (IllegalAccessException e) {
-                    System.err.println(e.getMessage());
+                if (parameterString.equals("config")){
+                    config = Config.jsonToConfig(response);
+                    try {
+                        listView.setAdapter(new ConfigListAdapter(getApplicationContext(), config.generateConfigItems()));
+                    } catch (IllegalAccessException e) {
+                        System.err.println(e.getMessage());
+                    }
                 }
 
             }
@@ -121,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void postButtonPressed(View view) {
-        fab.hideMenu(true);
+        fab.close(true);
         List<ConfigItem> items = ((ConfigListAdapter)listView.getAdapter()).getItems();
         System.out.println(items);
         Config config = new Config();
@@ -192,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void reloadButtonPressed(View view) {
-        fab.hideMenu(true);
+        fab.close(true);
         getCurrentRequestQueue().add(getStringRequestGET("config"));
     }
 
