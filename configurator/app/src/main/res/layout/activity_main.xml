@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/relativeLayoutRoot"
+    tools:context="assistantmirror.maxiphil.de.mirrorconfigurator.MainActivity">
+
+    <ListView
+        android:id="@+id/config_entry_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+
+    <LinearLayout
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/textViewIp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/custom_caption_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/server_ip_textview"/>
+
+        <EditText
+            android:id="@+id/editTextIp"
+            android:labelFor="@+id/textViewIPSet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/buttonIp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/IPButtonText"
+            android:layout_marginTop="50dp"
+            android:onClick="setUpIPForServer"/>
+    </LinearLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/fab_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        fab:menu_showShadow="true"
+        fab:menu_colorNormal="@color/colorPrimary"
+        fab:menu_colorPressed="@color/colorPrimaryDark"
+        fab:menu_animationDelayPerItem="50"
+        fab:menu_icon="@drawable/fab_add"
+        fab:menu_labels_showAnimation="@anim/fab_slide_in_from_left"
+        fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+        fab:menu_labels_paddingTop="4dp"
+        fab:menu_labels_paddingRight="8dp"
+        fab:menu_labels_paddingBottom="4dp"
+        fab:menu_labels_paddingLeft="8dp"
+        fab:menu_labels_padding="8dp"
+        fab:menu_labels_textColor="#FFFFFF"
+        fab:menu_labels_textSize="14sp"
+        fab:menu_labels_cornerRadius="3dp"
+        fab:menu_labels_colorNormal="#333333"
+        fab:menu_labels_colorPressed="#444444"
+        fab:menu_labels_colorRipple="#66FFFFFF"
+        fab:menu_labels_showShadow="true"
+        fab:menu_labels_singleLine="false"
+        fab:menu_labels_ellipsize="none"
+        fab:menu_labels_maxLines="-1"
+        fab:menu_labels_position="left"
+
+        fab:menu_openDirection="up"
+        fab:menu_fab_show_animation="@anim/fab_scale_up"
+        fab:menu_fab_hide_animation="@anim/fab_scale_down"
+        fab:menu_backgroundColor="@android:color/transparent">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item_server_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_start_server"
+            fab:fab_size="mini"
+            android:onClick="startServerButtonPressed"
+            fab:fab_label="Mirror starten" />
+
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item_server_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_server_stop"
+            fab:fab_size="mini"
+            android:onClick="stopServerButtonPressed"
+            fab:fab_label="Mirror stoppen" />
+
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item_mirror_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_update_mirror"
+            fab:fab_size="mini"
+            android:onClick="updateNewMirrorSoftware"
+            fab:fab_label="Mirror updaten" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item_reset_config"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_reset_config"
+            fab:fab_size="mini"
+            android:onClick="resetConfigOnServer"
+            fab:fab_label="Config neuladen" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_check_circle_black_24dp"
+            fab:fab_size="mini"
+            android:onClick="postButtonPressed"
+            fab:fab_label="Bestätigen" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item_restart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_refresh_black_24dp"
+            fab:fab_size="mini"
+            android:onClick="reloadButtonPressed"
+            fab:fab_label="Config laden" />
+
+    </com.github.clans.fab.FloatingActionMenu>
+</RelativeLayout>

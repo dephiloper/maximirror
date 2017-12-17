@@ -5,8 +5,6 @@ import shutil
 import requests
 import sys
 import time
-import wget
-import psutil
 import subprocess
 
 logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level=logging.DEBUG)
@@ -86,12 +84,15 @@ if not os.path.exists(backup_dir):
 logging.info("stopping service")
 subprocess.call("systemctl stop {}".format(service_name).split())
 
+shutil.rmtree(temp_dir)
+os.makedirs(temp_dir)
+
 logging.info("backing up old release")
 backup_old_release()
 for asset in archive_assets:
     logging.info("downloading %s from %s", asset["name"], asset["browser_download_url"])
-    file = wget.download(asset["browser_download_url"], out=temp_dir, bar=None)
-    shutil.unpack_archive(file, deploy_dir)
+    subprocess.call("wget {} -P {}".format(asset["browser_download_url"], temp_dir).split())
+    shutil.unpack_archive(os.path.join(temp_dir, asset["name"]), deploy_dir)
 
 logging.info("stopping service")
 subprocess.call("systemctl start {}".format(service_name).split())
