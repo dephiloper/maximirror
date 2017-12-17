@@ -1,0 +1,30 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<BorderPane fx:controller="overview.OverviewController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" styleClass="overview" >
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+    <top>
+        <VBox alignment="CENTER" prefWidth="400">
+            <Label fx:id="time" styleClass="white-text-color" visible="false"/>
+            <Label fx:id="date" styleClass="white-text-color" visible="false"/>
+        </VBox>
+
+    </top>
+    <left>
+        <VBox>
+            <fx:include source="calendarWidget.fxml" fx:id="calendarWidget" visible="false"/>
+            <fx:include source="timeTableWidget.fxml" fx:id="timeTableWidget" visible="false"/>
+        </VBox>
+    </left>
+    <right>
+        <fx:include source="forecastWidget.fxml" fx:id="forecastWidget" visible="false"/>
+    </right>
+    <bottom>
+        <VBox>
+            <fx:include source="newsWidget.fxml" fx:id="newsWidget" alignment="BOTTOM_CENTER" visible="false"/>
+        </VBox>
+    </bottom>
+</BorderPane>

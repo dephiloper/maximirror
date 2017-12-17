@@ -1,0 +1,10 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<FlowPane fx:controller="news.NewsController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
+    <VBox maxHeight="300" maxWidth="800">
+        <Label styleClass="label-margin, white-text-color" fx:id="source" wrapText="true"/>
+        <Label styleClass="label-margin, white-text-color" fx:id="title" wrapText="true"/>
+        <Label styleClass="label-margin, white-text-color" fx:id="description" wrapText="true"/>
+    </VBox>
+</FlowPane>
