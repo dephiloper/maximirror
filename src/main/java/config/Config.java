@@ -39,7 +39,7 @@ public class Config {
     }
 
     private static final String CONFIG_PATH = "./config.json";
-    private static final String DEFAULT_CONFIG_PATH = "/config.json";
+    private static final String DEFAULT_CONFIG_PATH = "/root/config.json";
 
     public static void create() throws IOException {
         if (instance == null)
