@@ -1,6 +1,7 @@
 package assistantmirror.maxiphil.de.mirrorconfigurator;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,9 +9,12 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -35,13 +39,17 @@ import assistantmirror.maxiphil.de.mirrorconfigurator.config.ConfigItem;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView listView;
-    Config config = null;
-    FloatingActionMenu fab;
+    private ListView listView;
+    private Config config = null;
+    private FloatingActionMenu fab;
     private RequestQueue requestQueue;
-    String serverURL;
-    static Context context;
-    SharedPreferences sharedPreferences;
+    private String serverURL;
+    private static Context context;
+    private SharedPreferences sharedPreferences;
+    private Button ipButton;
+    private TextView ipTextView;
+    private EditText ipEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,10 +58,13 @@ public class MainActivity extends AppCompatActivity {
         serverURL = getServerIPFromSharedPrefs();
         setContentView(R.layout.activity_main);
         checkForUpdates();
+        getCurrentRequestQueue().add(getStringRequestGET("config"));
         listView = findViewById(R.id.config_entry_list);
         fab = findViewById(R.id.fab_menu);
-        fab.showMenu(false);
-        getCurrentRequestQueue().add(getStringRequestGET("config"));
+        ipButton = findViewById(R.id.buttonIp);
+        ipEditText = findViewById(R.id.editTextIp);
+        ipTextView = findViewById(R.id.textViewIp);
+        fab.hideMenu(false);
     }
 
     private String getServerIPFromSharedPrefs() {
@@ -61,13 +72,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private StringRequest getStringRequestGET(final String parameterString) {
-        return new StringRequest(Request.Method.GET, serverURL+parameterString, new Response.Listener<String>() {
+        return new StringRequest(Request.Method.GET, String.format("http://%s/%s",serverURL,parameterString), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if (parameterString.equals("config")) {
                     config = Config.jsonToConfig(response);
                     try {
                         listView.setAdapter(new ConfigListAdapter(getApplicationContext(), config.generateConfigItems()));
+                        hideSetUpLayout();
                     } catch (IllegalAccessException e) {
                         System.err.println(e.getMessage());
                     }
@@ -123,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         Config config = new Config();
         config = config.generateConfigFromItemList(items);
         final String jsonString = Config.configToJson(config);
-        StringRequest postJsonObjectRequest = new StringRequest(Request.Method.POST, serverURL+"updateconfig", new Response.Listener<String>() {
+        StringRequest postJsonObjectRequest = new StringRequest(Request.Method.POST, String.format("http://%s/updateconfig",serverURL), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("post", "successfully");
@@ -196,10 +208,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setUpIPForServer(View view) {
-        EditText ipEditText = findViewById(R.id.textEditIP);
         String ip = ipEditText.getText().toString();
         initializeServerIP(ip);
         writeToFile(ip);
+        reloadButtonPressed(view);
     }
 
     private void initializeServerIP(String serverURL){
@@ -210,5 +222,12 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("serverIP", ip);
         editor.apply();
+    }
+
+    private void hideSetUpLayout() {
+        ipEditText.setVisibility(View.GONE);
+        ipButton.setVisibility(View.GONE);
+        ipTextView.setVisibility(View.GONE);
+        fab.showMenu(false);
     }
 }
