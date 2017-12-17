@@ -1,14 +1,15 @@
 import os
 import json
 import re
-from subprocess import call
+import subprocess
 from flask import Flask
 from flask import request
 app = Flask(__name__)
 
+home_dir = os.path.expanduser("~/")
 this_dirpath = os.path.dirname(os.path.realpath(__file__))
-config_filepath = this_dirpath + "/../target/config.json"
-target_filepath = this_dirpath + "/../target/AssistantMirror-1.0-SNAPSHOT-jar-with-dependencies.jar"
+config_filepath = os.path.join(home_dir, "config.json")
+target_filepath = this_dirpath + "AssistantMirror.jar"
 
 class Config:
     def __init__(self):
@@ -87,4 +88,9 @@ def stop():
 @app.route("/start")
 def restart():
     return stop() + "<br>" + start()
+
+@app.route("/upgrade")
+def upgrade():
+    subprocess.Popen("python update.py".split())
+
 start()

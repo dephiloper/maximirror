@@ -4,10 +4,7 @@ out/
 *.iml
 .idea/
 target/
-<<<<<<< HEAD
-configurator/app/src/main/res/raw/
-
-=======
 __pycache__/
 META-INF/
->>>>>>> develop
+deployment/
+
