@@ -1,6 +1,7 @@
 package calendar;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
@@ -9,7 +10,8 @@ public class SimpleCalEvent {
     private LocalDateTime time;
     private String name;
 
-    public static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    public static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yy");
+    public static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
 
     public SimpleCalEvent(String name, LocalDateTime time) {
         this.name = name;
@@ -31,7 +33,17 @@ public class SimpleCalEvent {
 
     @Override
     public String toString() {
-        return time.format(dateFormat) + " : " + name;
+        String s = "";
+        if (time.toLocalDate().isEqual(LocalDate.now())) { // heute
+            s = time.format(timeFormat) + " Uhr - " + name;
+        } else if (time.toLocalDate().isEqual(LocalDate.now().plusDays(1))) {
+            s = "Morgen " + time.format(timeFormat) + " Uhr - " + name;
+        }
+        else
+            {
+            s = time.format(dateFormat) + " " + time.format(timeFormat) + " Uhr - " + name;
+        }
+        return s;
     }
 
     public boolean after(SimpleCalEvent ev) {
