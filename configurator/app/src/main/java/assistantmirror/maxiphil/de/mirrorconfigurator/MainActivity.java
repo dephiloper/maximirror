@@ -1,5 +1,6 @@
 package assistantmirror.maxiphil.de.mirrorconfigurator;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -39,13 +40,8 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionMenu fab;
     private RequestQueue requestQueue;
     String serverURL;
-    Context context;
+    static Context context;
     SharedPreferences sharedPreferences;
-    //String postURL = "http://192.168.1.13:5000/updateconfig";
-// Todo implement POST
-    // Todo use databinding for easier workflow --> https://medium.com/google-developers/android-data-binding-list-tricks-ef3d5630555e
-    // Todo add button to read all edittexts and checkboxed and put them back into the Config class to push them to the server
-    // Todo improve listview performance http://lucasr.org/2012/04/05/performance-tips-for-androids-listview/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab_menu);
         fab.showMenu(false);
         getCurrentRequestQueue().add(getStringRequestGET("config"));
-        setupListViewListeners();
-
     }
 
     private String getServerIPFromSharedPrefs() {
@@ -83,9 +77,7 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Unable to load config, please check the connection to your WiFi.", Toast.LENGTH_LONG);
-                toast.show();
-                toast = Toast.makeText(getApplicationContext(), "cannot connect to: " + getServerIPFromSharedPrefs(), Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), String.format("Verbindungsaufbau zu '%s' nicht möglich.",getServerIPFromSharedPrefs()), Toast.LENGTH_LONG);
                 toast.show();
             }
         });
@@ -96,33 +88,6 @@ public class MainActivity extends AppCompatActivity {
             requestQueue = Volley.newRequestQueue(this);
         }
         return requestQueue;
-    }
-
-    private void setupListViewListeners() {
-
-        /*listView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                focusedChanged = true;
-                if (fab.isShown())
-                    fab.hideMenu(false);
-            }
-        });
-
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (focusedChanged) fab.showMenu(false);
-                Log.i("onsrollchanged", "called");
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (fab.isShown() && focusedChanged) {
-                    fab.hideMenu(false);
-                }
-            }
-        });*/
     }
 
     private void checkForUpdates() {
@@ -158,16 +123,17 @@ public class MainActivity extends AppCompatActivity {
         Config config = new Config();
         config = config.generateConfigFromItemList(items);
         final String jsonString = Config.configToJson(config);
-        //JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
         StringRequest postJsonObjectRequest = new StringRequest(Request.Method.POST, serverURL+"updateconfig", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("post", "successfully");
+                Toast.makeText(MainActivity.context, "Config erfolgreich geupdated", Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("post", "no success");
+                Toast.makeText(MainActivity.context, "Config konnte nicht geupdated werden", Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
