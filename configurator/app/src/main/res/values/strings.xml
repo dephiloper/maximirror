@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mirror Configurator</string>
+    <string name="app_name">Senpai Mirror</string>
     <string name="configuration">Configuration:</string>
     <string name="loadingText">Bitte warten...</string>
     <string name="IPButtonText">Bestätigen</string>
