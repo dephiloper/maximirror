@@ -3,21 +3,18 @@ package calendar;
 import config.Config;
 import interfaces.Controller;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import overview.AssistantMirror;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class CalendarController implements Controller {
     @FXML
@@ -27,12 +24,12 @@ public class CalendarController implements Controller {
 
     private List<String> list = new ArrayList<>();
     private CalendarProvider calendarProvider = new CalendarProvider();
-    private Task<ObservableList<String>> calendarTask;
+    private final CalendarDataHelper calendarDataHelper = new CalendarDataHelper();
+    private ScheduledService<CalendarDataHelper> service;
 
     @Override
     public void init() {
         createBindings();
-        calendarProvider.loadEvents();
         setCustomFont();
     }
 
@@ -54,32 +51,42 @@ public class CalendarController implements Controller {
     public void startUpdate() {
         if (!Config.instance.SHOW_CALENDAR)
             return;
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        calendarTask = new Task<ObservableList<String>>() {
-            protected ObservableList<String> call() throws InterruptedException, IOException {
-                list.clear();
-                list = calendarProvider.getEvents();
-                updateValue(FXCollections.observableArrayList(list));
-                return FXCollections.observableArrayList(list);
+        service = new ScheduledService<CalendarDataHelper>() {
+            @Override
+            protected Task<CalendarDataHelper> createTask() {
+                return new Task<CalendarDataHelper>() {
+
+                    @Override
+                    protected CalendarDataHelper call() {
+                        calendarProvider.loadEvents();
+                        list.clear();
+                        list = calendarProvider.getEvents();
+                        CalendarDataHelper calendarDataHelper = new CalendarDataHelper((FXCollections.observableArrayList(list)));
+                        updateValue(calendarDataHelper);
+                        return calendarDataHelper;
+                    }
+                };
             }
         };
-
-        executor.scheduleAtFixedRate(calendarTask, 0, (long) Config.instance.CALENDAR_SLEEP_SECONDS, TimeUnit.HOURS);
-
+        service.setPeriod(Duration.seconds(Config.instance.CALENDAR_SLEEP_SECONDS));
+        service.start();
+        service.setOnSucceeded(event -> {
+            calendarDataHelper.reinitialize(service.getValue().getEvents());
+        });
         init();
     }
 
     @Override
     public void stopRunning() {
-        if (calendarTask != null) {
-            if (calendarTask.isRunning()) {
-                calendarTask.cancel();
+        if (service != null) {
+            if (service.isRunning()) {
+                service.cancel();
             }
         }
     }
 
     @Override
     public void createBindings() {
-        listView.itemsProperty().bind(calendarTask.valueProperty());
+        listView.itemsProperty().bind(calendarDataHelper.eventsProperty());
     }
 }

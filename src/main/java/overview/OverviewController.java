@@ -2,8 +2,12 @@ package overview;
 
 import calendar.CalendarController;
 import config.Config;
+import forecast.ForecastController;
 import interfaces.Controller;
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -13,7 +17,6 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import news.NewsController;
 import timetable.TimeTableController;
-import forecast.ForecastController;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OverviewController implements Controller {
-
     @FXML
     public Parent calendarWidget;
     @FXML
@@ -64,6 +66,8 @@ public class OverviewController implements Controller {
         applyTransitions();
         setCustomFont();
     }
+
+
 
     private void setCustomFont() {
         time.setFont(new Font(AssistantMirror.FONT_NAME, 80));

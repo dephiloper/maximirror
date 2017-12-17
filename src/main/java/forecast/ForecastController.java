@@ -73,6 +73,7 @@ public class ForecastController implements Controller {
         windSpeedDescription.setFont(new Font(AssistantMirror.FONT_NAME, 25));
         cloudCoverPrefix.setFont(new Font(AssistantMirror.FONT_NAME, 25));
         humidityDescription.setFont(new Font(AssistantMirror.FONT_NAME, 25));
+        humidityPrefix.setFont(new Font(AssistantMirror.FONT_NAME, 25));
         windSpeed.setFont(new Font(AssistantMirror.FONT_NAME, 25));
         cloudCover.setFont(new Font(AssistantMirror.FONT_NAME, 25));
         summary.setFont(new Font(AssistantMirror.FONT_NAME, 25));
@@ -90,7 +91,7 @@ public class ForecastController implements Controller {
             protected Task<ForecastDataHelper> createTask() {
                 return new Task<ForecastDataHelper>() {
                     @Override
-                    protected ForecastDataHelper call() throws Exception {
+                    protected ForecastDataHelper call() {
                         Forecast forecast = forecastProvider.provideData();
                         if (forecast == null) {
                             System.err.println("Error fetching Weather!");
@@ -106,7 +107,6 @@ public class ForecastController implements Controller {
                                 currently.getPrecipType(),
                                 currently.getHumidity(),
                                 forecast.getTimezone(),
-                                //forecastProvider.convertSvg(currently.getIcon())
                                 forecastProvider.convertPng(currently.getIcon()),
                                 hourly.getSummary());
 
