@@ -11,13 +11,19 @@
         android:layout_width="0dp"
         android:layout_marginStart="10dp"
         android:layout_weight="1"
+        android:gravity="center_vertical"
         android:id="@+id/list_item_key"
         >
     </TextView>
-    <CheckBox
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_height="match_parent"
         android:layout_width="0dp"
-        android:id="@+id/list_item_value_bool"
-        android:layout_weight="1"
-        android:gravity="center"/>
+        android:layout_weight="1">
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_item_value_bool"
+            android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
+
 </LinearLayout>

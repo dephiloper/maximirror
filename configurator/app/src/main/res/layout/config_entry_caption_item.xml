@@ -12,7 +12,6 @@
         android:layout_marginStart="10dp"
         android:layout_weight="1"
         android:id="@+id/list_item_key"
-        android:textStyle="bold"
         android:textSize="@dimen/custom_caption_size"
         >
     </TextView>

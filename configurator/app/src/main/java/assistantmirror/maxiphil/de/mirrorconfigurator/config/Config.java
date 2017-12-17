@@ -67,7 +67,7 @@ public class Config {
         itemList.add(new ConfigItem<>("Standort Latitude:", String.valueOf(LOCATION_LAT)));
         itemList.add(new ConfigItem<>("Standort Lontitude:", String.valueOf(LOCATION_LON)));
         for (TransportStation station : TRANSPORT_STATIONS){
-            itemList.add(new ConfigItem<>("Station:", new MarkAsCaption()));
+            itemList.add(new ConfigItem<>("Station", new MarkAsCaption()));
             itemList.add(new ConfigItem<>("Station-ID:", station.ID));
             itemList.add(new ConfigItem<>("Bahnen:", Arrays.toString(station.LINE_NAME_FILTER).replace("[", "").replace("]", "")));
             itemList.add(new ConfigItem<>("Zeit zur Station (min):", String.valueOf(station.WALK_DURATION_MINUTES.toString())));
