@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         return new StringRequest(Request.Method.GET, serverURL+parameterString, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if (parameterString.equals("config")){
+                if (parameterString.equals("config")) {
                     config = Config.jsonToConfig(response);
                     try {
                         listView.setAdapter(new ConfigListAdapter(getApplicationContext(), config.generateConfigItems()));
