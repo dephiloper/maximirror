@@ -144,7 +144,7 @@ public class ForecastController implements Controller {
 
     @Override
     public void createBindings() {
-        temperature.textProperty().bind(forecastDataHelper.temperatureProperty().asString("%.2f"));
+        temperature.textProperty().bind(forecastDataHelper.temperatureProperty().asString("%.1f"));
         windSpeed.textProperty().bind(forecastDataHelper.windSpeedProperty().asString("%.2f"));
         cloudCover.textProperty().bind(forecastDataHelper.cloudCoverProperty().asString("%.0f"));
         summary.textProperty().bind(forecastDataHelper.summaryProperty());
