@@ -94,6 +94,11 @@ for asset in archive_assets:
     subprocess.call("wget {} -P {}".format(asset["browser_download_url"], temp_dir).split())
     shutil.unpack_archive(os.path.join(temp_dir, asset["name"]), deploy_dir)
 
+for root, dirs, files in os.walk(deploy_dir):
+    for name in files:
+        if name.endswith(".py") or name.endswith(".sh"):
+            subprocess.call("chmod u+x {}".format(os.path.join(root, name)).split())
+
 logging.info("stopping service")
 subprocess.call("systemctl start {}".format(service_name).split())
 
