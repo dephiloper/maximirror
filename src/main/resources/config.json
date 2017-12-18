@@ -1,0 +1,65 @@
+{
+    "WINDOW_HEIGHT": 1080,
+    "WINDOW_WIDTH": 1920,
+    "LOCATION_LAT": 0.0,
+    "LOCATION_LON": 0.0,
+    "TRANSPORT_STATIONS": [
+        {
+            "ID": "Insert ID",
+            "LINE_NAME_FILTER": [
+                "ALL"
+            ],
+            "WALK_DURATION_MINUTES": -1
+        },
+        {
+            "ID": "Insert ID",
+            "LINE_NAME_FILTER": [
+                "ALL"
+            ],
+            "WALK_DURATION_MINUTES": -1
+        },
+        {
+            "ID": "Insert ID",
+            "LINE_NAME_FILTER": [
+                "ALL"
+            ],
+            "WALK_DURATION_MINUTES": -1
+        },
+        {
+            "ID": "Insert ID",
+            "LINE_NAME_FILTER": [
+                "ALL"
+            ],
+            "WALK_DURATION_MINUTES": -1
+        },
+        {
+            "ID": "Insert ID",
+            "LINE_NAME_FILTER": [
+                "ALL"
+            ],
+            "WALK_DURATION_MINUTES": -1
+        }
+    ],
+    "WEATHER_API_KEY": "",
+    "NEWS_API_KEY": "",
+    "GOOGLE_ICAL_URL": "",
+    "CLOCK_SLEEP_SECONDS": 0.5,
+    "TIMETABLE_SLEEP_SECONDS": 10.0,
+    "CALENDAR_SLEEP_SECONDS": 600.0,
+    "WEATHER_SLEEP_SECONDS": 600.0,
+    "NEWS_SLEEP_SECONDS": 20.0,
+    "TIME_FORMAT": "HH:mm",
+    "DATE_FORMAT": "dd.MM.yyyy",
+    "CALENDAR_UPCOMING_EVENT_COUNT": 5,
+    "TIMETABLE_UPCOMING_TRANSPORT_COUNT": 5,
+    "APPLICATION_NAME": "assistantmirror",
+    "SHOW_TIME": true,
+    "SHOW_DATE": true,
+    "SHOW_CALENDAR": true,
+    "SHOW_TIMETABLE": true,
+    "SHOW_FORECAST": true,
+    "ENABLE_FULLSCREEN": true,
+    "NEWS_SOURCES": [
+        "ign"
+    ]
+}
