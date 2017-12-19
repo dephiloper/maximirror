@@ -10,6 +10,7 @@ home_dir = os.path.expanduser("~/")
 this_dirpath = os.path.dirname(os.path.realpath(__file__))
 config_filepath = os.path.join(home_dir, "config.json")
 target_filepath = this_dirpath + "AssistantMirror.jar"
+upgrade_service_name = "mirror-update"
 
 class Config:
     def __init__(self):
@@ -72,10 +73,7 @@ def writeConfig():
     config.update(json.loads(request.data))
     return config.saveToFile()
 
-#@app.route("/start")
 def start():
-    #call(["java", "-jar", target_filepath, "&"])
-    #os.system("java -jar " + target_filepath + " &")
     os.system("startx&")
     return "starting " + target_filepath + "..."
 
@@ -91,6 +89,7 @@ def restart():
 
 @app.route("/upgrade")
 def upgrade():
-    subprocess.Popen("python update.py".split())
+    subprocess.call("systemctl start {}".format(upgrade_service_name).split())
+    return "mirror upgraded"
 
 start()

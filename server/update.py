@@ -99,7 +99,7 @@ for root, dirs, files in os.walk(deploy_dir):
         if name.endswith(".py") or name.endswith(".sh"):
             subprocess.call("chmod u+x {}".format(os.path.join(root, name)).split())
 
-logging.info("stopping service")
+logging.info("start service")
 subprocess.call("systemctl start {}".format(service_name).split())
 
 logging.info("update done")

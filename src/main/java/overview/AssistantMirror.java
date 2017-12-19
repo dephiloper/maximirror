@@ -36,6 +36,7 @@ public class AssistantMirror extends Application {
         Scene scene = new Scene(root,Config.instance.WINDOW_WIDTH,Config.instance.WINDOW_HEIGHT);
         scene.getStylesheets().add(STYLE);
         primaryStage.setScene(scene);
+        primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         primaryStage.setFullScreen(Config.instance.ENABLE_FULLSCREEN);
 
         primaryStage.setOnCloseRequest(event -> {
