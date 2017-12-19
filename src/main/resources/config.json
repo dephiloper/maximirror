@@ -52,14 +52,13 @@
     "DATE_FORMAT": "dd.MM.yyyy",
     "CALENDAR_UPCOMING_EVENT_COUNT": 5,
     "TIMETABLE_UPCOMING_TRANSPORT_COUNT": 5,
-    "APPLICATION_NAME": "assistantmirror",
+    "APPLICATION_NAME": "Senpai Mirror",
     "SHOW_TIME": true,
     "SHOW_DATE": true,
-    "SHOW_CALENDAR": true,
-    "SHOW_TIMETABLE": true,
-    "SHOW_FORECAST": true,
+    "SHOW_CALENDAR": false,
+    "SHOW_TIMETABLE": false,
+    "SHOW_FORECAST": false,
     "ENABLE_FULLSCREEN": true,
     "NEWS_SOURCES": [
-        "ign"
     ]
 }
