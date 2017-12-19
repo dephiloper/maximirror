@@ -64,7 +64,7 @@ def resetconfig():
     stop()
     os.system("rm -f " + config_filepath)
     start()
-    return "config reset done"
+    return "reset config"
 
 @app.route("/updateconfig", methods=["POST"])
 def writeConfig():
@@ -81,15 +81,17 @@ def start():
 def stop():
     os.system("pkill java")
     os.system("pkill X")
-    return "killing java..."
+    return "stop mirror"
 
 @app.route("/start")
 def restart():
-    return stop() + "<br>" + start()
+    stop()
+    start()
+    return "start mirror" 
 
 @app.route("/upgrade")
 def upgrade():
     subprocess.call("systemctl start {}".format(upgrade_service_name).split())
-    return "mirror upgraded"
+    return "upgrade mirror"
 
 start()

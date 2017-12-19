@@ -5,13 +5,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relativeLayoutRoot"
     tools:context="assistantmirror.maxiphil.de.mirrorconfigurator.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        fab:titleTextColor="@color/white"/>
 
     <ListView
         android:id="@+id/config_entry_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/my_toolbar"
         />
 
 
@@ -19,7 +31,8 @@
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_below="@id/my_toolbar">
         <TextView
             android:id="@+id/textViewIp"
             android:layout_marginStart="10dp"
@@ -89,9 +102,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_start_server"
+            fab:fab_colorNormal="@color/pink"
+            fab:fab_colorPressed="@color/pink_pressed"
             fab:fab_size="mini"
             android:onClick="startServerButtonPressed"
-            fab:fab_label="Mirror starten" />
+            fab:fab_label="@string/start_mirror" />
 
 
         <com.github.clans.fab.FloatingActionButton
@@ -99,46 +114,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_server_stop"
+            fab:fab_colorNormal="@color/pink"
+            fab:fab_colorPressed="@color/pink_pressed"
             fab:fab_size="mini"
             android:onClick="stopServerButtonPressed"
-            fab:fab_label="Mirror stoppen" />
-
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_item_mirror_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_update_mirror"
-            fab:fab_size="mini"
-            android:onClick="updateNewMirrorSoftware"
-            fab:fab_label="Mirror updaten" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_item_reset_config"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_reset_config"
-            fab:fab_size="mini"
-            android:onClick="resetConfigOnServer"
-            fab:fab_label="Config neuladen" />
+            fab:fab_label="@string/stop_mirror" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_item_post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_check_circle_black_24dp"
+            fab:fab_colorNormal="@color/pink"
+            fab:fab_colorPressed="@color/pink_pressed"
             fab:fab_size="mini"
             android:onClick="postButtonPressed"
-            fab:fab_label="Bestätigen" />
+            fab:fab_label="@string/confirm_config" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_item_restart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_refresh_black_24dp"
+            fab:fab_colorNormal="@color/pink"
+            fab:fab_colorPressed="@color/pink_pressed"
             fab:fab_size="mini"
             android:onClick="reloadButtonPressed"
-            fab:fab_label="Config laden" />
+            fab:fab_label="@string/refresh_config" />
 
     </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

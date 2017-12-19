@@ -1,20 +1,22 @@
 package assistantmirror.maxiphil.de.mirrorconfigurator;
 
-import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -53,10 +55,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         context = getApplicationContext();
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.app_name);
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         serverURL = getServerIPFromSharedPrefs();
-        setContentView(R.layout.activity_main);
+
         checkForUpdates();
         getCurrentRequestQueue().add(getStringRequestGET("config"));
         listView = findViewById(R.id.config_entry_list);
@@ -80,9 +87,15 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         listView.setAdapter(new ConfigListAdapter(getApplicationContext(), config.generateConfigItems()));
                         hideSetUpLayout();
+                        Toast toast = Toast.makeText(getApplicationContext(),"Config erfolgreich geladen.", Toast.LENGTH_SHORT);
+                        toast.show();
                     } catch (IllegalAccessException e) {
-                        System.err.println(e.getMessage());
+                        Toast toast = Toast.makeText(getApplicationContext(), "Config konnte nicht geparsed werden, bitte setze Sie zurück!", Toast.LENGTH_LONG);
+                        toast.show();
                     }
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT);
+                    toast.show();
                 }
 
             }
@@ -197,16 +210,6 @@ public class MainActivity extends AppCompatActivity {
         getCurrentRequestQueue().add(getStringRequestGET("stop"));
     }
 
-    public void updateNewMirrorSoftware(View view) {
-        fab.close(true);
-        getCurrentRequestQueue().add(getStringRequestGET("upgrade"));
-    }
-
-    public void resetConfigOnServer(View view) {
-        fab.close(true);
-        getCurrentRequestQueue().add(getStringRequestGET("reset"));
-    }
-
     public void setUpIPForServer(View view) {
         String ip = ipEditText.getText().toString();
         initializeServerIP(ip);
@@ -229,5 +232,57 @@ public class MainActivity extends AppCompatActivity {
         ipButton.setVisibility(View.GONE);
         ipTextView.setVisibility(View.GONE);
         fab.showMenu(false);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        switch (item.getItemId()) {
+            case R.id.update_mirror:
+                alertDialogBuilder
+                        .setMessage(R.string.alert_update_mirror)
+                        .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                getCurrentRequestQueue().add(getStringRequestGET("upgrade"));
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        }).create();
+
+                alertDialogBuilder.show();
+
+                return true;
+
+            case R.id.reset_config:
+                alertDialogBuilder
+                        .setMessage(R.string.alert_reset_config)
+                        .setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                getCurrentRequestQueue().add(getStringRequestGET("reset"));
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        }).create();
+
+                alertDialogBuilder.show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
