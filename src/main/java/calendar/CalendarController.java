@@ -43,7 +43,7 @@ public class CalendarController implements Controller {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                if (!isEmpty()) {
+                if (item != null) {
                     setText(item);
                     setFont(Font.font(AssistantMirror.FONT_NAME, 25));
                     setPrefWidth(0);
