@@ -38,7 +38,7 @@ public class Config {
         public Long WALK_DURATION_MINUTES;
     }
 
-    private static final String CONFIG_PATH = "./config.json";
+    private static final String CONFIG_PATH = "/root/config.json";
     private static final String DEFAULT_CONFIG_PATH = "/config.json";
 
     public static void create() throws IOException {
