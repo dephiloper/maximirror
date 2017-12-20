@@ -5,6 +5,6 @@
 <FlowPane fx:controller="calendar.CalendarController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" orientation="vertical">
     <VBox prefWidth="500" prefHeight="400">
         <Label styleClass="white-text-color, default-label-margin" fx:id="calendar">Kalender</Label>
-        <ListView fx:id="listView"/>
+        <ListView fx:id="listView" prefWidth="500"/>
     </VBox>
 </FlowPane>

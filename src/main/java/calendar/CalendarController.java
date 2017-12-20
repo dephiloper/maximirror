@@ -9,8 +9,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.Callback;
 import javafx.util.Duration;
+import org.jsoup.select.Evaluator;
 import overview.AssistantMirror;
 
 import java.util.ArrayList;
@@ -39,13 +43,16 @@ public class CalendarController implements Controller {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item != null) {
+                if (!isEmpty()) {
                     setText(item);
                     setFont(Font.font(AssistantMirror.FONT_NAME, 25));
+                    setPrefWidth(0);
                 }
             }
         });
     }
+
+
 
     @Override
     public void startUpdate() {

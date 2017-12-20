@@ -41,6 +41,7 @@ public class TimeTableController implements Controller {
                 if (item != null) {
                     setText(item);
                     setFont(Font.font(AssistantMirror.FONT_NAME, 25));
+                    setPrefWidth(0);
                 }
             }
         });

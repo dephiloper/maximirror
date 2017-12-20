@@ -23,6 +23,6 @@ public class Transport {
 
     @Override
     public String toString() {
-        return String.format("%s - %s - in %s min", lineName, direction, ChronoUnit.MINUTES.between(LocalTime.now(),time));
+        return String.format("%s min - %s - %s", ChronoUnit.MINUTES.between(LocalTime.now(),time), lineName, direction);
     }
 }

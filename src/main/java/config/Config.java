@@ -38,7 +38,7 @@ public class Config {
         public Long WALK_DURATION_MINUTES;
     }
 
-    private static final String CONFIG_PATH = "/root/config.json";
+    private static final String CONFIG_PATH = "./config.json";
     private static final String DEFAULT_CONFIG_PATH = "/config.json";
 
     public static void create() throws IOException {
@@ -61,7 +61,7 @@ public class Config {
         return new Gson().fromJson(jsonString, Config.class);
     }
 
-    private static String inputStreamToString(InputStream inputStream) throws FileNotFoundException {
+    private static String inputStreamToString(InputStream inputStream) {
         StringBuilder content = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
