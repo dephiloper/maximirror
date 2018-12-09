@@ -75,12 +75,12 @@ public class OverviewController implements Controller {
     }
 
     private void applyTransitions() {
-        transitions.add(new FadeTransition(Duration.seconds(3), calendarWidget));
-        transitions.add(new FadeTransition(Duration.seconds(3), timeTableWidget));
-        transitions.add(new FadeTransition(Duration.seconds(3), forecastWidget));
-        transitions.add(new FadeTransition(Duration.seconds(3), newsWidget));
-        transitions.add(new FadeTransition(Duration.seconds(3), time));
-        transitions.add(new FadeTransition(Duration.seconds(3), date));
+        transitions.add(new FadeTransition(Duration.seconds(10), calendarWidget));
+        transitions.add(new FadeTransition(Duration.seconds(10), timeTableWidget));
+        transitions.add(new FadeTransition(Duration.seconds(10), forecastWidget));
+        transitions.add(new FadeTransition(Duration.seconds(10), newsWidget));
+        transitions.add(new FadeTransition(Duration.seconds(10), time));
+        transitions.add(new FadeTransition(Duration.seconds(10), date));
 
         for (FadeTransition transition : transitions) {
             transition.setFromValue(0.0);

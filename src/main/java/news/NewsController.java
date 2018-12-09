@@ -43,7 +43,7 @@ public class NewsController implements Controller {
             protected Task<NewsDataHelper> createTask() {
                 return new Task<NewsDataHelper>() {
                     @Override
-                    protected NewsDataHelper call() throws Exception {
+                    protected NewsDataHelper call() {
                         News news = provider.provideData();
                         NewsDataHelper newsDataHelper = null;
 
@@ -54,6 +54,7 @@ public class NewsController implements Controller {
                                     news.getDescription());
                         }
                         if (newsDataHelper != null) {
+                            newsDataHelper = provider.getPlaceholderDataHelper();
                             updateValue(newsDataHelper);
                         }
                         return newsDataHelper;
@@ -83,5 +84,6 @@ public class NewsController implements Controller {
         source.textProperty().bind(newsDataHelper.sourceProperty());
         title.textProperty().bind(newsDataHelper.titleProperty());
         description.textProperty().bind(newsDataHelper.descriptionProperty());
+        newsDataHelper.reinitialize(provider.getPlaceholderDataHelper());
     }
 }

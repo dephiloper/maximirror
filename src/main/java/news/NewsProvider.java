@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -60,11 +59,11 @@ public class NewsProvider implements Provider<News> {
 
                 String name = "", title = "", description = "";
 
-                if (!jsonObject.get("source").equals(null))
+                if (jsonObject.get("source") != null)
                     name = (String) ((JSONObject) jsonObject.get("source")).get("name");
-                if (!jsonObject.get("title").equals(null))
+                if (jsonObject.get("title") != null)
                     title = (String) jsonObject.get("title");
-                if (!jsonObject.get("description").equals(null))
+                if (jsonObject.get("description") != null)
                     description = (String) jsonObject.get("description");
 
                 newsListSource.add(new News(name, title, description));
@@ -80,5 +79,9 @@ public class NewsProvider implements Provider<News> {
         News news = newsList.get(providedNewsIndex);
         providedNewsIndex = (providedNewsIndex + 1) % newsList.size();
         return news;
+    }
+
+    NewsDataHelper getPlaceholderDataHelper() {
+        return new NewsDataHelper("Awesome News", "Awesome Title", "...");
     }
 }

@@ -19,11 +19,11 @@ class CalendarDataHelper {
         this.events.setValue(events);
     }
 
-    public ObservableList<String> getEvents() {
+    ObservableList<String> getEvents() {
         return events.get();
     }
 
-    public ListProperty<String> eventsProperty() {
+    ListProperty<String> eventsProperty() {
         return events;
     }
 

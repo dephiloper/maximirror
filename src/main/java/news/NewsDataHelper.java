@@ -22,6 +22,12 @@ class NewsDataHelper {
         this.description.setValue(description);
     }
 
+    void reinitialize(NewsDataHelper dataHelper) {
+        this.source.setValue(dataHelper.source.getValue());
+        this.title.setValue(dataHelper.title.getValue());
+        this.description.setValue(dataHelper.description.getValue());
+    }
+
     String getSource() {
         return source.get();
     }

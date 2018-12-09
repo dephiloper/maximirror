@@ -96,5 +96,7 @@ public class TimeTableController implements Controller {
     public void createBindings() {
         stationName.textProperty().bind(stationDataHelper.stationNameProperty());
         transportsListView.itemsProperty().bind(stationDataHelper.transportsProperty());
+        stationDataHelper.reinitialize(stationProvider.getPlaceholderDataHelper().getTransports(),
+                stationProvider.getPlaceholderDataHelper().getStationName());
     }
 }

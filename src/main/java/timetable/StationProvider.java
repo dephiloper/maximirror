@@ -55,10 +55,21 @@ class StationProvider implements Provider<Station> {
                     for (Element row : rows) {
                         if (row.getElementsByTag("strong").size() > 0) {
                             Transport transport = new Transport();
-                            LocalTime time = LocalTime.parse(row.getElementsByTag("strong").get(0).text().replace(" *", ""));
+
+                            LocalTime time = LocalTime.parse(row.getElementsByAttributeValueEnding("class", "Deptime")
+                                    .get(0)
+                                    .text()
+                                    .replace(" *", ""));
+
                             long arrivalTime = ChronoUnit.MINUTES.between(LocalTime.now(), time);
-                            String lineName = row.getElementsByTag("strong").get(1).text().replace("Tram ", "");
+
+                            String lineName = row.getElementsByAttributeValueContaining("class", "ivu-route")
+                                    .get(0)
+                                    .text()
+                                    .replace("Tram ", "");
+
                             String[] lineNameFilters = Config.instance.TRANSPORT_STATIONS[i].LINE_NAME_FILTER;
+
                             boolean isLineNameMatching = Arrays.asList(lineNameFilters).contains(lineName);
 
                             if (lineNameFilters.length == 0 ||
@@ -73,10 +84,12 @@ class StationProvider implements Provider<Station> {
                             }
                         }
                     }
+
                     synchronized (stations) {
                         if (transports.size() > Config.instance.TIMETABLE_UPCOMING_TRANSPORT_COUNT)
                             transports = transports.subList(0, Config.instance.TIMETABLE_UPCOMING_TRANSPORT_COUNT);
                         stations[i] = new Station(stationName, transports);
+
                     }
                 } catch (IOException e) {
                     System.err.println(e.getMessage());

@@ -55,7 +55,7 @@ public class ForecastController implements Controller {
     private ScheduledService<ForecastDataHelper> forecastService;
 
     private final ForecastDataHelper forecastDataHelper = new ForecastDataHelper();
-    private final ForecastProvider forecastProvider = new ForecastProvider();
+    private final ForecastProvider provider = new ForecastProvider();
 
     @Override
     public void init() {
@@ -92,23 +92,25 @@ public class ForecastController implements Controller {
                 return new Task<ForecastDataHelper>() {
                     @Override
                     protected ForecastDataHelper call() {
-                        Forecast forecast = forecastProvider.provideData();
-                        if (forecast == null) {
-                            System.err.println("Error fetching Weather!");
-                            return null;
+                        Forecast forecast = provider.provideData();
+                        ForecastDataHelper forecastDataHelper;
+
+                        if (forecast != null) {
+                            Currently currently = forecast.getCurrently();
+                            Hourly hourly = forecast.getHourly();
+                            forecastDataHelper = new ForecastDataHelper(
+                                    currently.getTemperature(),
+                                    currently.getWindSpeed(),
+                                    currently.getCloudCover(),
+                                    currently.getSummary(),
+                                    currently.getPrecipType(),
+                                    currently.getHumidity(),
+                                    forecast.getTimezone(),
+                                    provider.convertPng(currently.getIcon()),
+                                    hourly.getSummary());
+                        } else {
+                            forecastDataHelper = provider.getPlaceholderDataHelper();
                         }
-                        Currently currently = forecast.getCurrently();
-                        Hourly hourly = forecast.getHourly();
-                        ForecastDataHelper forecastDataHelper = new ForecastDataHelper(
-                                currently.getTemperature(),
-                                currently.getWindSpeed(),
-                                currently.getCloudCover(),
-                                currently.getSummary(),
-                                currently.getPrecipType(),
-                                currently.getHumidity(),
-                                forecast.getTimezone(),
-                                forecastProvider.convertPng(currently.getIcon()),
-                                hourly.getSummary());
 
                         updateValue(forecastDataHelper);
                         return forecastDataHelper;
@@ -152,6 +154,7 @@ public class ForecastController implements Controller {
         timeZone.textProperty().bind(forecastDataHelper.timeZoneProperty());
         futureSummary.textProperty().bind(forecastDataHelper.futureSummaryProperty());
         Bindings.bindBidirectional(this.icon.imageProperty(), forecastDataHelper.iconProperty());
+        forecastDataHelper.reinitialize(provider.getPlaceholderDataHelper());
     }
 }
 

@@ -48,4 +48,8 @@ class ForecastProvider implements Provider<Forecast> {
 
         return null;
     }
+
+    ForecastDataHelper getPlaceholderDataHelper() {
+        return new ForecastDataHelper(0d, 0d, 0d, "Fetching Data", "Fetching Data", 0d, "Please Stand By", convertPng(FALLBACK_IMG), "Fetching Data");
+    }
 }

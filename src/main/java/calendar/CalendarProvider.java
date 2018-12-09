@@ -12,15 +12,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import config.Config;
+import javafx.collections.FXCollections;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 
 import static java.lang.StrictMath.min;
 
-public class CalendarProvider {
+class CalendarProvider {
     private Calendar calendar;
     private List<SimpleCalEvent> sortedCalEvents;
     private static final int DEFAULT_DAYS_TO_PREDICT = 365*3;
@@ -65,16 +67,14 @@ public class CalendarProvider {
 
         // add recurrent Dates - Current Dates are with in
         PeriodList list = component.calculateRecurrenceSet(period);
-        Iterator iter = list.iterator();
-        while (iter.hasNext()) {
-            Period eventPeriod = (Period) iter.next();
+        for (Period eventPeriod : list) {
             eventList.add(new SimpleCalEvent(summary, eventPeriod.getStart().getTime()));
         }
 
         return eventList;
     }
 
-    public void loadEvents() {
+    void loadEvents() {
         loadEvents(DEFAULT_DAYS_TO_PREDICT);
     }
 
@@ -83,15 +83,16 @@ public class CalendarProvider {
 
         List<SimpleCalEvent> simpleCalEvents = new ArrayList<>();
 
-        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-            Component component = (Component) i.next();
-            simpleCalEvents.addAll(getAllEventsOf(component, new Period(new DateTime(System.currentTimeMillis()), new DateTime(System.currentTimeMillis() + daysToPredict * MILLIS_TO_DAYS))));
+        for (CalendarComponent calendarComponent : calendar.getComponents()) {
+            simpleCalEvents.addAll(getAllEventsOf(calendarComponent,
+                    new Period(new DateTime(System.currentTimeMillis()),
+                    new DateTime(System.currentTimeMillis() + daysToPredict * MILLIS_TO_DAYS))));
         }
 
         this.sortedCalEvents = simpleCalEvents.stream().sorted(new EventComparator()).filter(e -> e.after(LocalDateTime.now())).collect(Collectors.toList());
     }
 
-    public List<String> getEvents() {
+    List<String> getEvents() {
         return getEvents(Config.instance.CALENDAR_UPCOMING_EVENT_COUNT);
     }
 
@@ -115,5 +116,12 @@ public class CalendarProvider {
             eventList.add(this.sortedCalEvents.get(i).toString());
         }
         return eventList;
+    }
+
+    CalendarDataHelper getPlaceholderDataHelper() {
+        List<String> list = new ArrayList<>();
+        list.add("Please Stand By");
+        list.add("Fetching Data");
+        return new CalendarDataHelper(FXCollections.observableArrayList(list));
     }
 }

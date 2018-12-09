@@ -33,6 +33,19 @@ class ForecastDataHelper {
         this.futureSummary.setValue(futureSummary);
     }
 
+    void reinitialize(ForecastDataHelper dataHelper) {
+        this.temperature.setValue(dataHelper.temperature.getValue());
+        this.windSpeed.setValue(dataHelper.windSpeed.getValue());
+        this.cloudCover.setValue(dataHelper.cloudCover.getValue());
+        this.summary.setValue(dataHelper.summary.getValue());
+        this.precipType.setValue(dataHelper.precipType.getValue());
+        this.humidity.setValue(dataHelper.humidity.getValue());
+        this.timeZone.setValue(dataHelper.timeZone.getValue());
+        this.icon.setValue(dataHelper.icon.getValue());
+        this.futureSummary.setValue(dataHelper.futureSummary.getValue());
+
+    }
+
     double getTemperature() {
         return temperature.get();
     }

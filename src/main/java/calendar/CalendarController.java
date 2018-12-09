@@ -9,12 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.util.Callback;
 import javafx.util.Duration;
-import org.jsoup.select.Evaluator;
 import overview.AssistantMirror;
 
 import java.util.ArrayList;
@@ -27,7 +23,7 @@ public class CalendarController implements Controller {
     private ListView<String> listView = new ListView<>();
 
     private List<String> list = new ArrayList<>();
-    private CalendarProvider calendarProvider = new CalendarProvider();
+    private CalendarProvider provider = new CalendarProvider();
     private final CalendarDataHelper calendarDataHelper = new CalendarDataHelper();
     private ScheduledService<CalendarDataHelper> service;
 
@@ -65,10 +61,16 @@ public class CalendarController implements Controller {
 
                     @Override
                     protected CalendarDataHelper call() {
-                        calendarProvider.loadEvents();
+                        provider.loadEvents();
                         list.clear();
-                        list = calendarProvider.getEvents();
-                        CalendarDataHelper calendarDataHelper = new CalendarDataHelper((FXCollections.observableArrayList(list)));
+                        list = provider.getEvents();
+                        CalendarDataHelper calendarDataHelper;
+
+                        if (!list.isEmpty())
+                            calendarDataHelper = new CalendarDataHelper((FXCollections.observableArrayList(list)));
+                        else
+                            calendarDataHelper = provider.getPlaceholderDataHelper();
+
                         updateValue(calendarDataHelper);
                         return calendarDataHelper;
                     }
@@ -77,9 +79,11 @@ public class CalendarController implements Controller {
         };
         service.setPeriod(Duration.seconds(Config.instance.CALENDAR_SLEEP_SECONDS));
         service.start();
+
         service.setOnSucceeded(event -> {
             calendarDataHelper.reinitialize(service.getValue().getEvents());
         });
+
         init();
     }
 
@@ -95,5 +99,6 @@ public class CalendarController implements Controller {
     @Override
     public void createBindings() {
         listView.itemsProperty().bind(calendarDataHelper.eventsProperty());
+        calendarDataHelper.reinitialize(provider.getPlaceholderDataHelper().getEvents());
     }
 }
