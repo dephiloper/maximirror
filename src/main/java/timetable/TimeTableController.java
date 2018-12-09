@@ -58,16 +58,14 @@ public class TimeTableController implements Controller {
                     @Override
                     protected StationDataHelper call() throws Exception {
                         Station station = stationProvider.provideData();
-                        StationDataHelper stationDataHelper = null;
+                        StationDataHelper stationDataHelper = new StationDataHelper();
 
                         if (station != null) {
                             stationDataHelper = new StationDataHelper(FXCollections.observableArrayList(
                                     station.getTransports()),
                                     station.getStationName());
-                        } else {
-                            stationDataHelper = stationProvider.getPlaceholderDataHelper();
+                            updateValue(stationDataHelper);
                         }
-                        updateValue(stationDataHelper);
 
                         return stationDataHelper;
                     }
@@ -96,7 +94,5 @@ public class TimeTableController implements Controller {
     public void createBindings() {
         stationName.textProperty().bind(stationDataHelper.stationNameProperty());
         transportsListView.itemsProperty().bind(stationDataHelper.transportsProperty());
-        stationDataHelper.reinitialize(stationProvider.getPlaceholderDataHelper().getTransports(),
-                stationProvider.getPlaceholderDataHelper().getStationName());
     }
 }

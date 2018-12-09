@@ -117,11 +117,4 @@ class CalendarProvider {
         }
         return eventList;
     }
-
-    CalendarDataHelper getPlaceholderDataHelper() {
-        List<String> list = new ArrayList<>();
-        list.add("Please Stand By");
-        list.add("Fetching Data");
-        return new CalendarDataHelper(FXCollections.observableArrayList(list));
-    }
 }

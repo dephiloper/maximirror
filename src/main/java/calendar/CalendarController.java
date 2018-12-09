@@ -64,12 +64,10 @@ public class CalendarController implements Controller {
                         provider.loadEvents();
                         list.clear();
                         list = provider.getEvents();
-                        CalendarDataHelper calendarDataHelper;
+                        CalendarDataHelper calendarDataHelper = new CalendarDataHelper();
 
                         if (!list.isEmpty())
                             calendarDataHelper = new CalendarDataHelper((FXCollections.observableArrayList(list)));
-                        else
-                            calendarDataHelper = provider.getPlaceholderDataHelper();
 
                         updateValue(calendarDataHelper);
                         return calendarDataHelper;
@@ -99,6 +97,5 @@ public class CalendarController implements Controller {
     @Override
     public void createBindings() {
         listView.itemsProperty().bind(calendarDataHelper.eventsProperty());
-        calendarDataHelper.reinitialize(provider.getPlaceholderDataHelper().getEvents());
     }
 }

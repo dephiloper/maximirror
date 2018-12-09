@@ -53,7 +53,7 @@ public class NewsController implements Controller {
                                     news.getTitle(),
                                     news.getDescription());
                         }
-                        if (newsDataHelper != null) {
+                        else {
                             newsDataHelper = provider.getPlaceholderDataHelper();
                             updateValue(newsDataHelper);
                         }

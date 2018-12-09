@@ -2,6 +2,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Box?>
+<?import javafx.scene.layout.Pane?>
 <BorderPane fx:controller="overview.OverviewController" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css" styleClass="overview" >
     <padding>
         <Insets top="15" right="15" bottom="15" left="15"/>
@@ -16,6 +18,7 @@
     <left>
         <VBox>
             <fx:include source="calendarWidget.fxml" fx:id="calendarWidget" visible="false"/>
+            <Pane minHeight="40"/>
             <fx:include source="timeTableWidget.fxml" fx:id="timeTableWidget" visible="false"/>
         </VBox>
     </left>

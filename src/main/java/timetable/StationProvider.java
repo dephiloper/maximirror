@@ -98,11 +98,6 @@ class StationProvider implements Provider<Station> {
         }, 0,1, TimeUnit.MINUTES);
     }
 
-    StationDataHelper getPlaceholderDataHelper() {
-        return new StationDataHelper(FXCollections.observableArrayList(
-                "Fetching Data","Fetching Data", "Fetching Data"),"Please Stand By");
-    }
-
     @Override
     synchronized public Station provideData() {
         Station providedStation = stations[providedStationIndex];
