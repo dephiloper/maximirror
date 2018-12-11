@@ -5,13 +5,13 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 
-if [ ! -d "./deployment" ]; then
-    echo "creating deployment dir"
-    mkdir deployment
-fi
-
 if [ "$(ls -A "./deployment")" ]; then
      rm ./deployment/*
+fi
+
+if [ ! -d "./deployment" ]; then
+    echo "creating deployment dir"
+    mkdir -p deployment/scripts/
 fi
 
 echo ""
@@ -29,6 +29,7 @@ cp ./target/AssistantMirror-1.0-SNAPSHOT-jar-with-dependencies.jar ./deployment/
 cp ./server/main.py ./deployment/
 cp ./server/server.sh ./deployment/
 cp ./server/update.py ./deployment/
+cp -r ./scripts ./deploy/scripts/
 
 echo ""
 echo "writing release file"
