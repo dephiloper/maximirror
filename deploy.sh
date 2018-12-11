@@ -5,14 +5,10 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 
-if [ "$(ls -A "./deployment")" ]; then
-     rm ./deployment/*
-fi
+rm -rf ./deployment
 
-if [ ! -d "./deployment" ]; then
-    echo "creating deployment dir"
-    mkdir -p deployment/scripts/
-fi
+echo "creating deployment dir"
+mkdir -p ./deployment/scripts/
 
 echo ""
 echo "building java project"
@@ -29,7 +25,7 @@ cp ./target/AssistantMirror-1.0-SNAPSHOT-jar-with-dependencies.jar ./deployment/
 cp ./server/main.py ./deployment/
 cp ./server/server.sh ./deployment/
 cp ./server/update.py ./deployment/
-cp -r ./scripts ./deploy/scripts/
+cp -r ./scripts/* ./deployment/scripts/
 
 echo ""
 echo "writing release file"
@@ -37,8 +33,9 @@ echo "$1" > ./deployment/release
 
 echo ""
 echo "zipping release"
-zip -rjq AssistantMirror.zip ./deployment/
-rm ./deployment/*
+(cd deployment; zip -rq AssistantMirror.zip *)
+mv deployment/AssistantMirror.zip .
+rm -r ./deployment/*
 mv ./AssistantMirror.zip ./deployment/
 
 if [ $? -ne 0 ]; then
