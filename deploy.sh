@@ -29,6 +29,7 @@ cp ./target/AssistantMirror-1.0-SNAPSHOT-jar-with-dependencies.jar ./deployment/
 cp ./server/main.py ./deployment/
 cp ./server/server.sh ./deployment/
 cp ./server/update.py ./deployment/
+cp -r ./scripts ./deploy/scripts/
 
 echo ""
 echo "writing release file"
