@@ -46,7 +46,7 @@ def backup_old_release(clean_dir_after: bool = True):
 logging.info("starting update process")
 
 headers = {"Accept": "application/vnd.github.v3+json"}
-api_url = "https://api.github.com/repos/dephiloper/logger/releases/latest"
+api_url = "https://api.github.com/repos/dephiloper/maximirror/releases/latest"
 response = requests.get(api_url, headers=headers)
 
 if not 200 <= response.status_code < 300:
