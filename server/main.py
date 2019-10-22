@@ -2,6 +2,7 @@ import os
 import json
 import re
 import subprocess
+import time
 from flask import Flask
 from flask import request
 app = Flask(__name__)
@@ -9,7 +10,7 @@ app = Flask(__name__)
 home_dir = os.path.expanduser("~/")
 this_dirpath = os.path.dirname(os.path.realpath(__file__))
 config_filepath = os.path.join(home_dir, "config.json")
-target_filepath = this_dirpath + "AssistantMirror.jar"
+target_filepath = this_dirpath + "/AssistantMirror.jar"
 upgrade_service_name = "mirror-update"
 
 class Config:
@@ -63,14 +64,19 @@ def readconfig():
 def resetconfig():
     stop()
     os.system("rm -f " + config_filepath)
+    time.sleep(0.2)
     start()
     return "reset config"
 
 @app.route("/updateconfig", methods=["POST"])
 def writeConfig():
+    stop()
     config = Config()
     config.loadFromFile()
     config.update(json.loads(request.data))
+    # todo check if config is properly updated
+    time.sleep(0.2)
+    start()
     return config.saveToFile()
 
 def start():
@@ -86,6 +92,7 @@ def stop():
 @app.route("/start")
 def restart():
     stop()
+    time.sleep(0.2)
     start()
     return "start mirror" 
 
